@@ -1,0 +1,82 @@
+﻿@using FahasaStoreAPI.Models.Entities
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<form asp-action="Index">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label>Filter Key</label>
+        <input asp-for="FilterOptions.Filters[0].Key" class="form-control" />
+        <label>Filter Value</label>
+        <input asp-for="FilterOptions.Filters[0].Value" class="form-control" />
+        <label>Filter TypeOfKey</label>
+        <input asp-for="FilterOptions.Filters[0].TypeOfKey" class="form-control" />
+        <label>Filter ComparisonOperator</label>
+        <input asp-for="FilterOptions.Filters[0].ComparisonOperator" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="FilterOptions.SortField" class="control-label"></label>
+        <select asp-for="FilterOptions.SortField" class="form-control" asp-items="ViewBag.OrderBy"></select>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="FilterOptions.OrderByDescending" /> @Html.DisplayNameFor(model => model.FilterOptions.OrderByDescending)
+        </label>
+    </div>
+    <div class="form-group">
+        <label asp-for="FilterOptions.PageNumber" class="control-label"></label>
+        <input asp-for="FilterOptions.PageNumber" class="form-control" />
+        <span asp-validation-for="FilterOptions.PageNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FilterOptions.PageSize" class="control-label"></label>
+        <input asp-for="FilterOptions.PageSize" class="form-control" />
+        <span asp-validation-for="FilterOptions.PageSize" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if(Model.Paged.Items != null && Model.Paged.Items.Count() > 0)
+            {
+                foreach (var item in Model.Paged.Items)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        document.getElementById('addFilter').addEventListener('click', function () {
+            const filterContainer = document.querySelector('.form-group .filter-item');
+            const newFilter = filterContainer.cloneNode(true);
+            filterContainer.parentNode.insertBefore(newFilter, this);
+        });
+
+        document.querySelectorAll('.remove-filter').forEach(button => {
+            button.addEventListener('click', function () {
+                this.parentNode.remove();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,15 @@
+insert into PaymentMethods (name, image_url, active, created_at) values ('Open-architected', 'https://robohash.org/illoquiadelectus.png?size=500x500&set=set1', 1, '3/11/2016 14:46:38');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Integrated', 'https://robohash.org/quiaetquibusdam.png?size=500x500&set=set1', 1, '1/5/2010 10:20:16');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Networked', 'https://robohash.org/enimconsequaturasperiores.png?size=500x500&set=set1', 1, '11/20/2016 12:43:33');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Stand-alone', 'https://robohash.org/autsedest.png?size=500x500&set=set1', 1, '10/1/2021 13:30:29');
+insert into PaymentMethods (name, image_url, active, created_at) values ('fresh-thinking', 'https://robohash.org/voluptatevoluptatibussunt.png?size=500x500&set=set1', 1, '3/2/2018 14:26:07');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Robust', 'https://robohash.org/quisquamutquas.png?size=500x500&set=set1', 1, '9/29/2018 10:34:18');
+insert into PaymentMethods (name, image_url, active, created_at) values ('local area network', 'https://robohash.org/quiadelenitidolorem.png?size=500x500&set=set1', 1, '9/2/2001 02:37:14');
+insert into PaymentMethods (name, image_url, active, created_at) values ('internet solution', 'https://robohash.org/doloribusexercitationemprovident.png?size=500x500&set=set1', 1, '3/26/2013 10:25:35');
+insert into PaymentMethods (name, image_url, active, created_at) values ('5th generation', 'https://robohash.org/etaspernaturdistinctio.png?size=500x500&set=set1', 1, '9/12/2007 12:36:57');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Right-sized', 'https://robohash.org/porroquiillo.png?size=500x500&set=set1', 1, '12/11/2017 17:22:55');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Graphical User Interface', 'https://robohash.org/distinctiosuntvoluptas.png?size=500x500&set=set1', 1, '5/7/2006 11:51:02');
+insert into PaymentMethods (name, image_url, active, created_at) values ('algorithm', 'https://robohash.org/errornihileum.png?size=500x500&set=set1', 1, '4/8/2010 03:50:19');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Public-key', 'https://robohash.org/repellatarchitectoconsequatur.png?size=500x500&set=set1', 1, '1/23/2010 17:25:44');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Multi-lateral', 'https://robohash.org/teneturitaquea.png?size=500x500&set=set1', 1, '9/5/2020 22:14:55');
+insert into PaymentMethods (name, image_url, active, created_at) values ('Virtual', 'https://robohash.org/atexplicaboamet.png?size=500x500&set=set1', 1, '12/28/2015 08:44:54');

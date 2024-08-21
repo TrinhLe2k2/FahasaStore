@@ -1,0 +1,108 @@
+﻿@using FahasaStoreAPI.Models.Entities
+@using FahasaStoreApp.Models.ViewModels.Entities
+
+@{
+    if (Books != null && Books.Count > 0)
+    {
+        foreach (var book in Books)
+        {
+            <div>
+                <div class="card mx-2 position-relative overflow-hidden">
+                    <a href="/Home/Product/@book.Id" class="text-decoration-none mx-2" style="color: #000;" title="@book.Name">
+                        <div class="w-100 position-relative" style="padding-bottom: 100%;">
+                            <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" class="card-img-top position-absolute w-100 h-100 object-fit-cover" alt="...">
+                        </div>
+                        <div class="card-body p-1">
+                            <h6 class="card-title twoLine">@book.Name</h6>
+                            <div class="d-flex flex-column justify-content-start">
+                                <div>
+                                    <span class="card-text text-danger fw-bold">@book.CurrentPrice.ToString("N0") đ</span>
+                                    <small class="position-absolute top-0 end-0 bg-danger text-white px-2 ms-2 rounded-start">-@book.DiscountPercentage %</small>
+                                </div>
+                                <small class="card-text text-decoration-line-through">@book.Price.ToString("N0") đ</small>
+                            </div>
+                            <div>
+                                @{
+                                    for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (book.RateAverage >= i)
+                                        {
+                                            <span style="color: gold;">★</span>
+                                        }
+                                        else
+                                        {
+                                            <span>★</span>
+                                        }
+                                    }
+                                }
+                                <small>(@book.RateCount)</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    }
+}
+
+@{
+    if (FlashSaleBooks != null && FlashSaleBooks.Count > 0)
+    {
+        foreach (var fsb in FlashSaleBooks)
+        {
+            var book = fsb.Book;
+
+            <div>
+                <div class="card mx-2 position-relative overflow-hidden">
+                    <a href="/Home/Product/@book.Id" class="text-decoration-none mx-2" style="color: #000;" title="@book.Name">
+                        <div class="w-100 position-relative" style="padding-bottom: 100%;">
+                            <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" class="card-img-top position-absolute w-100 h-100 object-fit-cover" alt="...">
+                        </div>
+                        <div class="card-body p-1">
+                            <h6 class="card-title twoLine">@book.Name</h6>
+                            <div class="d-flex flex-column justify-content-start">
+                                <div>
+                                    <span class="card-text text-danger fw-bold">@fsb.PriceFS.ToString("N0") đ</span>
+                                    <small class="position-absolute top-0 end-0 bg-danger text-white px-2 ms-2 rounded-start">-@fsb.DiscountPercentage %</small>
+                                </div>
+                                <small class="card-text text-decoration-line-through">@book.Price.ToString("N0") đ</small>
+                            </div>
+                            <div>
+                                @{
+                                    for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (book.RateAverage >= i)
+                                        {
+                                            <span style="color: gold;">★</span>
+                                        }
+                                        else
+                                        {
+                                            <span>★</span>
+                                        }
+                                    }
+                                }
+                                <small>(@book.RateCount)</small>
+                            </div>
+                            @{
+                                var progress = (fsb.Solded * 100 / fsb.Quantity);
+                                <div class="progress position-relative">
+                                    <div class="progress-bar bg-danger" style="width: @progress%;"></div>
+                                    <div class="position-absolute text-dark w-100 text-center"><span>đã bán @fsb.Solded</span></div>
+                                </div>
+                            }
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    }
+}
+
+@code {
+
+    [Parameter]
+    public List<BookVM>? Books { get; set; }
+
+    [Parameter]
+    public List<FlashSaleBookVM>? FlashSaleBooks { get; set; }
+}

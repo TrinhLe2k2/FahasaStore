@@ -1,0 +1,10 @@
+insert into Categories (name, image_url, created_at) values ('Comedy|Crime|Drama', 'https://cdn0.fahasa.com/media/catalog/product/i/m/image_188995_1_1.jpg', '3/8/2021');
+insert into Categories (name, image_url, created_at) values ('Adventure|Animation|Children|Musical', 'https://cdn0.fahasa.com/media/catalog/product/i/m/image_234124.jpg', '8/16/2007');
+insert into Categories (name, image_url, created_at) values ('Musical', 'https://cdn0.fahasa.com/media/catalog/product/n/g/nghigiaulamgiau_110k-01_bia-1.jpg', '9/28/2017');
+insert into Categories (name, image_url, created_at) values ('Comedy', 'https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_38609.jpg', '3/8/2012');
+insert into Categories (name, image_url, created_at) values ('Documentary', 'https://cdn0.fahasa.com/media/catalog/product/9/7/9786043440287.jpg', '5/17/2005');
+insert into Categories (name, image_url, created_at) values ('Drama|Horror', 'https://cdn0.fahasa.com/media/catalog/product/i/m/image_244718_1_4401.jpg', '6/10/2003');
+insert into Categories (name, image_url, created_at) values ('Drama', 'https://cdn0.fahasa.com/media/catalog/product/8/9/8935235238381.jpg', '9/10/2008');
+insert into Categories (name, image_url, created_at) values ('Comedy|Drama|Horror|Sci-Fi|Thriller', 'https://cdn0.fahasa.com/media/catalog/product/9/7/9786043440287.jpg', '11/11/2014');
+insert into Categories (name, image_url, created_at) values ('Action|Adventure|Comedy|Fantasy|Sci-Fi', 'https://cdn0.fahasa.com/media/catalog/product/p/h/ph_t-h_nh-_nh-lu_t-murphybia-1.jpg', '10/4/2002');
+insert into Categories (name, image_url, created_at) values ('Drama|War', 'https://cdn0.fahasa.com/media/catalog/product/8/9/8936067607277.jpg', '10/7/2007');

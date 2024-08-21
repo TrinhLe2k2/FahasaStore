@@ -1,0 +1,15 @@
+insert into Dimensions (length, width, height, unit, created_at) values (19, 28, 23, 'in', '11/25/2011 13:45:51');
+insert into Dimensions (length, width, height, unit, created_at) values (21, 5, 7, 'ft', '2/20/2012 07:17:22');
+insert into Dimensions (length, width, height, unit, created_at) values (4, 2, 6, 'in', '1/31/2006 05:00:31');
+insert into Dimensions (length, width, height, unit, created_at) values (23, 29, 23, 'cm', '11/8/2026 15:39:23');
+insert into Dimensions (length, width, height, unit, created_at) values (17, 29, 14, 'ft', '6/2/2010 22:29:50');
+insert into Dimensions (length, width, height, unit, created_at) values (3, 11, 11, 'ft', '9/1/2027 01:18:31');
+insert into Dimensions (length, width, height, unit, created_at) values (29, 17, 6, 'mm', '12/29/2012 03:37:34');
+insert into Dimensions (length, width, height, unit, created_at) values (7, 24, 30, 'mm', '4/19/2044 20:40:44');
+insert into Dimensions (length, width, height, unit, created_at) values (23, 24, 29, 'ft', '5/23/2018 00:29:37');
+insert into Dimensions (length, width, height, unit, created_at) values (29, 14, 11, 'cm', '2/27/2026 20:07:15');
+insert into Dimensions (length, width, height, unit, created_at) values (17, 1, 21, 'ft', '9/25/2031 21:37:33');
+insert into Dimensions (length, width, height, unit, created_at) values (13, 28, 9, 'ft', '6/19/2024 10:24:23');
+insert into Dimensions (length, width, height, unit, created_at) values (2, 29, 20, 'm', '11/17/2049 10:36:28');
+insert into Dimensions (length, width, height, unit, created_at) values (17, 10, 15, 'm', '1/31/2007 03:05:22');
+insert into Dimensions (length, width, height, unit, created_at) values (20, 5, 21, 'cm', '12/5/2020 19:19:17');

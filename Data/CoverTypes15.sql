@@ -1,0 +1,15 @@
+insert into CoverTypes (type_name, created_at) values ('Fleischer', '12/27/2022');
+insert into CoverTypes (type_name, created_at) values ('Aurelius', '10/13/2005');
+insert into CoverTypes (type_name, created_at) values ('Syphas', '3/11/2006');
+insert into CoverTypes (type_name, created_at) values ('Ayres', '2/3/2007');
+insert into CoverTypes (type_name, created_at) values ('Dolby', '11/10/2003');
+insert into CoverTypes (type_name, created_at) values ('Brafferton', '2/22/2017');
+insert into CoverTypes (type_name, created_at) values ('Masurel', '4/19/2016');
+insert into CoverTypes (type_name, created_at) values ('Awty', '11/2/2007');
+insert into CoverTypes (type_name, created_at) values ('Havis', '5/5/2017');
+insert into CoverTypes (type_name, created_at) values ('Lyle', '2/26/2018');
+insert into CoverTypes (type_name, created_at) values ('Perot', '12/4/2001');
+insert into CoverTypes (type_name, created_at) values ('Matthiae', '6/23/2016');
+insert into CoverTypes (type_name, created_at) values ('Lineen', '5/30/2010');
+insert into CoverTypes (type_name, created_at) values ('Duffield', '11/24/2006');
+insert into CoverTypes (type_name, created_at) values ('Entissle', '11/4/2020');

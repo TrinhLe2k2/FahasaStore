@@ -1,0 +1,162 @@
+﻿@inject IHttpContextAccessor httpContextAccessor
+@using FahasaStoreAPI.Models.Entities
+@using FahasaStoreApp.Helpers
+@model IEnumerable<Category>
+@{
+    var userLogin = new UserLogined(httpContextAccessor);
+    var categories = ViewData["categories"] as List<Category>;
+}
+<!-- HTML của bạn sử dụng model data -->
+<section id="header">
+    <div class="container-xl dropdown d-lg-flex align-items-center">
+        <a class="navbar-brand" title="Fahasa" asp-area="" asp-controller="Home" asp-action="Index">
+            <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/fahasa-logo.png" height="38" class="fahasa-logo" />
+        </a>
+        <div class="flex-grow-1">
+            <div class="d-flex w-100 align-items-center flex-wrap justify-content-center mt-3 mt-lg-0">
+                @if (categories != null && categories.Count > 0)
+                {
+                    <div class="py-2 px-3">
+                        <div title="Category" role="button" class="dropdown-btn d-flex flex-column align-items-center fw-bold">
+                            <i class="bi bi-columns-gap"></i>
+                            <span class="dropdown-toggle d-none d-lg-block">Danh mục</span>
+                        </div>
+                        <div class="dropdown-list border-0">
+                            <div class="container">
+                                <div class="row p-4">
+                                    <div class="col-6 col-lg-4 col-xxl-3">
+                                        <h4 class="mb-3 text-black text-truncate">Danh mục sản phẩm</h4>
+                                        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                            @{
+                                                int index = 0;
+                                                foreach (var item in categories)
+                                                {
+                                                    if (index++ == 0)
+                                                    {
+                                                        <a class="nav-link fw-bold fs-5 w-100 text-truncate active" id="v-pills-tab_@item.Id" data-bs-toggle="pill" data-bs-target="#v-pills_@item.Id" role="button" aria-controls="v-pills_@item.Id" aria-selected="true">@item.Name</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="nav-link fw-bold fs-5 w-100 text-truncate" id="v-pills-tab_@item.Id" data-bs-toggle="pill" data-bs-target="#v-pills_@item.Id" role="button" aria-controls="v-pills_@item.Id" aria-selected="false">@item.Name</a>
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-lg-8 col-xxl-9">
+                                        <div class="tab-content" id="v-pills-tabContent">
+                                            @{
+                                                int index2 = 0;
+                                                foreach (var item in categories)
+                                                {
+                                                    if (index2++ == 0)
+                                                    {
+                                                        <div class="tab-pane fade show active" id="v-pills_@item.Id" role="tabpanel" aria-labelledby="v-pills-tab_@item.Id" tabindex="0">
+                                                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                                                <h4 class="text-black mb-0 main-category"><i class="bi bi-globe-americas"></i> @item.Name</h4>
+                                                                <a class="nav-link text-truncate" href="/Home/Filter?CategoryId=@item.Id">Xem thêm</a>
+                                                            </div>
+                                                            <div class="row g-3">
+                                                                @{
+                                                                    if (item.Subcategories.Count > 0)
+                                                                    {
+                                                                        foreach (var subItem in item.Subcategories)
+                                                                        {
+                                                                            <div class="col">
+                                                                                <a class="text-truncate btn btn-outline-danger w-100" href="/Home/Filter?SubcategoryId=@subItem.Id">@subItem.Name</a>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="tab-pane fade" id="v-pills_@item.Id" role="tabpanel" aria-labelledby="v-pills-tab_@item.Id" tabindex="0">
+                                                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                                                <h4 class="text-black mb-0 main-category"><i class="bi bi-globe-americas"></i> @item.Name</h4>
+                                                                <a class="nav-link text-truncate" href="/Home/Filter?CategoryId=@item.Id">Xem thêm</a>
+                                                            </div>
+                                                            <div class="row g-3">
+                                                                @{
+                                                                    if (item.Subcategories.Count > 0)
+                                                                    {
+                                                                        foreach (var subItem in item.Subcategories)
+                                                                        {
+                                                                            <div class="col">
+                                                                                <a class="text-truncate btn btn-outline-danger w-100" href="/Home/Filter?CategotyId=@subItem.Id">@subItem.Name</a>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overlay"></div>
+                    </div>
+                }
+                
+                <div class="border rounded-3 flex-grow-1 order-1 order-sm-0">
+                    <form asp-action="Search" asp-controller="Home">
+                        <div class="p-1 d-flex">
+                            <input type="search" name="Search" placeholder="Bạn muốn tìm kiếm gì?" class="border-0 flex-grow-1" style="outline: none;" />
+                            <button type="submit" class="border-0 px-4 py-1 rounded-3">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="ps-3 d-block d-lg-none"></div>
+                <div id="cart"></div>
+                <div class="ps-3 d-block d-lg-none"></div>
+                <div class="dropdown">
+                    <div style="cursor: pointer;" class="dropdown-btn py-2 px-3 d-flex flex-column align-items-center fw-bold">
+                        <img src="userLogin.CurrentUser.ImageUrl" height="25" width="25" class="rounded-circle" style="object-fit: cover;" />
+                        <span class="dropdown-toggle d-none d-lg-block">FullName</span>
+                    </div>
+                    <div class="list-group dropdown-list">
+                        <a href="#" class="list-group-item">Tài khoản</a>
+                        <a href="#" class="list-group-item">Đăng xuất</a>
+                    </div>
+                </div>
+
+                @{
+                    if (userLogin.CurrentUser != null)
+                    {
+                        <div id="notification"></div>
+                        <div class="ps-3 d-block d-lg-none"> </div>
+                        <div id="cart"></div>
+
+                        <div class="ps-3 d-block d-lg-none"> </div>
+                        <div class="dropdown user my-1">
+                            <div data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" class="user-btn py-2 pe-3 d-flex flex-column align-items-center fw-bold text-black-50">
+                                <img src="@userLogin.CurrentUser.ImageUrl" height="25" width="25" class="rounded-circle" style="object-fit: cover;" />
+                                <span class="dropdown-toggle d-none d-lg-block">@userLogin.CurrentUser.FullName</span>
+                            </div>
+                            <ul class="dropdown-menu dropdown-menu-end shadow py-0">
+                                <li><a class="dropdown-item" href="/User/ControlPanel">Tài khoản</a></li>
+                                <li><a class="dropdown-item" href="/Accounts/LogOut">Đăng xuất</a></li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        // <div class="py-2 px-3">
+                        //     <a href="/Accounts/Account" onclick="HandlerCRUD(this, event)" class="btn btn-danger">
+                        //         Tài khoản
+                        //     </a>
+                        // </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

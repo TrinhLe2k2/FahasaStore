@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FahasaStoreApp", "FahasaStoreApp\FahasaStoreApp.csproj", "{4FC45705-989D-4FA5-BBB8-CFD908E42072}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FahasaStoreAPI", "FahasaStoreAPI\FahasaStoreAPI.csproj", "{BAFB40EB-0898-492A-A06D-7F0640C7EB9E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4FC45705-989D-4FA5-BBB8-CFD908E42072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC45705-989D-4FA5-BBB8-CFD908E42072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC45705-989D-4FA5-BBB8-CFD908E42072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC45705-989D-4FA5-BBB8-CFD908E42072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAFB40EB-0898-492A-A06D-7F0640C7EB9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAFB40EB-0898-492A-A06D-7F0640C7EB9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAFB40EB-0898-492A-A06D-7F0640C7EB9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAFB40EB-0898-492A-A06D-7F0640C7EB9E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4BBC3D7-F760-4117-AA14-2004D479DD10}
+	EndGlobalSection
+EndGlobal

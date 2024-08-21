@@ -1,0 +1,250 @@
+:root {
+    --primary-color-fahasa: #c92127;
+}
+
+html {
+  font-size: 14px;
+  /*color: rgba(0, 0, 0, 0.5);*/
+}
+
+.nav-link,
+a {
+    color: #000000;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.overlay {
+    visibility: hidden;
+    position: fixed;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #808080;
+    z-index: 1000;
+    opacity: 0.5;
+}
+
+.dropdown-list {
+    visibility: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    padding: 4px;
+    z-index: 1001;
+    opacity: 0;
+    transform: translateY(-10px);
+    /*transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;*/
+}
+
+.dropdown .dropdown-list:hover ~ .dropdown-btn,
+.dropdown .dropdown-btn:hover {
+    color: var(--primary-color-fahasa);
+}
+
+.dropdown .dropdown-btn:hover ~ .dropdown-list ~ .overlay,
+.dropdown .dropdown-list:hover ~ .overlay,
+.dropdown .dropdown-list:hover,
+.dropdown .dropdown-btn:hover ~ .dropdown-list {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown .dropdown-list .list-group-item:hover {
+    color: #fff;
+    background-color: var(--primary-color-fahasa) !important;
+}
+
+.text-fahasa {
+    color: var(--primary-color-fahasa) !important;
+}
+
+.bg-primary-fahasa {
+    background-color: var(--primary-color-fahasa);
+    color: white;
+}
+
+.fs-7 {
+    font-size: 0.9rem !important;
+}
+
+.zoom-in {
+    cursor: zoom-in;
+}
+
+.textIntroductionLite,
+.text-truncatet-row-double {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.twoLine:hover {
+    color: var(--primary-color-fahasa);
+}
+
+.oneLine {
+    color: #000;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.twoLine {
+    color: #000;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.2;
+    height: 2.4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.textContent {
+    text-align: justify;
+    white-space: pre-line;
+}
+
+    .textContent p {
+        margin-bottom: 0;
+    }
+
+.textIntroductionLite {
+    -webkit-line-clamp: 14;
+}
+
+.ranking-slider-nav .slick-slide.slick-current {
+    position: relative;
+}
+
+    .ranking-slider-nav .slick-slide.slick-current::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        border-right: 4px solid var(--primary-color-fahasa);
+        height: 100%;
+        animation: slideAnimation 0.5s linear;
+    }
+
+@keyframes slideAnimation {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.breadcrumb-item.active {
+    color: var(--primary-color-fahasa);
+}
+
+.breadcrumb-item a {
+    text-decoration: none;
+    color: #000;
+}
+
+    .breadcrumb-item a:hover {
+        color: var(--primary-color-fahasa);
+        font-weight: 600;
+    }
+
+.card:hover {
+    border: 1px solid var(--primary-color-fahasa);
+}
+
+.page-link {
+    color: #808080;
+}
+
+    .page-link:hover {
+        color: var(--primary-color-fahasa);
+    }
+
+    .page-link:focus {
+        box-shadow: none;
+        background-color: var(--primary-color-fahasa);
+        color: #fff;
+    }
+
+    .page-link.active {
+        color: #fff;
+        font-weight: 700;
+        background-color: var(--primary-color-fahasa);
+        border-color: var(--primary-color-fahasa);
+    }
+
+/*layout*/
+.search-box .result-search {
+    animation: expand .3s linear;
+}
+
+.nav-pills .nav-link.active {
+    background-color: transparent;
+}
+
+.nav-pills .nav-link {
+    color: #000;
+}
+
+    .nav-pills .nav-link.active,
+    .nav-pills .nav-link:hover {
+        transition: transform linear 0.3s;
+        transform: translateX(5%);
+    }
+
+.nav-link:hover,
+.nav-link.active,
+.user-btn:hover,
+.user .show.user-btn,
+.account-btn:hover,
+.account .show.account-btn,
+.car-btn:hover,
+.cart .show.car-btn,
+.notification-btn:hover,
+.notification .show.notification-btn {
+    color: var(--primary-color-fahasa) !important;
+}
+
+.user .dropdown-menu .dropdown-item:active,
+.account .dropdown-menu .dropdown-item:active,
+.cart .dropdown-menu .dropdown-item:active,
+.notification .dropdown-menu .dropdown-item:active {
+    background-color: var(--primary-color-fahasa) !important;
+}
+
+.boxImg:hover {
+    transform: scale(1.5);
+    transition: transform .5s;
+}
+
+footer .list-group-item {
+    background-color: transparent;
+    border: none;
+}
+
+    footer .list-group-item:hover {
+        color: var(--primary-color-fahasa);
+        transform: translateX(5%);
+        transition: 0.5s;
+        font-weight: 600;
+        background-color: transparent;
+    }
+
+form input.form-control:focus {
+    border-color: #000;
+    box-shadow: none;
+}

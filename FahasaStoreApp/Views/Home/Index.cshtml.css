@@ -1,0 +1,118 @@
+﻿
+#carouselBanner .carousel-indicators button {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    border: 0;
+    transition: all linear .6s;
+    margin: 0 4px;
+}
+
+    #carouselBanner .carousel-indicators button.active {
+        width: 24px;
+        background-color: var(--primary-color-fahasa);
+    }
+
+#carouselBanner span::before {
+    background-color: #000;
+    border-radius: 50%;
+}
+
+#carouselBanner .carousel-control-next,
+#carouselBanner .carousel-control-prev {
+    width: 10%;
+    font-size: 1.5rem;
+    opacity: 1;
+    transition: all linear 1s;
+}
+
+    #carouselBanner .carousel-control-next:hover span,
+    #carouselBanner .carousel-control-prev:hover span {
+        transform: scale(1.5);
+        transition: transform .5s;
+    }
+
+#carouselBanner .carousel-control-prev {
+    left: -12px;
+    justify-content: start;
+}
+
+#carouselBanner .carousel-control-next {
+    right: -12px;
+    justify-content: end;
+}
+
+.menu__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+    .menu__item a {
+        color: #000;
+        text-decoration: none;
+        width: 100%;
+        padding: 6px;
+    }
+
+/*.card {
+    border: none;
+    overflow: hidden;
+}*/
+.card:hover {
+    border: 1px solid var(--primary-color-fahasa);
+}
+
+.ul-Tabs,
+#rankingTab,
+#shoppingTrendsTab {
+    border-bottom: none;
+}
+
+    .ul-Tabs .nav-link,
+    #rankingTab .nav-link,
+    #shoppingTrendsTab .nav-link {
+        color: #000;
+        font-weight: 600;
+        border: none;
+    }
+
+        .ul-Tabs .nav-link:hover,
+        #rankingTab .nav-link:hover,
+        #shoppingTrendsTab .nav-link:hover {
+            color: var(--primary-color-fahasa);
+        }
+
+        .ul-Tabs .nav-link.active,
+        #rankingTab .nav-link.active,
+        #shoppingTrendsTab .nav-link.active {
+            position: relative;
+            font-weight: 700;
+            color: var(--primary-color-fahasa);
+            border: none;
+        }
+
+            .ul-Tabs .nav-link.active::before,
+            #rankingTab .nav-link.active::before,
+            #shoppingTrendsTab .nav-link.active::before {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: var(--primary-color-fahasa);
+                transform-origin: center bottom; /* Ensures the transform originates from the bottom center */
+                animation: scaleAnimation 0.3s ease-out;
+            }
+
+@keyframes scaleAnimation {
+    0% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}

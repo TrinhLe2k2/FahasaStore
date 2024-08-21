@@ -1,0 +1,71 @@
+﻿@using FahasaStoreApp.Models.ViewModels.Entities
+@{
+    var topSellingBooksByCategory = ViewData["TopSellingBooksByCategory"] as List<BookVM>;
+}
+
+@if (topSellingBooksByCategory != null && topSellingBooksByCategory.Any())
+{
+    <div class="p-3">
+        <div class="row">
+            <div class="ranking-slider-nav col-5">
+                @{
+                    int i = 0;
+                    foreach (var book in topSellingBooksByCategory)
+                    {
+                        i = i + 1;
+                        <div class="py-2 zoom-in">
+                            <div class="row align-items-center g-0">
+                                <div class="col-1 text-center">
+                                    <span>@i</span>
+                                    <i class="bi bi-arrow-up-short text-success fw-bold fs-5"></i>
+                                </div>
+                                <div class="col-11 d-flex align-items-center flex-column flex-lg-row">
+                                    <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" class="rounded-start object-fit-cover" width="100" height="100" alt="...">
+                                    <div class="d-flex flex-column px-2">
+                                        <a href="" class="twoLine text-decoration-none">@book.Name</a>
+                                        <small class="text-black-50">@book.Author.Name</small>
+                                        <small class="text-black-50">Đã bán: @book.Solded</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="ranking-slider-for col-7">
+                @{
+                    foreach (var book in topSellingBooksByCategory)
+                    {
+                        <div class="d-flex flex-column align-items-center flex-lg-row align-items-lg-start">
+                            <a href="" class="p-2 text-center text-decoration-none d-md-flex align-items-md-center d-lg-block">
+                                <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" width="240" height="240" class="object-fit-cover" />
+                                <span class="btn btn-danger">Xem ngay</span>
+                            </a>
+                            <div class="px-2 d-flex flex-column">
+                                <a href="" class="text-decoration-none text-black">
+                                    <h6>@book.Name</h6>
+                                </a>
+                                <span>Tác giả: @book.Author.Name</span>
+
+                                @if (book.BookPartners.Any())
+                                {
+                                    foreach (var bp in book.BookPartners)
+                                    {
+                                        <span>@bp.PartnerType : @bp.PartnerName</span>
+                                    }
+                                }
+
+                                <span class="fw-bold mt-2">@book.CurrentPrice.ToString("N0") đ</span>
+                                <div class="mb-2">
+                                    <small class="text-decoration-line-through">@book.Price.ToString("N0") đ</small>
+                                    <span class="bg-warning rounded-3 px-2 fw-bold text-danger">-@book.DiscountPercentage %</span>
+                                </div>
+                                <small class="textContent textIntroductionLite">@book.Description</small>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}

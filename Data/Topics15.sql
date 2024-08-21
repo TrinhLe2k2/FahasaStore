@@ -1,0 +1,15 @@
+insert into Topics (topic_name, created_at) values ('From the Terrace', '2/2/2020 22:52:40');
+insert into Topics (topic_name, created_at) values ('Black Fury', '5/3/2010 05:56:34');
+insert into Topics (topic_name, created_at) values ('Stolen Life, A', '9/30/2014 01:46:34');
+insert into Topics (topic_name, created_at) values ('In the Bedroom', '3/2/2020 02:22:43');
+insert into Topics (topic_name, created_at) values ('Don McKay', '9/10/2012 15:38:15');
+insert into Topics (topic_name, created_at) values ('American Vagabond', '11/15/2004 13:14:51');
+insert into Topics (topic_name, created_at) values ('Man Exposed', '6/18/2020 10:52:37');
+insert into Topics (topic_name, created_at) values ('Head in the Clouds', '8/12/2012 20:42:46');
+insert into Topics (topic_name, created_at) values ('Collector, The', '1/23/2007 04:33:50');
+insert into Topics (topic_name, created_at) values ('Ca$h', '5/7/2018 16:02:32');
+insert into Topics (topic_name, created_at) values ('Green Butchers, The (Grønne slagtere, De)', '2/25/2011 03:29:59');
+insert into Topics (topic_name, created_at) values ('Modern Boy (Modeon boi)', '1/28/2014 18:47:55');
+insert into Topics (topic_name, created_at) values ('From Dusk Till Dawn', '2/16/2007 19:31:24');
+insert into Topics (topic_name, created_at) values ('No End (Bez konca)', '6/5/2013 15:28:08');
+insert into Topics (topic_name, created_at) values ('Fiancee, The (Parineeta)', '10/3/2011 12:16:08');

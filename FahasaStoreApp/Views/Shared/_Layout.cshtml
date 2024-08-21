@@ -1,0 +1,342 @@
+﻿@using FahasaStoreAPI.Models.Entities
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Helpers
+@using Microsoft.AspNetCore.Http
+
+@{
+    var categories = Context.Items["Categories"] as List<Category>;
+    var website = Context.Items["Website"] as Website;
+    var platforms = Context.Items["Platforms"] as List<Platform>;
+    var topics = Context.Items["Topics"] as List<Topic>;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FahasaStoreApp</title>
+    <link href="~/css/bootstrapv53.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    @* slick *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css" integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FahasaStoreApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @*
+        Ở đây có thể sử dụng Component để truyền data hoặc có thể thay thế bằng middleware
+        @await Component.InvokeAsync(typeof(HeaderViewComponent)) 
+    *@
+    <section id="header">
+        <div class="container-xl dropdown d-lg-flex align-items-center">
+            <a class="navbar-brand" title="Fahasa" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/fahasa-logo.png" height="38" class="fahasa-logo" />
+            </a>
+            <div class="flex-grow-1">
+                <div class="d-flex w-100 align-items-center flex-wrap justify-content-center mt-3 mt-lg-0">
+                    @if (categories != null && categories.Count > 0)
+                    {
+                        <div class="py-2 px-3">
+                            <div title="Category" role="button" class="dropdown-btn d-flex flex-column align-items-center fw-bold">
+                                <i class="bi bi-columns-gap"></i>
+                                <span class="dropdown-toggle d-none d-lg-block">Danh mục</span>
+                            </div>
+                            <div class="dropdown-list border-0">
+                                <div class="container">
+                                    <div class="row p-4">
+                                        <div class="col-6 col-lg-4 col-xxl-3">
+                                            <h4 class="mb-3 text-black text-truncate">Danh mục sản phẩm</h4>
+                                            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                                @{
+                                                    int index = 0;
+                                                    foreach (var item in categories)
+                                                    {
+                                                        if (index++ == 0)
+                                                        {
+                                                            <a class="nav-link fw-bold fs-5 w-100 text-truncate active" id="v-pills-tab_@item.Id" data-bs-toggle="pill" data-bs-target="#v-pills_@item.Id" role="button" aria-controls="v-pills_@item.Id" aria-selected="true">@item.Name</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="nav-link fw-bold fs-5 w-100 text-truncate" id="v-pills-tab_@item.Id" data-bs-toggle="pill" data-bs-target="#v-pills_@item.Id" role="button" aria-controls="v-pills_@item.Id" aria-selected="false">@item.Name</a>
+                                                        }
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-8 col-xxl-9">
+                                            <div class="tab-content" id="v-pills-tabContent">
+                                                @{
+                                                    int index2 = 0;
+                                                    foreach (var item in categories)
+                                                    {
+                                                        if (index2++ == 0)
+                                                        {
+                                                            <div class="tab-pane fade show active" id="v-pills_@item.Id" role="tabpanel" aria-labelledby="v-pills-tab_@item.Id" tabindex="0">
+                                                                <div class="mb-3 d-flex justify-content-between align-items-center">
+                                                                    <h4 class="text-black mb-0 main-category"><i class="bi bi-globe-americas"></i> @item.Name</h4>
+                                                                    <a class="nav-link text-truncate" href="/Home/Filter?CategoryId=@item.Id">Xem thêm</a>
+                                                                </div>
+                                                                <div class="row g-3">
+                                                                    @{
+                                                                        if (item.Subcategories.Count > 0)
+                                                                        {
+                                                                            foreach (var subItem in item.Subcategories)
+                                                                            {
+                                                                                <div class="col">
+                                                                                    <a class="text-truncate btn btn-outline-danger w-100" href="/Home/Filter?SubcategoryId=@subItem.Id">@subItem.Name</a>
+                                                                                </div>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="tab-pane fade" id="v-pills_@item.Id" role="tabpanel" aria-labelledby="v-pills-tab_@item.Id" tabindex="0">
+                                                                <div class="mb-3 d-flex justify-content-between align-items-center">
+                                                                    <h4 class="text-black mb-0 main-category"><i class="bi bi-globe-americas"></i> @item.Name</h4>
+                                                                    <a class="nav-link text-truncate" href="/Home/Filter?CategoryId=@item.Id">Xem thêm</a>
+                                                                </div>
+                                                                <div class="row g-3">
+                                                                    @{
+                                                                        if (item.Subcategories.Count > 0)
+                                                                        {
+                                                                            foreach (var subItem in item.Subcategories)
+                                                                            {
+                                                                                <div class="col">
+                                                                                    <a class="text-truncate btn btn-outline-danger w-100" href="/Home/Filter?CategotyId=@subItem.Id">@subItem.Name</a>
+                                                                                </div>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="overlay"></div>
+                        </div>
+                    }
+
+                    <div class="border rounded-3 flex-grow-1 order-1 order-sm-0">
+                        <form asp-action="Search" asp-controller="Home">
+                            <div class="p-1 d-flex">
+                                <input type="search" name="Search" placeholder="Bạn muốn tìm kiếm gì?" class="border-0 flex-grow-1" style="outline: none;" />
+                                <button type="submit" class="border-0 px-4 py-1 rounded-3">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="py-2 px-3">
+                        <a href="/Accounts/Account" onclick="HandlerCRUD(this, event)" class="btn btn-danger">
+                            Tài khoản
+                        </a>
+                    </div>
+                    @* if (userLogin.CurrentUser != null)
+                    {
+                    <div id="notification"></div>
+                    <div class="ps-3 d-block d-lg-none"> </div>
+                    <div id="cart"></div>
+
+                    <div class="ps-3 d-block d-lg-none"> </div>
+                    <div class="dropdown user my-1">
+                        <div data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" class="user-btn py-2 pe-3 d-flex flex-column align-items-center fw-bold text-black-50">
+                            <img src="userLogin.CurrentUser.ImageUrl" height="25" width="25" class="rounded-circle" style="object-fit: cover;" />
+                            <span class="dropdown-toggle d-none d-lg-block">userLogin.CurrentUser.FullName</span>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end shadow py-0">
+                            <li><a class="dropdown-item" href="/User/ControlPanel">Tài khoản</a></li>
+                            <li><a class="dropdown-item" href="/Accounts/LogOut">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                    }
+                    else
+                    {
+                    <div class="py-2 px-3">
+                        <a href="/Accounts/Account" onclick="HandlerCRUD(this, event)" class="btn btn-danger">
+                            Tài khoản
+                        </a>
+                    </div>
+                    } *@
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @RenderBody()
+
+    @* chat *@
+    <div class="position-fixed bottom-0 end-0 z-3">
+        <div class="boxChat" style="display: none;">
+            <div class="shadow me-3 bg-white d-flex flex-column rounded-top-3 mb-3" style="width: 320px; height: 450px;">
+                <div class="header-boxChat bg-white rounded-top-3">
+                    <div class="d-flex align-items-center p-3 rounded-top-3 bg-primary-fahasa">
+                        <img src="~/image/callmeIcon.png" width="50" height="50" class="object-fit-cover rounded-circle" />
+                        <div class="flex-grow-1 ms-2" style="width: 50px;">
+                            <h5 class="mb-0" style="font-size: 16px;">Chăm sóc khách hàng</h5>
+                            <div class="text-truncate" style="font-size: 13px;">Sẵn lòng giải đáp mọi thắc mắc</div>
+                        </div>
+                        <div id="close-boxChat" role="button">
+                            <i class="bi bi-x-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-boxChat flex-grow-1 pt-2" style="overflow: auto;">
+                    <div class="d-flex mb-2 px-2">
+                        <div class="img_cont_msg mt-3 me-2">
+                            <img width="30" height="30" src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle object-fit-cover">
+                        </div>
+                        <div class="d-flex flex-column align-items-start">
+                            <div class="msg_cotainer rounded-3 p-2 bg-light" style="max-width: 75%;">
+                                I am looking for your next templates
+                                I am looking for your next templates
+                                I am looking for your next templates
+                            </div>
+                            <small class="msg_time ms-2">9:07 AM, Today</small>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-end mb-2 px-2">
+                        <div class="msg_cotainer rounded-3 p-2 bg-primary text-white" style="max-width: 75%;">
+                            templates templates
+                            templates
+                            templates
+                        </div>
+                        <small class="msg_time">9:07 AM, Today</small>
+                    </div>
+                    <div class="d-flex mb-2 px-2">
+                        <div class="img_cont_msg mt-3 me-2">
+                            <img width="30" height="30" src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle object-fit-cover">
+                        </div>
+                        <div class="d-flex flex-column align-items-start">
+                            <div class="msg_cotainer rounded-3 p-2 bg-light" style="max-width: 75%;">
+                                I am looking for your next templates
+                                I am looking for your next templates
+                                I am looking for your next templates
+                            </div>
+                            <small class="msg_time ms-2">9:07 AM, Today</small>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-end mb-2 px-2">
+                        <div class="msg_cotainer rounded-3 p-2 bg-primary text-white" style="max-width: 75%;">
+                            templates templates
+                            templates
+                            templates
+                        </div>
+                        <small class="msg_time">9:07 AM, Today</small>
+                    </div>
+                </div>
+                <div class="footer-boxChat d-flex" style="border-top: 1px solid #888;">
+                    <input type="text" placeholder="Nhập câu hỏi của bạn" class="border-0 flex-grow-1 px-3 py-2" style="outline: none;" />
+                    <button type="button" class="border-0 px-4 py-1 rounded-start-3 bg-primary-fahasa">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="boxImg" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Chăm sóc khách hàng">
+            <img src="~/image/callmeIcon.png" width="50" height="50" role="button" id="showBoxChatBtn" class="object-fit-cover rounded-circle m-3 shadow" />
+        </div>
+    </div>
+
+    <div id="modal-for-crud"></div>
+
+    <footer class="bg-black bg-opacity-10 py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-5">
+                    <div>
+                        @if (website != null)
+                        {
+                            <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/fahasa-logo.png" width="300" height="50" class="object-fit-contain mw-100 fahasa-logo" />
+                            <div class="my-2">
+                                <small class="fahasa-name fw-bold">@website.Name</small><br />
+                                <small class="fahasa-address">@website.Address</small>
+                            </div>
+                            <small><p class="my-2 fahasa-description" style="text-align: justify;">@website.Description</p></small>
+                        }
+                        
+                        @if (platforms != null && platforms.Any())
+                        {
+                            <div id="platforms">
+                                @foreach (var item in platforms)
+                                {
+                                    <a href="@item.Link" title="@item.PlatformName" class="p-2 fs-3"><img src="@item.ImageUrl" width="28" height="28" class="object-fit-contain" /></a>
+                                }
+                            </div>
+                        }
+                        
+                        <div>
+                            <img src="~/image/android1.png" width="100" height="50" class="object-fit-contain p-2" />
+                            <img src="~/image/appstore1.png" width="100" height="50" class="object-fit-contain p-2" />
+                        </div>
+                    </div>
+                </div>
+                @if (topics != null && topics.Any())
+                {
+                    <div id="topics" class="col-sm-6 col-md-7">
+                        <div class="row row-cols-auto row-cols-lg-2 g-4 justify-content-between">
+                            @foreach (var topic in topics)
+                            {
+                                <div class="col">
+                                    <h6 class="text-uppercase">@topic.TopicName</h6>
+                                    <div class="list-group">
+                                        @{
+                                            if (topic.TopicContents.Any())
+                                            {
+                                                foreach (var content in topic.TopicContents)
+                                                {
+                                                    <a href="" class="list-group-item list-group-item-action">@content.Title</a>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </footer>
+    
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+
+    @* Slick *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @* chat *@
+    <script>
+        $(document).ready(function () {
+            $('#showBoxChatBtn').click(function () {
+                $(this).hide();
+                $('.boxChat').show();
+            });
+            $('#close-boxChat').click(function () {
+                $('.boxChat').hide();
+                $('#showBoxChatBtn').show();
+            });
+        });
+
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

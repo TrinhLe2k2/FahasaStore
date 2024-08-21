@@ -1,0 +1,10 @@
+insert into Status (name, created_at) values ('Processing', '1/25/1904 17:19:36');
+insert into Status (name, created_at) values ('Confirmed', '9/21/2027 19:46:12');
+insert into Status (name, created_at) values ('Packing', '6/18/1944 14:58:32');
+insert into Status (name, created_at) values ('Shipped', '1/4/1933 12:16:58');
+insert into Status (name, created_at) values ('Out for Delivery', '4/14/1979 01:05:22');
+insert into Status (name, created_at) values ('Delivered', '10/18/1985 07:34:03');
+insert into Status (name, created_at) values ('Cancelled', '2/14/2059 18:09:36');
+insert into Status (name, created_at) values ('Returned', '4/19/1984 10:25:08');
+insert into Status (name, created_at) values ('Pending Payment', '5/22/1963 13:17:51');
+insert into Status (name, created_at) values ('Completed Payment', '5/22/1963 13:17:51');
