@@ -14,12 +14,33 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\BannersController.cs" />
+    <Compile Remove="Controllers\BooksController.cs" />
+    <Compile Remove="Controllers\CategoriesController.cs" />
+    <Compile Remove="Controllers\FlashSaleBooksController.cs" />
+    <Compile Remove="Controllers\FlashSalesController.cs" />
+    <Compile Remove="Controllers\MenusController.cs" />
+    <Compile Remove="Controllers\PartnersController.cs" />
+    <Compile Remove="Controllers\PlatformsController.cs" />
+    <Compile Remove="Controllers\SubcategoriesController.cs" />
+    <Compile Remove="Controllers\TopicContentsController.cs" />
+    <Compile Remove="Controllers\TopicsController.cs" />
+    <Compile Remove="Controllers\UsersController.cs" />
+    <Compile Remove="Controllers\WebsitesController.cs" />
+    <Compile Remove="Models\ViewModels\Entities\BookPartnerVM.cs" />
+    <Compile Remove="Models\ViewModels\Entities\BookVM.cs" />
+    <Compile Remove="Models\ViewModels\Entities\FlashSaleBookVM.cs" />
+    <Compile Remove="Models\ViewModels\Entities\FlashSaleVM.cs" />
+    <Compile Remove="Repositories\Implementations\BookRepository.cs" />
     <Compile Remove="Repositories\Implementations\SubcategoryRepository.cs" />
     <Compile Remove="Repositories\Implementations\TopicRepository.cs" />
+    <Compile Remove="Repositories\Interfaces\IBookRepository.cs" />
     <Compile Remove="Repositories\Interfaces\ISubcategoryRepository.cs" />
     <Compile Remove="Repositories\Interfaces\ITopicRepository.cs" />
+    <Compile Remove="Services\Implementations\BookService.cs" />
     <Compile Remove="Services\Implementations\SubcategoryService.cs" />
     <Compile Remove="Services\Implementations\TopicService.cs" />
+    <Compile Remove="Services\Interfaces\IBookService.cs" />
     <Compile Remove="Services\Interfaces\ISubcategoryService.cs" />
     <Compile Remove="Services\Interfaces\ITopicService.cs" />
   </ItemGroup>
@@ -27,6 +48,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
     <PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
+    <PackageReference Include="Humanizer" Version="2.14.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.29" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.29" />

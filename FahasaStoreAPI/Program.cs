@@ -75,11 +75,12 @@ builder.Services.AddDbContext<FahasaStoreDBContext>(option =>
 
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
+builder.Services.AddScoped<IBookRecommendationSystem, BookRecommendationSystem>();
 builder.Services.AddScoped<IFahasaStoreRepository, FahasaStoreRepository>();
 builder.Services.AddScoped<IFahasaStoreService, FahasaStoreService>();
 
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<IBookService, BookService>();
+//builder.Services.AddScoped<IBookRepository, BookRepository>();
+//builder.Services.AddScoped<IBookService, BookService>();
 
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
@@ -88,10 +89,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
-builder.Services.AddScoped(typeof(IBaseService<,,,>), typeof(BaseService<,,,>));
-
-builder.Services.AddScoped(typeof(ItestRepository<,,>), typeof(testRepository<,,>));
-builder.Services.AddScoped(typeof(ItestService<,,>), typeof(testService<,,>));
+builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingProfile));

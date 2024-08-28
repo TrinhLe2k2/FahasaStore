@@ -1,15 +1,16 @@
 ﻿using FahasaStoreAPI.Base.Implementations;
 using FahasaStoreAPI.Base.Interfaces;
 using FahasaStoreAPI.Models.Entities;
+using FahasaStoreAPI.Models.ViewModels.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FlashSalesController : BaseController<FlashSale, FlashSale, FlashSale, int>
+    public class FlashSaleController : BaseController<FlashSale, FlashSaleVM>
     {
-        public FlashSalesController(IBaseService<FlashSale, FlashSale, FlashSale, int> service) : base(service)
+        public FlashSaleController(IBaseService<FlashSale, FlashSaleVM> service) : base(service)
         {
         }
     }

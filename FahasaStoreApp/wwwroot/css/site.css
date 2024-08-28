@@ -12,6 +12,11 @@ a {
     color: #000000;
 }
 
+.active > .page-link {
+    background-color: var(--primary-color-fahasa);
+    border-color: var(--primary-color-fahasa);
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;

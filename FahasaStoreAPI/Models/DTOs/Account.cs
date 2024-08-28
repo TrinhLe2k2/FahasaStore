@@ -1,11 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FahasaStoreAPI.Models.DTOs.Entities
+namespace FahasaStoreAPI.Models.DTOs
 {
-    public class UserUpdateDto
-    {
-
-    }
     public class Login
     {
         [Required, EmailAddress]
@@ -24,7 +20,7 @@ namespace FahasaStoreAPI.Models.DTOs.Entities
         [Required, Compare("Password", ErrorMessage = "Password and Confirmation Password must match.")]
         public string ConfirmPassword { get; set; } = null!;
     }
-    public class UserRole
+    public class AccountRole
     {
         public string UserId { get; set; } = null!;
         public string Role { get; set; } = null!;

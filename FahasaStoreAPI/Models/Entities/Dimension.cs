@@ -1,10 +1,9 @@
-﻿using FahasaStoreAPI.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FahasaStoreAPI.Models.Entities
 {
-    public partial class Dimension : IEntity<int>
+    public partial class Dimension
     {
         public Dimension()
         {

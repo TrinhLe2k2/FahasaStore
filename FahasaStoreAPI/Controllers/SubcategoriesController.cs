@@ -5,6 +5,7 @@ using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Models.DTOs.Entities;
 using FahasaStoreAPI.Models.Entities;
 using FahasaStoreAPI.Models.ViewModels;
+using FahasaStoreAPI.Models.ViewModels.Entities;
 using FahasaStoreAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,10 @@ namespace FahasaStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SubcategoriesController : BaseController<Subcategory, SubcategoryCreateDto , CategoryEditDto, int>
+    public class SubcategoryController : BaseController<Subcategory, SubcategoryVM>
     {
-        public SubcategoriesController(IBaseService<Subcategory, SubcategoryCreateDto , CategoryEditDto, int> service) : base(service)
+        public SubcategoryController(IBaseService<Subcategory, SubcategoryVM> service) : base(service)
         {
-        } 
+        }
     }
 }

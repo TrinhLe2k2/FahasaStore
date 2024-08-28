@@ -1,16 +1,17 @@
 ﻿using FahasaStoreAPI.Base.Implementations;
 using FahasaStoreAPI.Base.Interfaces;
 using FahasaStoreAPI.Models.Entities;
-using Microsoft.AspNetCore.Http;
+using FahasaStoreAPI.Models.ViewModels.Entities;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace FahasaStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MenusController : BaseController<Menu, Menu, Menu, int>
+    public class MenuController : BaseController<Menu, MenuVM>
     {
-        public MenusController(IBaseService<Menu, Menu, Menu, int> service) : base(service)
+        public MenuController(IBaseService<Menu, MenuVM> service) : base(service)
         {
         }
     }

@@ -1,10 +1,9 @@
-﻿using FahasaStoreAPI.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FahasaStoreAPI.Models.Entities
 {
-    public partial class FlashSale : IEntity<int>
+    public partial class FlashSale
     {
         public FlashSale()
         {

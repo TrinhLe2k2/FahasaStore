@@ -1,0 +1,19 @@
+﻿.accordion-button {
+    background-color: transparent;
+    color: var(--primary-color-fahasa);
+    font-weight: 700;
+}
+
+    .accordion-button.collapsed {
+        color: #000;
+        font-weight: 400;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+
+.form-select.sortBy:focus {
+    box-shadow: none;
+    border-color: var(--primary-color-fahasa);
+}

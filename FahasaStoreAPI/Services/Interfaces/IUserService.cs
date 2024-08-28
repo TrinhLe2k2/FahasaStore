@@ -1,7 +1,5 @@
-﻿using FahasaStoreAPI.Base.Interfaces;
-using FahasaStoreAPI.Identity;
-using FahasaStoreAPI.Models.DTOs.Entities;
-using FahasaStoreAPI.Models.Entities;
+﻿using FahasaStoreAPI.Identity;
+using FahasaStoreAPI.Models.DTOs;
 
 namespace FahasaStoreAPI.Services.Interfaces
 {

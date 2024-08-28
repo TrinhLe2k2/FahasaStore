@@ -1,0 +1,31 @@
+﻿@using FahasaStoreApp.Models.ViewModels.Entities
+
+<div class="d-flex align-items-center bg-light border rounded-3 p-2">
+    <img src="/image/voucher.png" width="100" height="100" class="object-fit-contain me-2" />
+    <div class="flex-grow-1">
+        <div class="oneLine text-uppercase fw-bold">@voucher.Name</div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <a href="/Home/VoucherDetails" IdValue="@voucher.Id" onclick="HandlerCRUD(this, event)" class="nav-link">Chi tiết</a>
+            @{
+                if (buyMore != null && buyMore == true)
+                {
+                    <a href="#" class="btn btn-primary py-1 ms-auto">Mua thêm</a>
+                }
+                if (remove != null && remove == true)
+                {
+                    <a href="#" class="btn btn-danger py-1 ms-auto"><i class="bi bi-x-lg"></i></a>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public VoucherVM voucher { get; set; } = null!;
+    [Parameter]
+    public bool? buyMore { get; set; }
+    [Parameter]
+    public bool? remove { get; set; }
+}

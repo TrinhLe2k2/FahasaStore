@@ -7,7 +7,7 @@ using FahasaStoreAPI.Models.ViewModels.Entities;
 
 namespace FahasaStoreAPI.Services.Interfaces
 {
-    public interface IBookService : IBaseService<Book, BookCreateDto, BookEditDto, int>
+    public interface IBookService : IBaseService<Book, BookVM>
     {
         new Task<BookVM?> FindByIdAsync(int id);
         new Task<FilterVM<BookVM>> FilterAsync(FilterOptions filterOptions);

@@ -29,58 +29,19 @@ namespace FahasaStoreAPI.Helpers
             return new PagedVM<T>
             {
                 Items = pagedList.ToList(),
-                PageNumber = pagedList.PageNumber,
-                PageSize = pagedList.PageSize,
-                TotalItemCount = pagedList.TotalItemCount,
-                PageCount = pagedList.PageCount,
-                HasNextPage = pagedList.HasNextPage,
-                HasPreviousPage = pagedList.HasPreviousPage,
-                IsFirstPage = pagedList.IsFirstPage,
-                IsLastPage = pagedList.IsLastPage,
-                StartPage = startPage,
-                EndPage = endPage
-            };
-        }
-
-        public static Expression<Func<Book, BookVM>> BookToBookVM()
-        {
-            return book => new BookVM
-            {
-                Id = book.Id,
-                SubcategoryId = book.SubcategoryId,
-                AuthorId = book.AuthorId,
-                CoverTypeId = book.CoverTypeId,
-                DimensionId = book.DimensionId,
-
-                Name = book.Name,
-                Description = book.Description,
-                Price = book.Price,
-                DiscountPercentage = book.DiscountPercentage,
-                Quantity = book.Quantity,
-                Weight = book.Weight,
-                PageCount = book.PageCount,
-                CreatedAt = book.CreatedAt,
-
-                RateAverage = book.Reviews.Any() ? book.Reviews.Average(r => r.Rating) : 0,
-                RateCount = book.Reviews.Count(),
-                Solded = book.OrderItems.Sum(o => o.Quantity),
-                CurrentPrice = (book.Price * 100 - book.Price * book.DiscountPercentage) / 100,
-                FavouritesCount = book.Favourites.Count,
-
-                Author = book.Author,
-                CoverType = book.CoverType,
-                Dimension = book.Dimension,
-                Subcategory = book.Subcategory,
-
-                //BookPartners = book.BookPartners,
-                BookPartners = book.BookPartners.Select(bp => new BookPartnerVM
+                PagedNavigation =
                 {
-                    PartnerId = bp.PartnerId,
-                    PartnerName = bp.Partner.Name,
-                    PartnerTypeId = bp.Partner.PartnerTypeId,
-                    PartnerType = bp.Partner.PartnerType.Name
-                }).ToList(),
-                PosterImages = book.PosterImages
+                    PageNumber = pagedList.PageNumber,
+                    PageSize = pagedList.PageSize,
+                    TotalItemCount = pagedList.TotalItemCount,
+                    PageCount = pagedList.PageCount,
+                    HasNextPage = pagedList.HasNextPage,
+                    HasPreviousPage = pagedList.HasPreviousPage,
+                    IsFirstPage = pagedList.IsFirstPage,
+                    IsLastPage = pagedList.IsLastPage,
+                    StartPage = startPage,
+                    EndPage = endPage
+                }
             };
         }
     }

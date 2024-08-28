@@ -1,0 +1,399 @@
+﻿@using FahasaStoreApp.Models.DTOs.Entities
+@using FahasaStoreApp.Models.ViewModels
+@model OptionsFilterBook
+@{
+    var dataOptionsFilterBook = ViewData["DataOptionsFilterBook"] as DataOptionsFilterBook;
+    var resultFilter = ViewData["ResultFilter"] as ResultFilterBook;
+    ViewData["Title"] = "Bộ Lọc";
+    ViewData["Search"] = resultFilter?.optionsFilterBook.SearchName;
+
+    var categories = dataOptionsFilterBook?.Categories;
+    var partnerTypes = dataOptionsFilterBook?.PartnerTypes;
+    var authors = dataOptionsFilterBook?.Authors;
+    var coverTypes = dataOptionsFilterBook?.CoverTypes;
+    var dimensions = dataOptionsFilterBook?.Dimensions;
+    var prices = dataOptionsFilterBook?.Price;
+    var sortBys = dataOptionsFilterBook?.SortBy;
+}
+<div id="Fillter" class="bg-black bg-opacity-10">
+    <div class="container">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Bộ lọc</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="container">
+        <div class="bg-white rounded-3 p-3">
+            <form asp-controller="GetData" asp-action="FilterBook" class="w-100" id="filterForm">
+                <input type="search" id="SearchNameFilter" name="SearchName" hidden />
+                <div class="row">
+                    <div class="col-3">
+                        <button class="btn btn-danger d-lg-none mb-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Bộ Chọn</button>
+                        <div class="offcanvas-lg offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Bộ Chọn</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="text-uppercase text-fahasa m-0">Lọc theo</h5>
+                                        <a class="nav-link" id="resetAll" href="#">Đặt lại toàn bộ</a>
+                                    </div>
+                                    <hr>
+                                    <div class="accordion accordion-flush" id="accordionFlushFilter">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-ForCurrentPrice" aria-expanded="false"
+                                                        aria-controls="flush-collapse-ForCurrentPrice">
+                                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.MinPrice)</h6>
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapse-ForCurrentPrice" class="accordion-collapse collapse">
+                                                <div class="accordion-body">
+                                                    <a class="nav-link reset-filter" data-filter="MinPrice" href="#">Đặt lại</a>
+                                                    <div class="p-3">
+                                                        @for (int price = 0; price < 6; price++)
+                                                        {
+                                                            var minPrice = price * 100000;
+                                                            <div class="form-group form-check">
+                                                                <label class="form-check-label w-100 py-2">
+                                                                    <input class="form-check-input" asp-for="MinPrice" type="radio" value="@minPrice" /> @minPrice.ToString("N0") đ
+                                                                </label>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-ForCurrentPriceMAX" aria-expanded="false"
+                                                        aria-controls="flush-collapse-ForCurrentPriceMAX">
+                                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.MaxPrice)</h6>
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapse-ForCurrentPriceMAX" class="accordion-collapse collapse">
+                                                <div class="accordion-body">
+                                                    <a class="nav-link reset-filter" data-filter="MaxPrice" href="#">Đặt lại</a>
+                                                    <div class="p-3">
+                                                        @for (int price = 1; price < 7; price++)
+                                                        {
+                                                            var maxPrice = price * 100000;
+                                                            <div class="form-group form-check">
+                                                                <label class="form-check-label w-100 py-2">
+                                                                    <input class="form-check-input" asp-for="MaxPrice" type="radio" value="@maxPrice" /> @maxPrice.ToString("N0") đ
+                                                                </label>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-ForCategory" aria-expanded="false"
+                                                        aria-controls="flush-collapse-ForCategory">
+                                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.CategoryId)</h6>
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapse-ForCategory" class="accordion-collapse collapse">
+                                                <div class="accordion-body">
+                                                    <a class="nav-link reset-filter" data-subfilter="SubcategoryId" data-filter="CategoryId" href="#">Đặt lại</a>
+                                                    <div class="accordion accordion-flush" id="accordionCategoryFilter">
+                                                        @{
+                                                            if (categories != null && categories.Count > 0)
+                                                            {
+                                                                foreach (var category in categories)
+                                                                {
+                                                                    <div class="accordion-item">
+                                                                        <h2 class="accordion-header">
+                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory_@category.Id" aria-expanded="true" aria-controls="collapseCategory_@category.Id">
+                                                                                @category.Name
+                                                                            </button>
+                                                                        </h2>
+                                                                        <div id="collapseCategory_@category.Id" class="accordion-collapse collapse">
+                                                                            <div class="accordion-body">
+                                                                                @{
+                                                                                    <div class="form-group form-check">
+                                                                                        <label class="form-check-label w-100 py-2">
+                                                                                            <input class="form-check-input" asp-for="CategoryId" type="radio" value="@category.Id" /> @category.Name
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    if (category.Subcategories.Count > 0)
+                                                                                    {
+                                                                                        foreach (var subcategory in category.Subcategories)
+                                                                                        {
+                                                                                            <div class="form-group form-check">
+                                                                                                <label class="form-check-label w-100 py-2">
+                                                                                                    <input class="form-check-input" asp-for="SubcategoryId" type="radio" value="@subcategory.Id" /> @subcategory.Name
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-ForPartnerType" aria-expanded="false"
+                                                        aria-controls="flush-collapse-ForPartnerType">
+                                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.PartnerTypeId)</h6>
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapse-ForPartnerType" class="accordion-collapse collapse">
+                                                <div class="accordion-body">
+                                                    <a class="nav-link reset-filter" data-subfilter="PartnerId" data-filter="PartnerTypeId" href="#">Đặt lại</a>
+                                                    <div class="accordion accordion-flush" id="accordionPartnerFilter">
+                                                        @{
+                                                            if (partnerTypes != null && partnerTypes.Count > 0)
+                                                            {
+                                                                foreach (var partnerType in partnerTypes)
+                                                                {
+                                                                    <div class="accordion-item">
+                                                                        <h2 class="accordion-header">
+                                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePartner_@partnerType.Id" aria-expanded="true" aria-controls="collapsePartner_@partnerType.Id">
+                                                                                @partnerType.Name
+                                                                            </button>
+                                                                        </h2>
+                                                                        <div id="collapsePartner_@partnerType.Id" class="accordion-collapse collapse">
+                                                                            <div class="accordion-body">
+                                                                                @{
+                                                                                    <div class="form-group form-check">
+                                                                                        <label class="form-check-label w-100 py-2">
+                                                                                            <input class="form-check-input" asp-for="PartnerTypeId" type="radio" value="@partnerType.Id" /> @partnerType.Name
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    if (partnerType.Partners.Count > 0)
+                                                                                    {
+                                                                                        foreach (var partner in partnerType.Partners)
+                                                                                        {
+                                                                                            <div class="form-group form-check">
+                                                                                                <label class="form-check-label w-100 py-2">
+                                                                                                    <input class="form-check-input" asp-for="PartnerId" type="radio" value="@partner.Id" /> @partner.Name
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-ForAuthor" aria-expanded="false"
+                                                        aria-controls="flush-collapse-ForAuthor">
+                                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.AuthorId)</h6>
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapse-ForAuthor" class="accordion-collapse collapse">
+                                                <div class="accordion-body">
+                                                    <a class="nav-link reset-filter" data-filter="AuthorId" href="#">Đặt lại</a>
+                                                    <div class="p-3">
+                                                        @{
+                                                            if (authors != null && authors.Count > 0)
+                                                            {
+                                                                foreach (var author in authors)
+                                                                {
+                                                                    <div class="form-group form-check">
+                                                                        <label class="form-check-label w-100 py-2">
+                                                                            <input class="form-check-input" asp-for="AuthorId" type="radio" value="@author.Id" /> @author.Name
+                                                                        </label>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-ForCoverType" aria-expanded="false"
+                                                        aria-controls="flush-collapse-ForCoverType">
+                                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.CoverTypeId)</h6>
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapse-ForCoverType" class="accordion-collapse collapse">
+                                                <div class="accordion-body">
+                                                    <a class="nav-link reset-filter" data-filter="CoverTypeId" href="#">Đặt lại</a>
+                                                    <div class="p-3">
+                                                        @{
+                                                            if (coverTypes != null && coverTypes.Count > 0)
+                                                            {
+                                                                foreach (var coverType in coverTypes)
+                                                                {
+                                                                    <div class="form-group form-check">
+                                                                        <label class="form-check-label w-100 py-2">
+                                                                            <input class="form-check-input" asp-for="CoverTypeId" type="radio" value="@coverType.Id" /> @coverType.TypeName
+                                                                        </label>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-ForDimension" aria-expanded="false"
+                                                        aria-controls="flush-collapse-ForDimension">
+                                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.DimensionId)</h6>
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapse-ForDimension" class="accordion-collapse collapse">
+                                                <div class="accordion-body">
+                                                    <a class="nav-link reset-filter" data-filter="DimensionId" href="#">Đặt lại</a>
+                                                    <div class="p-3">
+                                                        @{
+                                                            if (dimensions != null && dimensions.Count > 0)
+                                                            {
+                                                                foreach (var dimension in dimensions)
+                                                                {
+                                                                    <div class="form-group form-check">
+                                                                        <label class="form-check-label w-100 py-2">
+                                                                            <input class="form-check-input" asp-for="DimensionId" type="radio" value="@dimension.Id" /> @dimension.Length x @dimension.Width x @dimension.Height @dimension.Unit
+                                                                        </label>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-9">
+                        <div class="d-flex justify-content-end">
+                            @{
+                                var bookdto = new BookDto();
+                                    <div>
+                                        <div class="input-group">
+                                            <select asp-for="SortBy" class="form-select">
+                                                <option value="">-- Sắp xếp theo --</option>
+                                                <option value="@nameof(bookdto.CurrentPrice)">Theo Giá</option>
+                                                <option value="@nameof(bookdto.Name)">Theo Tên</option>
+                                                <option value="@nameof(bookdto.CreatedAt)">Sách Mới</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mx-2 my-auto">
+                                        <div class="form-group form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="SortDescending" /> @Html.DisplayNameFor(model => model.SortDescending)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="input-group">
+                                            <select asp-for="PageSize" class="form-select">
+                                                <option value="">-- Số lượng hiển thị --</option>
+                                                <option value="12">12 sản phẩm</option>
+                                                <option value="24">24 sản phẩm</option>
+                                                <option value="48">48 sản phẩm</option>
+                                                <option value="96">96 sản phẩm</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                            }
+                        </div>
+                        <div id="filterResults">
+                            @await Html.PartialAsync("/Views/GetData/FilterBook.cshtml", resultFilter)
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function SubmitFormFilter() {
+            $('#SearchNameFilter').val($('#SearchNameLayout').val());
+            RenderPartialView("filterForm", "filterResults");
+        }
+
+        function UpdateFormFilter() {
+            $('input[type="radio"]:checked').each(function () {
+                var currentAccordionItem = $(this).closest('.accordion-item');
+                while (currentAccordionItem.length) {
+                    currentAccordionItem.find('i.bi-check2-circle').first().removeAttr('hidden');
+                    expandAccordionItem(currentAccordionItem);
+                    currentAccordionItem = currentAccordionItem.parent().closest('.accordion-item');
+                }
+            });
+        }
+
+        function expandAccordionItem(accordionItem) {
+            if (accordionItem.length) {
+                accordionItem.find('button.accordion-button.collapsed').first().removeClass('collapsed');
+                accordionItem.find('div.accordion-collapse.collapse').first().addClass('show');
+            }
+        }
+
+        function resetFilter(filterName) {
+            $('input[name="' + filterName + '"]').prop('checked', false);
+            SubmitFormFilter();
+        }
+
+        function resetAllFilters() {
+            $('input[type="radio"]').prop('checked', false);
+            SubmitFormFilter();
+        }
+
+        // Attach event handlers
+        $(document).ready(function () {
+            UpdateFormFilter();
+
+            $('input[type="radio"]').change(function () {
+                SubmitFormFilter();
+            });
+            $('input[type="checkbox"]').change(function () {
+                SubmitFormFilter();
+            });
+            $('select.form-select').change(function () {
+                SubmitFormFilter();
+            });
+
+            $('.reset-filter').on('click', function (e) {
+                e.preventDefault();
+                resetFilter($(this).data('filter'));
+                resetFilter($(this).data('subfilter'));
+            });
+            $('#resetAll').on('click', function (e) {
+                e.preventDefault();
+                resetAllFilters();
+            });
+        });
+    </script>
+}

@@ -2,7 +2,6 @@
 {
     public class FilterOptions
     {
-        public List<AttributeCollection> AttributeCollectionInclude { get; set; } = new List<AttributeCollection>();
         public List<FilterItem> Filters { get; set; } = new List<FilterItem>();
         public string SortField { get; set; } = "Id";
         public bool OrderByDescending { get; set; } = true;

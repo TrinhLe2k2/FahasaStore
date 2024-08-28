@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FahasaStoreAPI.Constants;
 using FahasaStoreAPI.Helpers;
+using FahasaStoreAPI.Models.DTOs.Entities;
 using FahasaStoreAPI.Models.Entities;
 using FahasaStoreAPI.Models.ViewModels;
 using FahasaStoreAPI.Models.ViewModels.Entities;
 using FahasaStoreAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 using X.PagedList;
 
 namespace FahasaStoreAPI.Repositories.Implementations
@@ -27,65 +31,12 @@ namespace FahasaStoreAPI.Repositories.Implementations
             var today = DateTime.Today;
 
             var flashSaleToday = await _context.FlashSales.AsNoTracking()
-                .Select(flashSale => new FlashSaleVM
-                {
-                    Id = flashSale.Id,
-                    StartDate = flashSale.StartDate,
-                    EndDate = flashSale.EndDate,
-                    FlashSaleBooks = flashSale.FlashSaleBooks
-                        .Select(fsb => new FlashSaleBookVM
-                        {
-                            DiscountPercentage = fsb.DiscountPercentage,
-                            Quantity = fsb.Quantity,
-
-                            PriceFS = (fsb.Book.Price * 100 - fsb.Book.Price * fsb.DiscountPercentage) / 100,
-                            Solded = fsb.Book.OrderItems.Count,
-                            Book = new BookVM
-                            {
-                                Id = fsb.Book.Id,
-                                SubcategoryId = fsb.Book.SubcategoryId,
-                                AuthorId = fsb.Book.AuthorId,
-                                CoverTypeId = fsb.Book.CoverTypeId,
-                                DimensionId = fsb.Book.DimensionId,
-
-                                Name = fsb.Book.Name,
-                                Description = fsb.Book.Description,
-                                Price = fsb.Book.Price,
-                                DiscountPercentage = fsb.Book.DiscountPercentage,
-                                Quantity = fsb.Book.Quantity,
-                                Weight = fsb.Book.Weight,
-                                PageCount = fsb.Book.PageCount,
-                                CreatedAt = fsb.Book.CreatedAt,
-
-                                RateAverage = fsb.Book.Reviews.Any() ? fsb.Book.Reviews.Average(r => r.Rating) : 0,
-                                RateCount = fsb.Book.Reviews.Count(),
-                                Solded = fsb.Book.OrderItems.Sum(o => o.Quantity),
-                                CurrentPrice = (fsb.Book.Price * 100 - fsb.Book.Price * fsb.Book.DiscountPercentage) / 100,
-                                FavouritesCount = fsb.Book.Favourites.Count,
-
-                                Author = fsb.Book.Author,
-                                CoverType = fsb.Book.CoverType,
-                                Dimension = fsb.Book.Dimension,
-                                Subcategory = fsb.Book.Subcategory,
-
-                                BookPartners = fsb.Book.BookPartners.Select(bp => new BookPartnerVM
-                                {
-                                    PartnerId = bp.PartnerId,
-                                    PartnerName = bp.Partner.Name,
-                                    PartnerTypeId = bp.Partner.PartnerTypeId,
-                                    PartnerType = bp.Partner.PartnerType.Name
-                                }).ToList(),
-                                PosterImages = fsb.Book.PosterImages
-                            }
-                        })
-                        .ToPagedList(pageNumber, pageSize)
-                })
+                .ProjectTo<FlashSaleVM>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(e => e.StartDate <= today && e.EndDate >= today);
-
             return flashSaleToday;
         }
 
-        public async Task<IPagedList<BookVM>> TrendingBooks(string trendingBy, int pageNumber, int pageSize)
+        public async Task<IPagedList<BookDto>> TrendingBooks(string trendingBy, int pageNumber, int pageSize)
         {
             var startDate = DateTime.Today;
             var endDate = DateTime.Today;
@@ -103,8 +54,8 @@ namespace FahasaStoreAPI.Repositories.Implementations
             }
 
             var trendingBooks = await _context.Books.AsNoTracking()
-                .Where(b => b.OrderItems.Any(oi => oi.Order.CreatedAt >= startDate && oi.Order.CreatedAt <= endDate))
-                .Select(MethodsHelper.BookToBookVM())
+                .Where(b => b.OrderItems.Any(oi => oi.Order != null && oi.Order.CreatedAt >= startDate && oi.Order.CreatedAt <= endDate))
+                .ProjectTo<BookDto>(_mapper.ConfigurationProvider)
                 .OrderByDescending(b => b.Solded)
                 .ToPagedListAsync(pageNumber, pageSize);
                                       
@@ -114,12 +65,127 @@ namespace FahasaStoreAPI.Repositories.Implementations
         public async Task<IPagedList<BookVM>> TopSellingBooksByCategory(int categoryId, int pageNumber, int pageSize)
         {
             var topSellingBooks = await _context.Books.AsNoTracking()
-                .Where(b => b.Subcategory.CategoryId == categoryId)
-                .Select(MethodsHelper.BookToBookVM())
+                .Where(b => b.Subcategory != null && b.Subcategory.CategoryId == categoryId)
+                .ProjectTo<BookVM>(_mapper.ConfigurationProvider)
                 .OrderByDescending(b => b.Solded)
                 .ToPagedListAsync(pageNumber, pageSize);
 
             return topSellingBooks;
+        }
+
+        public async Task<DataOptionsFilterBook> DataOptionsFilterBook()
+        {
+            var categories = await _context.Categories.AsNoTracking()
+                .ProjectTo<CategoryVM>(_mapper.ConfigurationProvider)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+
+            var partnerTypes = await _context.PartnerTypes.AsNoTracking()
+                .ProjectTo<PartnerTypeVM>(_mapper.ConfigurationProvider)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+            var authors = await _context.Authors.AsNoTracking()
+                .ProjectTo<AuthorDto>(_mapper.ConfigurationProvider).OrderBy(c => c.Name)
+                .ToListAsync();
+            var coverTypes = await _context.CoverTypes.AsNoTracking()
+                .ProjectTo<CoverTypeDto>(_mapper.ConfigurationProvider).OrderBy(c => c.TypeName)
+                .ToListAsync();
+            var dimensions = await _context.Dimensions.AsNoTracking()
+                .ProjectTo<DimensionDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            var dataOptionsFilterBook = new DataOptionsFilterBook
+            {
+                Categories = categories,
+                PartnerTypes = partnerTypes,
+                Authors = authors,
+                CoverTypes = coverTypes,
+                Dimensions = dimensions
+            };
+            return dataOptionsFilterBook;
+        }
+
+        public async Task<ResultFilterBook> FilterBook(OptionsFilterBook optionsFilterBook)
+        {
+            var query = _context.Books.AsNoTracking().AsQueryable();
+            #region step 1: Filter Book
+            if (optionsFilterBook.CategoryId.HasValue)
+            {
+                query = query.Where(b => b.Subcategory != null && b.Subcategory.CategoryId == optionsFilterBook.CategoryId.Value);
+            }
+
+            if (optionsFilterBook.SubcategoryId.HasValue)
+            {
+                query = query.Where(b => b.SubcategoryId == optionsFilterBook.SubcategoryId.Value);
+            }
+
+            if (optionsFilterBook.AuthorId.HasValue)
+            {
+                query = query.Where(b => b.AuthorId == optionsFilterBook.AuthorId.Value);
+            }
+
+            if (optionsFilterBook.PartnerTypeId.HasValue)
+            {
+                query = query.Where(b => b.BookPartners.Any(bp => bp.Partner != null && bp.Partner.PartnerTypeId == optionsFilterBook.PartnerTypeId.Value));
+            }
+
+            if (optionsFilterBook.PartnerId.HasValue)
+            {
+                query = query.Where(b => b.BookPartners.Any(bp => bp.PartnerId == optionsFilterBook.PartnerId.Value));
+            }
+
+            if (optionsFilterBook.CoverTypeId.HasValue)
+            {
+                query = query.Where(b => b.CoverTypeId == optionsFilterBook.CoverTypeId.Value);
+            }
+
+            if (optionsFilterBook.DimensionId.HasValue)
+            {
+                query = query.Where(b => b.DimensionId == optionsFilterBook.DimensionId.Value);
+            }
+
+            #endregion
+
+            #region step 2: Filter BookDto
+            var queryForBookDto = query.ProjectTo<BookDto>(_mapper.ConfigurationProvider);
+
+            if (optionsFilterBook.MinPrice.HasValue)
+            {
+                queryForBookDto = queryForBookDto.Where(b => b.CurrentPrice >= optionsFilterBook.MinPrice.Value);
+            }
+
+            if (optionsFilterBook.MaxPrice.HasValue)
+            {
+                queryForBookDto = queryForBookDto.Where(b => b.CurrentPrice <= optionsFilterBook.MaxPrice.Value);
+            }
+
+            if (!string.IsNullOrEmpty(optionsFilterBook.SearchName))
+            {
+                queryForBookDto = queryForBookDto.Where(b => b.Name.Contains(optionsFilterBook.SearchName));
+            }
+
+            #endregion
+
+            #region step 3: OrderBy
+            if (!string.IsNullOrEmpty(optionsFilterBook.SortBy) && typeof(BookDto).GetProperty(optionsFilterBook.SortBy) != null)
+            {
+                if (optionsFilterBook.SortDescending)
+                {
+                    queryForBookDto = queryForBookDto.OrderByDescending(e => EF.Property<object>(e, optionsFilterBook.SortBy));
+                }
+                else
+                {
+                    queryForBookDto = queryForBookDto.OrderBy(e => EF.Property<object>(e, optionsFilterBook.SortBy));
+                }
+            }
+            #endregion
+            var pageListBook = await queryForBookDto.ToPagedListAsync(optionsFilterBook.PageNumber, optionsFilterBook.PageSize);
+            var result = new ResultFilterBook
+            {
+                optionsFilterBook = optionsFilterBook,
+                books = MethodsHelper.GetPagedAsync(pageListBook)
+            };
+            return result;
         }
     }
 }

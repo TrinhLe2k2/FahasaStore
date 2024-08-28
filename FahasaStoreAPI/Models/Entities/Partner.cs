@@ -1,10 +1,9 @@
-﻿using FahasaStoreAPI.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FahasaStoreAPI.Models.Entities
 {
-    public partial class Partner : IEntity<int>
+    public partial class Partner
     {
         public Partner()
         {
@@ -12,7 +11,7 @@ namespace FahasaStoreAPI.Models.Entities
         }
 
         public int Id { get; set; }
-        public int PartnerTypeId { get; set; }
+        public int? PartnerTypeId { get; set; }
         public string Name { get; set; } = null!;
         public string Address { get; set; } = null!;
         public string Phone { get; set; } = null!;
@@ -21,7 +20,7 @@ namespace FahasaStoreAPI.Models.Entities
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
 
-        public virtual PartnerType PartnerType { get; set; } = null!;
+        public virtual PartnerType? PartnerType { get; set; }
         public virtual ICollection<BookPartner> BookPartners { get; set; }
     }
 }

@@ -1,13 +1,14 @@
 ﻿@using FahasaStoreAPI.Models.Entities
 @using FahasaStoreApp.Components
 @using FahasaStoreApp.Helpers
+@using FahasaStoreApp.Models.ViewModels.Entities
 @using Microsoft.AspNetCore.Http
 
 @{
-    var categories = Context.Items["Categories"] as List<Category>;
-    var website = Context.Items["Website"] as Website;
-    var platforms = Context.Items["Platforms"] as List<Platform>;
-    var topics = Context.Items["Topics"] as List<Topic>;
+    var categories = Context.Items["Categories"] as List<CategoryVM>;
+    var website = Context.Items["Website"] as WebsiteVM;
+    var platforms = Context.Items["Platforms"] as List<PlatformVM>;
+    var topics = Context.Items["Topics"] as List<TopicVM>;
 }
 
 <!DOCTYPE html>
@@ -22,6 +23,9 @@
     @* slick *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css" integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    @* swiper *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FahasaStoreApp.styles.css" asp-append-version="true" />
@@ -38,6 +42,11 @@
             </a>
             <div class="flex-grow-1">
                 <div class="d-flex w-100 align-items-center flex-wrap justify-content-center mt-3 mt-lg-0">
+                    <div class="py-2 px-2">
+                        <a href="/Home/Filter" class="btn btn-outline-danger">
+                            Bộ Lọc
+                        </a>
+                    </div>
                     @if (categories != null && categories.Count > 0)
                     {
                         <div class="py-2 px-3">
@@ -129,9 +138,9 @@
                     }
 
                     <div class="border rounded-3 flex-grow-1 order-1 order-sm-0">
-                        <form asp-action="Search" asp-controller="Home">
+                        <form asp-action="Filter" asp-controller="Home">
                             <div class="p-1 d-flex">
-                                <input type="search" name="Search" placeholder="Bạn muốn tìm kiếm gì?" class="border-0 flex-grow-1" style="outline: none;" />
+                                <input type="search" id="SearchNameLayout" name="SearchName" value="@ViewData["Search"]" placeholder="Bạn muốn tìm kiếm gì?" class="border-0 flex-grow-1" style="outline: none;" />
                                 <button type="submit" class="border-0 px-4 py-1 rounded-3">
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -319,6 +328,8 @@
     @* Slick *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
 
+    @* swiper *@
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
 

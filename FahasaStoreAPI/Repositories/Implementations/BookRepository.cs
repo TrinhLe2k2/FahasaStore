@@ -13,7 +13,7 @@ using X.PagedList;
 
 namespace FahasaStoreAPI.Repositories.Implementations
 {
-    public class BookRepository : BaseRepository<Book, int>, IBookRepository
+    public class BookRepository : BaseRepository<Book, BookVM>, IBookRepository
     {
         public BookRepository(FahasaStoreDBContext context) : base(context)
         {

@@ -1,0 +1,8 @@
+﻿@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@model ResultFilterBook
+
+<div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-1">
+    @(await Html.RenderComponentAsync<BookComponent>(RenderMode.ServerPrerendered, new { BookDtos = Model.books.Items }))
+    @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = Model.books.PagedNavigation, formId = "filterForm", renderINId = "filterResults" }))
+</div>

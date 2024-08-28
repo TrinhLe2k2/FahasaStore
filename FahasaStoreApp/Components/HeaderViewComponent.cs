@@ -2,6 +2,7 @@
 using FahasaStoreApp.Base.Interfaces;
 using FahasaStoreApp.Models.DTOs;
 using FahasaStoreApp.Models.DTOs.Entities;
+using FahasaStoreApp.Models.ViewModels.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -10,13 +11,13 @@ namespace FahasaStoreApp.Components
     public class HeaderViewComponent : ViewComponent
     {
         private readonly IMemoryCache _cache;
-        private readonly IBaseService<Category, CategoryCreateDto, CategoryEditDto, int> _categoryService;
-        private readonly IBaseService<Subcategory, SubcategoryCreateDto, SubcategoryEditDto, int> _subcategoryService;
+        private readonly IBaseService<Category, CategoryVM> _categoryService;
+        private readonly IBaseService<Subcategory, SubcategoryVM> _subcategoryService;
 
         public HeaderViewComponent(
             IMemoryCache cache,
-            IBaseService<Category, CategoryCreateDto, CategoryEditDto, int> categoryService,
-            IBaseService<Subcategory, SubcategoryCreateDto, SubcategoryEditDto, int> subcategoryService
+            IBaseService<Category, CategoryVM> categoryService,
+            IBaseService<Subcategory, SubcategoryVM> subcategoryService
         )
         {
             _cache = cache;
@@ -27,7 +28,7 @@ namespace FahasaStoreApp.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             const string cacheKey = "CategoriesWithSubcategories";
-            if (!_cache.TryGetValue(cacheKey, out IEnumerable<Category>? data) || data == null)
+            if (!_cache.TryGetValue(cacheKey, out IEnumerable<CategoryVM>? data) || data == null)
             {
                 // Fetch data from API
                 data = await RenderCategories();
@@ -43,15 +44,9 @@ namespace FahasaStoreApp.Components
             return View("Header");
         }
 
-        private async Task<IEnumerable<Category>> RenderCategories()
+        private async Task<IEnumerable<CategoryVM>> RenderCategories()
         {
-            var categoryFilter = await _categoryService.Filter(new FilterOptions
-            {
-                AttributeCollectionInclude = new List<AttributeCollection>
-                {
-                    new AttributeCollection {AttributeCollectionName = "Subcategories", take = 50}
-                }
-            });
+            var categoryFilter = await _categoryService.FilterAsync(new FilterOptions());
             var categories = categoryFilter.Paged.Items;
             return categories;
         }

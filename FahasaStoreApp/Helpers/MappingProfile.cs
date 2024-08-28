@@ -8,10 +8,6 @@ namespace FahasaStoreApp.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<Category, CategoryCreateDto>().ReverseMap();
-            CreateMap<Category, CategoryEditDto>().ReverseMap();
-            CreateMap<Subcategory, SubcategoryCreateDto>().ReverseMap();
-            CreateMap<Subcategory, SubcategoryEditDto>().ReverseMap();
         }
     }
 }

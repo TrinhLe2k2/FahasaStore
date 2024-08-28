@@ -1,0 +1,83 @@
+﻿@using FahasaStoreApp.Models.ViewModels
+
+@if (pagedNavigation != null && formId != null && renderINId != null)
+{
+    <div class="w-100">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end">
+                @if (pagedNavigation.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <label class="page-link" aria-label="Previous">
+                            <input class="form-check-input" type="radio" hidden value="1" id="PageNumber" name="PageNumber" onchange="RenderPartialView('@formId', '@renderINId')">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </label>
+                    </li>
+                    <li class="page-item">
+                        <label class="page-link" aria-label="Previous">
+                            <input class="form-check-input" type="radio" hidden value="@(pagedNavigation.PageNumber - 1)" id="PageNumber" name="PageNumber" onchange="RenderPartialView('@formId', '@renderINId')">
+                            <span aria-hidden="true">&laquo;</span>
+                        </label>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;&laquo;</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                }
+
+                @for (int i = pagedNavigation.StartPage; i <= pagedNavigation.EndPage; i++)
+                {
+                    <li class="page-item @(i == pagedNavigation.PageNumber ? "active" : "")">
+                        <label class="page-link" aria-label="Previous">
+                            <input class="form-check-input" type="radio" hidden value="@i" id="PageNumber" name="PageNumber" onchange="RenderPartialView('@formId', '@renderINId')">
+                            @i
+                        </label>
+                    </li>
+                }
+
+                @if (pagedNavigation.HasNextPage)
+                {
+                    <li class="page-item">
+                        <label class="page-link" aria-label="Previous">
+                            <input class="form-check-input" type="radio" hidden value="@(pagedNavigation.PageNumber + 1)" id="PageNumber" name="PageNumber" onchange="RenderPartialView('@formId', '@renderINId')">
+                            <span aria-hidden="true">&raquo;</span>
+                        </label>
+                    </li>
+                    <li class="page-item">
+                        <label class="page-link" aria-label="Previous">
+                            <input class="form-check-input" type="radio" hidden value="@(pagedNavigation.PageCount)" id="PageNumber" name="PageNumber" onchange="RenderPartialView('@formId', '@renderINId')">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </label>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;&raquo;</span>
+                    </li>
+                }
+            </ul>
+            <div class="input-group mb-3" style="max-width: 160px; margin-left: auto;">
+                <input type="number" name="PageNumber" class="form-control" value="@pagedNavigation.PageNumber" placeholder="@(pagedNavigation.PageCount) page ..." min="1" max="@pagedNavigation.PageCount" />
+                <button class="btn btn-dark" onclick="RenderPartialView('@formId', '@renderINId')">Go</button>
+            </div>
+        </nav>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public PagedNavigation? pagedNavigation { get; set; }
+    [Parameter]
+    public string? formId { get; set; }
+    [Parameter]
+    public string? renderINId { get; set; }
+}

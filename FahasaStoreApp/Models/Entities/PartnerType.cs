@@ -1,10 +1,9 @@
-﻿using FahasaStoreAPI.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FahasaStoreAPI.Models.Entities
 {
-    public partial class PartnerType : IEntity<int>
+    public partial class PartnerType
     {
         public PartnerType()
         {

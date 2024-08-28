@@ -1,0 +1,44 @@
+﻿
+.mySwiper-product-view .swiper-slide {
+    opacity: 0.4;
+}
+
+.mySwiper-product-view .swiper-slide-thumb-active {
+    opacity: 1;
+}
+
+.swiper-slide img {
+    object-fit: contain;
+}
+
+.card:hover {
+    border: 1px solid var(--primary-color-fahasa);
+}
+
+.swiper-button-disabled {
+    display: none;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+    content: "";
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    color: #000;
+    font-size: 32px;
+}
+
+.stars .star.active {
+    color: gold;
+}
+
+.stars .star {
+    cursor: pointer;
+}
+
+.form-select.fillterReview:focus {
+    box-shadow: none;
+    border-color: var(--primary-color-fahasa);
+}

@@ -1,4 +1,5 @@
 ﻿using FahasaStoreAPI.Base.Implementations;
+using FahasaStoreAPI.Models.DTOs.Entities;
 using FahasaStoreAPI.Models.ViewModels;
 using FahasaStoreAPI.Models.ViewModels.Entities;
 using FahasaStoreAPI.Services.Interfaces;
@@ -37,6 +38,34 @@ namespace FahasaStoreAPI.Controllers
         {
             var result = await _fahasaStoreService.TopSellingBooksByCategory(categoryId, pageNumber, pageSize);
             return Ok(result);
+        }
+
+        [HttpGet("FindSimilarBooks")]
+        public async Task<ActionResult<PagedVM<BookDto>>> FindSimilarBooks(int bookId, int pageNumber = 1, int pageSize = 10)
+        {
+            var result = await _fahasaStoreService.FindSimilarBooks(bookId, pageNumber, pageSize);
+            return Ok(result);
+        }
+
+        [HttpPost("FindSimilarBooksBasedOnCart")]
+        public async Task<ActionResult<PagedVM<BookDto>>> FindSimilarBooksBasedOnCart(List<int> bookIdInCart, int pageNumber = 1, int pageSize = 10, string aggregationMethod = "average")
+        {
+            var result = await _fahasaStoreService.FindSimilarBooksBasedOnCart(bookIdInCart, pageNumber, pageSize, aggregationMethod);
+            return Ok(result);
+        }
+
+        [HttpGet("DataOptionsFilterBook")]
+        public async Task<DataOptionsFilterBook> DataOptionsFilterBook()
+        {
+            var result = await _fahasaStoreService.DataOptionsFilterBook();
+            return result;
+        }
+
+        [HttpPost("FilterBook")]
+        public async Task<ResultFilterBook> FilterBook(OptionsFilterBook optionsFilterBook)
+        {
+            var result = await _fahasaStoreService.FilterBook(optionsFilterBook);
+            return result;
         }
     }
 }

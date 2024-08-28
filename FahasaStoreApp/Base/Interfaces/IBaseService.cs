@@ -1,19 +1,17 @@
 ﻿using FahasaStoreApp.Models.DTOs;
+using FahasaStoreApp.Models.Interfaces;
 using FahasaStoreApp.Models.ViewModels;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreApp.Base.Interfaces
 {
-    public interface IBaseService<TEntity, TCreateDto, TEditDto, TKey>
+    public interface IBaseService<TEntity, TViewModel>
         where TEntity : class
-        where TCreateDto : class
-        where TEditDto : class
-        where TKey : IEquatable<TKey>
+        where TViewModel : class, IEntity<int>
     {
-        Task<TEntity> Details(TKey id);
-        Task<TEntity> CreateAsync(TCreateDto dto);
-        Task<TEntity> Update(TKey id, TEditDto dto);
-        Task<bool> Delete(TKey id);
-        Task<FilterVM<TEntity>> Filter(FilterOptions filterOptions);
+        Task<TViewModel> GetByIdAsync(int id);
+        Task<TViewModel> CreateAsync(TViewModel model);
+        Task<TViewModel> UpdateAsync(int id, TViewModel model);
+        Task<bool> DeleteAsync(int id);
+        Task<FilterVM<TViewModel>> FilterAsync(FilterOptions filterOptions);
     }
 }

@@ -1,0 +1,537 @@
+﻿@using FahasaStoreApp.Components
+@using FahasaStoreApp.Helpers
+@using FahasaStoreApp.Models.DTOs.Entities
+@using FahasaStoreApp.Models.ViewModels.Entities
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var userLogin = new UserLogined(HttpContextAccessor);
+    var product = ViewData["Product"] as BookVM;
+    var vouchers = ViewData["Vouchers"] as List<VoucherVM>;
+    var reviews = ViewData["Reviews"] as List<ReviewVM>;
+    var similarBooks = ViewData["SimilarBooks"] as List<BookDto>;
+
+    ViewData["Title"] = product?.Name;
+}
+@if (product != null)
+{
+    <div id="InfomationProduct" class="bg-black bg-opacity-10">
+        @* breadcrumb - view product *@
+        <div class="container">
+            <nav class="pt-2">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Product</li>
+                </ol>
+            </nav>
+            <div class="bg-white rounded-3 p-3">
+                <div class="row flex-column flex-lg-row align-items-center align-items-lg-start">
+                    <div class="col-5">
+                        @if (product.PosterImages != null && product.PosterImages.Count > 0)
+                        {
+                            var defaultPoster = product.PosterImages.First(p => p.ImageDefault == true);
+
+                            <div class="swiper mySwiper2-product-view">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <div class="w-100 position-relative" style="padding-bottom: 100%;">
+                                            <img src="@defaultPoster.ImageUrl" class="position-absolute w-100 h-100 object-fit-contain" alt="...">
+                                        </div>
+                                    </div>
+                                    @foreach (var poster in product.PosterImages.Where(p => p.ImageDefault == false).ToList())
+                                    {
+                                        <div class="swiper-slide">
+                                            <div class="w-100 position-relative" style="padding-bottom: 100%;">
+                                                <img src="@poster.ImageUrl" class="position-absolute w-100 h-100 object-fit-contain" alt="...">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="swiper-pagination text-warning"></div>
+                            </div>
+                            <div thumbsSlider="" class="swiper mySwiper-product-view mt-3 d-none d-md-block">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <div class="w-100 position-relative" style="padding-bottom: 100%;">
+                                            <img src="@defaultPoster.ImageUrl" class="position-absolute w-100 h-100 object-fit-contain" alt="...">
+                                        </div>
+                                    </div>
+                                    @foreach (var poster in product.PosterImages.Where(p => p.ImageDefault == false).ToList())
+                                    {
+                                        <div class="swiper-slide">
+                                            <div class="w-100 position-relative" style="padding-bottom: 100%;">
+                                                <img src="@poster.ImageUrl" class="position-absolute w-100 h-100 object-fit-contain" alt="...">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="col-lg-7 col-12 mt-3 mt-lg-0 fs-7 pt-lg-3">
+                        <h4 class="mb-3">@product.Name</h4>
+                        <div class="row row-cols-2 mb-2">
+                            <div class="col">@Html.DisplayNameFor(model => product.AuthorName): <a href="" class="text-decoration-none fw-bold">@product.AuthorName</a></div>
+                            @{
+                                if (product.BookPartners != null && product.BookPartners.Count > 0)
+                                {
+                                    foreach (var bp in product.BookPartners)
+                                    {
+                                        <div class="col">@bp.PartnerTypeName: <a href="" class="text-decoration-none fw-bold">@bp.PartnerName</a></div>
+                                    }
+                                }
+                            }
+                            <div class="col">@Html.DisplayNameFor(model => product.CoverTypeName): <a href="" class="text-decoration-none fw-bold">@product.CoverTypeName</a></div>
+                        </div>
+                        <div>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= product.RateAverage)
+                                {
+                                    <span style="color: gold;">★</span>
+                                }
+                                else
+                                {
+                                    <span>★</span>
+                                }
+                            }
+                            <span>(@product.RateCount đánh giá)</span>
+                        </div>
+                        <div class="d-flex align-items-center my-3">
+                            <span class="fs-2 fw-bold text-danger">@product.CurrentPrice.ToString("N0") đ</span>
+                            <span class="ms-2 text-decoration-line-through">@product.Price.ToString("N0") đ</span>
+                            <span class="bg-danger text-white px-2 ms-2 fw-bold px-2 py-1 rounded-3">- @product.DiscountPercentage %</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                Chính sách đổi trả
+                            </div>
+                            <div class="col-9">
+                                Đổi trả sản phẩm trong 30 ngày
+                                <a href="#" class="text-decoration-none fw-bold">Xem thêm</a>
+                            </div>
+                        </div>
+                        <div class="row my-3 align-items-center">
+                            <div class="col-3">
+                                Số lượng
+                            </div>
+                            <div class="col-9">
+                                <input type="number" id="order-quantity" value="1" class="fs-5 px-2 py-1 text-center w-25" min="1" max="@product.Quantity" />
+                            </div>
+                        </div>
+                        <div class="d-flex mt-3">
+                            @Html.AntiForgeryToken()
+                            <form action="/User/AddCartItem" BookId="@product.Id" onsubmit="AddCartItem(this, event)">
+                                <input type="submit" value="Thêm vào giỏ hàng" class="btn btn-outline-danger fw-bold mx-1 py-2" />
+                            </form>
+                            <form asp-controller="User" asp-action="BuyNow" id="form-ByNow">
+                                <input type="number" id="Quantity" name="Quantity" hidden />
+                                <input type="number" name="BookId" value="@product.Id" hidden />
+                                <input type="submit" value="Mua ngay" class="btn btn-danger fw-bold mx-1 py-2" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* voucher *@
+        @if (vouchers != null && vouchers.Any())
+        {
+            <div class="container mt-4">
+                <div class="d-flex align-items-center p-3 rounded-top-3 bg-white">
+                    <img src="~/image/icon_dealhot_new.png" width="32" height="32" class="object-fit-cover rounded-3" />
+                    <h5 class="fw-bold mb-0 p-2">Mã giảm giá</h5>
+                    @{
+                        var voucherMore = vouchers?.Skip(3).ToList();
+                        if (voucherMore != null && voucherMore.Count > 0)
+                        {
+                            <span role="button" class="text-primary ms-auto" data-bs-toggle="modal" data-bs-target="#vouchersModal">Xem thêm</span>
+                            <div class="modal fade" id="vouchersModal" tabindex="-1" aria-labelledby="vouchersModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header text-danger">
+                                            <i class="bi bi-gift-fill fs-3"></i>
+                                            <h1 class="modal-title fs-5 text-uppercase ms-3" id="vouchersModalLabel">Mã giảm giá</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @{
+                                                foreach (var v in voucherMore)
+                                                {
+                                                    <div class="mb-3">
+                                                        @(await Html.RenderComponentAsync<VoucherComponent>(RenderMode.ServerPrerendered, new { voucher = v }))
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+                <div class="bg-white p-3 rounded-bottom-3">
+                    <div class="row row-cols-1 row-cols-lg-3 g-3">
+                        @{
+                            if (vouchers != null && vouchers.Count > 0)
+                            {
+                                foreach (var v in vouchers.Take(3))
+                                {
+                                    <div class="col">
+                                        @(await Html.RenderComponentAsync<VoucherComponent>(RenderMode.ServerPrerendered, new { voucher = v }))
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @* Gợi Ý Sản Phẩm tương tự *@
+        @if (similarBooks != null && similarBooks.Count > 0)
+        {
+            <div class="container mt-4">
+                <div class="d-flex align-items-center p-3 rounded-top-3 bg-white">
+                    <img src="~/image/icon_dealhot_new.png" width="32" height="32" class="object-fit-cover rounded-3" />
+                    <h5 class="fw-bold mb-0 p-2">Sản Phẩm Tương Tự</h5>
+                </div>
+                <div class="bg-white p-3 rounded-bottom-3">
+                    <!-- Swiper -->
+                    <div class="swiper mySwiper-hot">
+                        <div class="swiper-wrapper">
+                            @foreach (var book in similarBooks)
+                            {
+                                <div class="swiper-slide">
+                                    <div class="card position-relative">
+                                        <a href="~/Home/Product/@book.Id" class="text-decoration-none mx-2" style="color: #000;" title="@book.Name">
+                                            <div class="w-100 position-relative" style="padding-bottom: 100%;">
+                                                <img src="@book.poster" class="card-img-top position-absolute w-100 h-100 object-fit-cover" alt="...">
+                                            </div>
+                                            <div class="card-body p-1">
+                                                <h6 class="card-title twoLine">@book.Name</h6>
+                                                <div class="d-flex flex-column justify-content-start">
+                                                    <div>
+                                                        <span class="card-text text-danger fw-bold">@book.CurrentPrice.ToString("N0")) đ</span>
+                                                        <small class="position-absolute top-0 end-0 bg-danger text-white px-2 ms-2 rounded-start">- @book.DiscountPercentage %</small>
+                                                    </div>
+                                                    <small class="card-text text-decoration-line-through">@book.Price.ToString("N0") đ</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="swiper-button-next rounded-circle"><i class="bi bi-arrow-right-circle"></i></div>
+                        <div class="swiper-button-prev rounded-circle"><i class="bi bi-arrow-left-circle"></i></div>
+                    </div>
+                </div>
+            </div>
+        }
+        
+
+        @* Infomation Product *@
+        <div class="container mt-4">
+            <div class="p-3 bg-white rounded-3">
+                <h5>Thông tin sản phẩm</h5>
+                <dl class="row px-4">
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => product.Name)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @product.Name
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => product.Id)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @product.Id
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => product.AuthorName)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @product.AuthorName
+                    </dd>
+                    @{
+                        if (product.BookPartners != null && product.BookPartners.Count > 0)
+                        {
+                            foreach (var bp in product.BookPartners)
+                            {
+                                <dt class="col-sm-3">
+                                    @bp.PartnerTypeName
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @bp.PartnerName
+                                </dd>
+                            }
+                        }
+                    }
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => product.DimensionName)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @product.DimensionName
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => product.PageCount)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @product.PageCount
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => product.CoverTypeName)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @product.CoverTypeName
+                    </dd>
+                    <div class="py-2">
+                        Giá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận chuyển, phụ phí hàng cồng kềnh,...
+                    </div>
+                </dl>
+                <hr />
+                <div>
+                    <div class="collapse" id="collapseDescriptionBook">
+                        <div class="textContent">
+                            @product.Description
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center mt-4">
+                        <a class="btn btn-outline-danger" onclick="ShowMoreOnclick(this)" data-bs-toggle="collapse" href="#collapseDescriptionBook" role="button" aria-expanded="false" aria-controls="collapseDescriptionBook">
+                            Xem thêm
+                        </a>
+                        <script>
+                            function ShowMoreOnclick(element) {
+                                var isExpanded = element.getAttribute("aria-expanded");
+                                if (isExpanded === "false") {
+                                    element.textContent = "Xem thêm";
+                                } else {
+                                    element.textContent = "Ẩn bớt";
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* review *@
+        <div class="container mt-4 review">
+            <div class="p-3 bg-white rounded-3">
+                <h5 class="text-uppercase pb-3">Đánh giá sản phẩm</h5>
+                <div class="row">
+                    <div class="col-9 col-lg-7">
+                        <div class="d-flex">
+                            <div class="my-auto">
+                                <h6 class="text-center">@product.RateAverage/5</h6>
+                                <div class="fs-5">
+                                    @{
+                                        for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= product.RateAverage)
+                                            {
+                                                <span style="color: gold;">★</span>
+                                            }
+                                            else
+                                            {
+                                                <span>★</span>
+                                            }
+                                        }
+                                    }
+                                </div>
+                                <div class="text-center">(@product.RateCount đánh giá)</div>
+                            </div>
+                            <div class="flex-grow-1 mx-4">
+                                <div class="d-flex align-items-center">
+                                    <span>5 sao</span>
+                                    <div style="height: 8px;" class="progress flex-grow-1 mx-3" role="progressbar" aria-label="Danger example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" style="width: @product.Rate5Percentage%"></div>
+                                    </div>
+                                    <span>@product.Rate5Percentage%</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span>4 sao</span>
+                                    <div style="height: 8px;" class="progress flex-grow-1 mx-3" role="progressbar" aria-label="Danger example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" style="width: @product.Rate4Percentage%"></div>
+                                    </div>
+                                    <span>@product.Rate4Percentage%</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span>3 sao</span>
+                                    <div style="height: 8px;" class="progress flex-grow-1 mx-3" role="progressbar" aria-label="Danger example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" style="width: @product.Rate3Percentage%"></div>
+                                    </div>
+                                    <span>@product.Rate3Percentage%</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span>2 sao</span>
+                                    <div style="height: 8px;" class="progress flex-grow-1 mx-3" role="progressbar" aria-label="Danger example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" style="width: @product.Rate2Percentage%"></div>
+                                    </div>
+                                    <span>@product.Rate2Percentage%</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span>1 sao</span>
+                                    <div style="height: 8px;" class="progress flex-grow-1 mx-3" role="progressbar" aria-label="Danger example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" style="width: @product.Rate1Percentage%"></div>
+                                    </div>
+                                    <span>@product.Rate1Percentage%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <ul class="list-group list-group-flush">
+                        @{
+                            if (reviews != null && reviews.Count > 0)
+                            {
+                                if (userLogin.CurrentUser != null)
+                                {
+                                    var reviewOfUser = reviews.FirstOrDefault(r => r.UserId == userLogin.CurrentUser.Id);
+                                    if (reviewOfUser != null)
+                                    {
+                                        <li class="list-group-item" id="reviewOfUser">
+                                            <div class="row">
+                                                <div class="col-3 col-xl-2">
+                                                    <img src="@userLogin.CurrentUser.ImageUrl" width="50" height="50" class="object-fit-contain rounded-circle me-2" />
+                                                    <span>@userLogin.CurrentUser.FullName</span>
+                                                    <div id="reviewOfUser_rating">
+                                                        @{
+                                                            for (int i = 1; i <= 5; i++)
+                                                            {
+                                                                if (i <= reviewOfUser.Rating)
+                                                                {
+                                                                    <span style="color: gold;">★</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>★</span>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <span id="reviewOfUser_comment">@reviewOfUser.Comment</span>
+                                                    <div class="d-flex justify-content-between">
+                                                        <small>@reviewOfUser.CreatedAt</small>
+                                                        <div class="btn-group" role="group">
+                                                            <a href="/User/EditReview" IdValue="@reviewOfUser.Id" onclick="HandlerCRUD(this, event)" data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-danger"><i class="bi bi-pen"></i></a>
+                                                            <a href="/User/DeleteReview" IdValue="@reviewOfUser.Id" onclick="HandlerCRUD(this, event)" data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-danger"><i class="bi bi-trash3"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                                foreach (var review in reviews)
+                                {
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-3 col-xl-2">
+                                                <img src="@review.User?.ImageUrl" width="50" height="50" class="object-fit-contain rounded-circle me-2" />
+                                                <span>@review.User?.FullName</span>
+                                                <div>
+                                                    @{
+                                                        for (int i = 1; i <= 5; i++)
+                                                        {
+                                                            if (i <= review.Rating)
+                                                            {
+                                                                <span style="color: gold;">★</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>★</span>
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+
+                                            </div>
+                                            <div class="col">
+                                                @review.Comment #@review.Id
+                                                <div>
+                                                    <small>@review.CreatedAt</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        @* Recommender system *@
+        @{
+            
+        }
+
+    </div>
+}
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var orderQuantityInput = $('#order-quantity');
+            var quantityInput = $('#Quantity');
+
+            quantityInput.val(orderQuantityInput.val());
+
+            orderQuantityInput.on('input', function () {
+                quantityInput.val(orderQuantityInput.val());
+            });
+        });
+    </script>
+    <script>
+        // view product
+        $(document).ready(function () {
+            var swiper = new Swiper(".mySwiper-product-view", {
+                loop: true,
+                spaceBetween: 10,
+                slidesPerView: 5,
+            });
+            var swiper2 = new Swiper(".mySwiper2-product-view", {
+                loop: true,
+                thumbs: {
+                    swiper: swiper,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    type: "fraction",
+                },
+            });
+        });
+
+        // hot
+        $(document).ready(function () {
+            var swiper = new Swiper(".mySwiper-hot", {
+                slidesPerView: 2,
+                spaceBetween: 30,
+                hashNavigation: true,
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                breakpoints: {
+                    576: {
+                        slidesPerView: 3,
+                    },
+                    768: {
+                        slidesPerView: 4,
+                    },
+                    992: {
+                        slidesPerView: 5,
+                    },
+                },
+            });
+        });
+    </script>
+}

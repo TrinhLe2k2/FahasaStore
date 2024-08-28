@@ -1,19 +1,20 @@
 ﻿@using FahasaStoreAPI.Models.Entities
 @using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.DTOs.Entities
 @using FahasaStoreApp.Models.ViewModels.Entities
 @{
     ViewData["Title"] = "Home Page";
-    var banners = ViewData["banners"] as List<Banner>;
-    var menu = ViewData["menu"] as List<Menu>;
+    var banners = ViewData["banners"] as List<BannerVM>;
+    var menu = ViewData["menu"] as List<MenuVM>;
     var flashSaleToday = ViewData["flashSaleToday"] as FlashSaleVM;
 
-    var trendOfMonth = ViewData["trendOfMonth"] as List<BookVM>;
-    var trendOfYear = ViewData["trendOfYear"] as List<BookVM>;
+    var trendOfMonth = ViewData["trendOfMonth"] as List<BookDto>;
+    var trendOfYear = ViewData["trendOfYear"] as List<BookDto>;
 
-    var categories = ViewData["categories"] as List<Category>;
+    var categories = ViewData["categories"] as List<CategoryVM>;
     var topSellingBooksByCategory = ViewData["topSellingBooksByCategory"] as List<BookVM>;
 
-    var partners = ViewData["partners"] as List<Partner>;
+    var partners = ViewData["partners"] as List<PartnerVM>;
 }
 
 <div class="bg-black bg-opacity-10 rounded-3">
@@ -191,7 +192,7 @@
                 </div> *@
                 <div class="tab-pane fade show active" id="trendOfMonth-tab-pane" role="tabpanel" aria-labelledby="trendOfMonth-tab" tabindex="0">
                     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4 mt-1">
-                        @(await Html.RenderComponentAsync<BookComponent>(RenderMode.ServerPrerendered, new { Books = trendOfMonth }))
+                        @(await Html.RenderComponentAsync<BookComponent>(RenderMode.ServerPrerendered, new { BookDtos = trendOfMonth }))
                     </div>
                     <div class="text-center mt-3">
                         <a href="" class="btn btn-outline-danger px-5">Xem Thêm</a>
@@ -199,7 +200,7 @@
                 </div>
                 <div class="tab-pane fade" id="trendOfYear-tab-pane" role="tabpanel" aria-labelledby="trendOfYear-tab" tabindex="0">
                     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4 mt-1">
-                        @(await Html.RenderComponentAsync<BookComponent>(RenderMode.ServerPrerendered, new { Books = trendOfYear }))
+                        @(await Html.RenderComponentAsync<BookComponent>(RenderMode.ServerPrerendered, new { BookDtos = trendOfYear }))
                     </div>
                     <div class="text-center mt-3">
                         <a href="" class="btn btn-outline-danger px-5">Xem Thêm</a>
@@ -257,8 +258,8 @@
                                                 <div class="col-11 d-flex align-items-center flex-column flex-lg-row">
                                                     <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" class="rounded-start object-fit-cover" width="100" height="100" alt="...">
                                                     <div class="d-flex flex-column px-2">
-                                                        <a href="" class="twoLine text-decoration-none">@book.Name</a>
-                                                        <small class="text-black-50">@book.Author.Name</small>
+                                                        <a href="/Home/Product/@book.Id" class="twoLine text-decoration-none">@book.Name</a>
+                                                        <small class="text-black-50">@book.AuthorName</small>
                                                         <small class="text-black-50">Đã bán: @book.Solded</small>
                                                     </div>
                                                 </div>
@@ -272,7 +273,7 @@
                                     foreach (var book in topSellingBooksByCategory)
                                     {
                                         <div class="d-flex flex-column align-items-center flex-lg-row align-items-lg-start">
-                                            <a href="" class="p-2 text-center text-decoration-none d-md-flex align-items-md-center d-lg-block">
+                                            <a href="/Home/Product/@book.Id" class="p-2 text-center text-decoration-none d-md-flex align-items-md-center d-lg-block">
                                                 <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" width="240" height="240" class="object-fit-cover" />
                                                 <span class="btn btn-danger">Xem ngay</span>
                                             </a>
@@ -280,12 +281,12 @@
                                                 <a href="" class="text-decoration-none text-black">
                                                     <h6>@book.Name</h6>
                                                 </a>
-                                                <span>Tác giả: @book.Author.Name</span>
+                                                <span>Tác giả: @book.AuthorName</span>
 
                                                 @if(book.BookPartners.Any()){
                                                     foreach (var bp in book.BookPartners)
                                                     {
-                                                        <span>@bp.PartnerType : @bp.PartnerName</span>
+                                                        <span>@bp.PartnerTypeName : @bp.PartnerName</span>
                                                     }
                                                 }
 
@@ -315,7 +316,7 @@
                 @foreach (var item in partners)
                 {
                     <div class="position-relative" title="@item.Name" style="padding-bottom: 100%;">
-                        <a href="" class="position-absolute w-100 h-100">
+                        <a href="/Home/Filter?PartnerId=@item.Id" class="position-absolute w-100 h-100">
                             <img src="@item.ImageUrl" class="object-fit-cover p-2 w-100 h-100" />
                         </a>
                     </div>

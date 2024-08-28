@@ -1,4 +1,4 @@
-﻿namespace FahasaStoreAPI.Models.Interfaces
+﻿namespace FahasaStoreApp.Models.Interfaces
 {
     public interface IEntity<TKey>
     {

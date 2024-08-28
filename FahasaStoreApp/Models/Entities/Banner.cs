@@ -1,10 +1,9 @@
-﻿using FahasaStoreAPI.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FahasaStoreAPI.Models.Entities
 {
-    public partial class Banner : IEntity<int>
+    public partial class Banner
     {
         public int Id { get; set; }
         public string? PublicId { get; set; }

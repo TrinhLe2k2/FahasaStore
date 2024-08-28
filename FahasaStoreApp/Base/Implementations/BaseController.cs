@@ -1,23 +1,20 @@
 ﻿using AutoMapper;
-using FahasaStoreAPI.Models.Entities;
-using FahasaStoreAPI.Models.Interfaces;
 using FahasaStoreApp.Base.Interfaces;
 using FahasaStoreApp.Models.DTOs;
+using FahasaStoreApp.Models.Interfaces;
 using FahasaStoreApp.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace FahasaStoreApp.Base.Implementations
 {
-    public class BaseController<TEntity, TCreateDto, TEditDto, TKey> : Controller
-        where TEntity : class, IEntity<TKey>
-        where TCreateDto : class
-        where TEditDto : class
-        where TKey : IEquatable<TKey>
+    public class BaseController<TEntity, TViewModel> : Controller
+        where TEntity : class
+        where TViewModel : class, IEntity<int>
     {
-        protected readonly IBaseService<TEntity, TCreateDto, TEditDto, TKey> _service;
+        protected readonly IBaseService<TEntity, TViewModel> _service;
 
-        public BaseController(IBaseService<TEntity, TCreateDto, TEditDto, TKey> service)
+        public BaseController(IBaseService<TEntity, TViewModel> service)
         {
             _service = service;
         }
@@ -26,16 +23,16 @@ namespace FahasaStoreApp.Base.Implementations
         {
             if (TempData["FilterResult"] != null)
             {
-                var filterResult = JsonConvert.DeserializeObject<FilterVM<Category>>(TempData["FilterResult"]?.ToString() ?? "");
+                var filterResult = JsonConvert.DeserializeObject<FilterVM<TViewModel>>(TempData["FilterResult"]?.ToString() ?? "");
                 return View(filterResult);
             }
-            return View(await _service.Filter(filterOptions));
+            return View(await _service.FilterAsync(filterOptions));
         }
 
         [HttpPost, ActionName("Index")]
         public virtual async Task<IActionResult> Filter(FilterOptions filterOptions)
         {
-            var filterResult = await _service.Filter(filterOptions);
+            var filterResult = await _service.FilterAsync(filterOptions);
             TempData["FilterResult"] = JsonConvert.SerializeObject(filterResult);
             return RedirectToAction("Index");
         }
@@ -46,50 +43,49 @@ namespace FahasaStoreApp.Base.Implementations
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> Create(TCreateDto model)
+        public virtual async Task<IActionResult> Create(TViewModel model)
         {
-            TEntity createdEntity = await _service.CreateAsync(model);
-            return RedirectToAction("Details", new { id = createdEntity.Id });
+            var repository = await _service.CreateAsync(model);
+            return RedirectToAction("Details", new { id = repository.Id });
         }
 
-        public virtual async Task<IActionResult> Details(TKey id)
+        public virtual async Task<IActionResult> Details(int id)
         {
-            var entity = await _service.Details(id);
-            return View(entity);
+            var repository = await _service.GetByIdAsync(id);
+            return View(repository);
         }
 
-        public virtual async Task<IActionResult> Edit(TKey id)
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            var entity = await _service.Details(id);
-            //var model = _mapper.Map<TEditDto>(entity);
-            return View(entity);
+            var repository = await _service.GetByIdAsync(id);
+            return View(repository);
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> Edit(TKey id, TEditDto model)
+        public virtual async Task<IActionResult> Edit(int id, TViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var updatedEntity = await _service.Update(id, model);
-            return RedirectToAction("Details", new { id = updatedEntity.Id });
+            var repository = await _service.UpdateAsync(id, model);
+            return RedirectToAction("Details", new { id = repository.Id });
         }
 
-        public virtual async Task<IActionResult> Delete(TKey id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            var entity = await _service.Details(id);
-            if (entity == null)
+            var repository = await _service.GetByIdAsync(id);
+            if (repository == null)
             {
                 return NotFound();
             }
-            return View(entity);
+            return View(repository);
         }
 
         [HttpPost, ActionName("Delete")]
-        public virtual async Task<IActionResult> DeleteConfirmed(TKey id)
+        public virtual async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _service.Delete(id);
+            await _service.DeleteAsync(id);
             return RedirectToAction("Index");
         }
     }

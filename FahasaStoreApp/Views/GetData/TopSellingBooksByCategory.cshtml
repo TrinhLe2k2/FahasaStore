@@ -23,7 +23,7 @@
                                     <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" class="rounded-start object-fit-cover" width="100" height="100" alt="...">
                                     <div class="d-flex flex-column px-2">
                                         <a href="" class="twoLine text-decoration-none">@book.Name</a>
-                                        <small class="text-black-50">@book.Author.Name</small>
+                                        <small class="text-black-50">@book.AuthorName</small>
                                         <small class="text-black-50">Đã bán: @book.Solded</small>
                                     </div>
                                 </div>
@@ -45,13 +45,13 @@
                                 <a href="" class="text-decoration-none text-black">
                                     <h6>@book.Name</h6>
                                 </a>
-                                <span>Tác giả: @book.Author.Name</span>
+                                <span>Tác giả: @book.AuthorName</span>
 
                                 @if (book.BookPartners.Any())
                                 {
                                     foreach (var bp in book.BookPartners)
                                     {
-                                        <span>@bp.PartnerType : @bp.PartnerName</span>
+                                        <span>@bp.PartnerTypeName : @bp.PartnerName</span>
                                     }
                                 }
 

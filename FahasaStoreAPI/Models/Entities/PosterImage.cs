@@ -1,18 +1,17 @@
-﻿using FahasaStoreAPI.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FahasaStoreAPI.Models.Entities
 {
-    public partial class PosterImage : IEntity<int>
+    public partial class PosterImage
     {
         public int Id { get; set; }
-        public int BookId { get; set; }
+        public int? BookId { get; set; }
         public string? PublicId { get; set; }
         public string? ImageUrl { get; set; }
         public bool ImageDefault { get; set; }
         public DateTime? CreatedAt { get; set; }
 
-        public virtual Book Book { get; set; } = null!;
+        public virtual Book? Book { get; set; }
     }
 }

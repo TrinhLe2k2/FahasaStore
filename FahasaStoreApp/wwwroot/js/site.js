@@ -2,15 +2,35 @@
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-const RenderPartialView = (url, elementId) => {
+//const RenderPartialView = (url, elementId) => {
+//    $.ajax({
+//        url: url,
+//        type: 'GET',
+//        success: function (data) {
+//            $('#' + elementId).html(data);
+//        },
+//        error: function () {
+//            alert("Error render for elementId = " + elementId);
+//        }
+//    });
+//}
+
+function RenderPartialView(formId, renderINId) {
+    const $form = $('#' + formId);
+    const formData = $form.serializeArray();
+
+    var htmlSpinner = '<div class="position-fixed d-flex justify-content-center align-items-center bg-light top-0 bottom-0 start-0 end-0 opacity-25"> <div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div> </div>';
+    $('#' + renderINId).html(htmlSpinner);
+
     $.ajax({
-        url: url,
-        type: 'GET',
-        success: function (data) {
-            $('#' + elementId).html(data);
+        url: $form.attr('action'),
+        type: $form.attr('method'),
+        data: formData,
+        success: function (html) {
+            $('#' + renderINId).html(html);
         },
-        error: function () {
-            console.log("Error render for elementId = " + elementId);
+        error: function (xhr, status, error) {
+            alert("error RenderPartialView" + formId);
         }
     });
 }
@@ -41,7 +61,7 @@ function initSlickSliders() {
 const HandlerBestSelling = (categoryId) => {
     //initSlickSliders();
     $.ajax({
-        url: `/Home/TopSellingBooksByCategory/${categoryId}`,
+        url: `/GetData/TopSellingBooksByCategory/${categoryId}`,
         method: 'GET',
         success: function (response) {
             $('.ranking-slider-for').slick('unslick');

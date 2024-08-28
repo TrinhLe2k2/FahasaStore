@@ -1,147 +1,62 @@
-﻿using FahasaStoreAPI.Base.Interfaces;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using FahasaStoreAPI.Base.Interfaces;
+using FahasaStoreAPI.Helpers;
 using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Models.Entities;
 using FahasaStoreAPI.Models.Interfaces;
+using FahasaStoreAPI.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Expressions;
-using System.Reflection;
 using X.PagedList;
 
 namespace FahasaStoreAPI.Base.Implementations
 {
-    public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
-    where TEntity : class, IEntity<TKey>
-    where TKey : IEquatable<TKey>
+    public class BaseRepository<TEntity, TViewModel> : IBaseRepository<TEntity, TViewModel>
+        where TEntity : class
+        where TViewModel : class, IEntity<int>
     {
         protected readonly FahasaStoreDBContext _context;
         protected readonly DbSet<TEntity> _dbSet;
+        protected readonly IMapper _mapper;
+        protected readonly IQueryable<TViewModel> _query;
 
-        public BaseRepository(FahasaStoreDBContext context)
+        public BaseRepository(FahasaStoreDBContext context, IMapper mapper)
         {
             _context = context;
             _dbSet = _context.Set<TEntity>();
+            _mapper = mapper;
+            _query = _dbSet.AsNoTracking().AsQueryable().ProjectTo<TViewModel>(_mapper.ConfigurationProvider);
         }
 
-        public virtual async Task<TEntity> AddAsync(TEntity entity)
+        public virtual async Task<TViewModel> AddAsync(TViewModel model)
         {
+            TEntity entity = _mapper.Map<TEntity>(model);
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
-            return entity;
+            TViewModel result = _mapper.Map<TViewModel>(entity);
+            return await _query.FirstAsync(e => e.Id.Equals(result.Id));
         }
-        public virtual async Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entities)
+
+        public virtual async Task<IEnumerable<TViewModel>> AddRangeAsync(IEnumerable<TViewModel> models)
         {
+            var entities = _mapper.Map<TEntity>(models);
             await _dbSet.AddRangeAsync(entities);
             await _context.SaveChangesAsync();
-            return entities;
+            return models;
         }
-        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
+
+        public virtual async Task<bool> DeleteAsync(TViewModel model)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return entity;
-        }
-        public virtual async Task<bool> DeleteAsync(TEntity entity)
-        {
+            var entity = _mapper.Map<TEntity>(model);
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
         }
-        public virtual async Task<TEntity?> FindByIdAsync(TKey id)
+
+        public virtual async Task<FilterVM<TViewModel>> FilterAsync(FilterOptions filterOptions)
         {
-            IQueryable<TEntity> query = QueryableForGetByIdAsync();
-            var result = await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
-            return result;
-        }
-        public virtual async Task<TEntity?> FindByIdHaveListAsync(TKey id, List<AttributeCollection> attributeCollection)
-        {
-            IQueryable<TEntity> query = _dbSet.AsNoTracking().AsQueryable();
-            var virtualProperties = typeof(TEntity)
-                .GetProperties()
-                .Where(p => p.GetMethod.IsVirtual && !p.GetMethod.IsFinal);
-
-            foreach (var property in virtualProperties)
-            {
-                if (IsCollectionProperty(property))
-                {
-                    if (attributeCollection.FirstOrDefault(a => a.AttributeCollectionName.ToLower() == property.Name.ToLower()) != null)
-                    {
-                        query = query.Include(property.Name);
-                    }
-                }
-                else
-                {
-                    query = query.Include(property.Name);
-                }
-            }
-
-            var result = await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
-
-            // Nếu có kết quả (không phải null)
-            if (result != null)
-            {
-                // Lấy tất cả các thuộc tính ảo của đối tượng TEntity có kiểu là collection (trừ string)
-                var collectionProperties = typeof(TEntity)
-                    .GetProperties()
-                    .Where(p => p.GetMethod.IsVirtual && IsCollectionProperty(p));
-
-                // Duyệt qua tất cả các thuộc tính collection
-                foreach (var property in collectionProperties)
-                {
-                    var attribute = attributeCollection.FirstOrDefault(a => a.AttributeCollectionName.ToLower() == property.Name.ToLower());
-
-                    if (attribute != null && attribute.take > 0)
-                    {
-                        var propertyType = property.PropertyType;
-                        if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
-                        {
-                            var itemType = propertyType.GetGenericArguments().First();
-                            var collectionType = typeof(List<>).MakeGenericType(itemType);
-                            var value = property.GetValue(result) as IEnumerable<object>;
-
-                            if (value != null)
-                            {
-                                // Giới hạn số lượng phần tử của collection
-                                var limitedCollection = value.Take(attribute.take).ToList();
-
-                                // Tạo một instance của collection đúng loại
-                                var newCollection = Activator.CreateInstance(collectionType) as System.Collections.IList;
-
-                                if (newCollection != null)
-                                {
-                                    foreach (var item in limitedCollection)
-                                    {
-                                        newCollection.Add(item);
-                                    }
-
-                                    // Cập nhật thuộc tính collection với danh sách đã giới hạn
-                                    property.SetValue(result, newCollection);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-        public virtual async Task<bool> ExistsAsync(TKey id)
-        {
-            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Equals(id)) != null;
-        }
-        public virtual async Task<IPagedList<TEntity>> FilterAsync(FilterOptions filterOptions)
-        {
-            IQueryable<TEntity> query = _dbSet.AsNoTracking().AsQueryable();
-            var virtualProperties = typeof(TEntity)
-                .GetProperties()
-                .Where(p => p.GetMethod.IsVirtual && !p.GetMethod.IsFinal && !IsCollectionProperty(p));
-
-            foreach (var property in virtualProperties)
-            {
-                query = query.Include(property.Name);
-            }
-
+            var query = _query;
             if (filterOptions.Filters != null && filterOptions.Filters.Count > 0)
             {
                 foreach (var filter in filterOptions.Filters)
@@ -192,12 +107,6 @@ namespace FahasaStoreAPI.Base.Implementations
                                         case ">=":
                                             query = query.Where($"{key} >= @0", dateValue);
                                             break;
-                                        case "<":
-                                            query = query.Where($"{key} < @0", dateValue);
-                                            break;
-                                        case ">":
-                                            query = query.Where($"{key} > @0", dateValue);
-                                            break;
                                     }
                                 }
                                 break;
@@ -217,103 +126,24 @@ namespace FahasaStoreAPI.Base.Implementations
                 query = query.OrderBy(e => e.Id);
             }
 
-            var result = await query.ToPagedListAsync(filterOptions.PageNumber, filterOptions.PageSize);
-
-            List<AttributeCollection> attributeCollection = filterOptions.AttributeCollectionInclude;
-
-            if (attributeCollection.Any())
-            {
-                // Lặp qua tất cả các thuộc tính trong attributeCollection
-                foreach (var attr in attributeCollection)
-                {
-                    // Lấy thuộc tính của TEntity dựa trên tên thuộc tính trong attributeCollection
-                    var property = typeof(TEntity).GetProperty(attr.AttributeCollectionName);
-
-                    if (property != null && attr.take > 0 && IsCollectionProperty(property))
-                    {
-                        // Lấy kiểu của thuộc tính
-                        var propertyType = property.PropertyType;
-
-                        // Kiểm tra xem thuộc tính có phải là ICollection hay không
-                        if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
-                        {
-                            // Lấy kiểu của các phần tử trong ICollection
-                            var itemType = propertyType.GetGenericArguments().First();
-
-                            // Tạo kiểu danh sách cụ thể cho itemType
-                            var collectionType = typeof(List<>).MakeGenericType(itemType);
-
-                            // Lặp qua tất cả các item trong kết quả
-                            foreach (var item in result)
-                            {
-                                // Tạo một danh sách mới với kiểu cụ thể
-                                var newCollection = Activator.CreateInstance(collectionType) as System.Collections.IList;
-
-                                if (newCollection != null)
-                                {
-                                    // Đảm bảo rằng item được theo dõi để có thể truy xuất dữ liệu
-                                    _context.Entry(item).State = EntityState.Unchanged;
-
-                                    // Tạo IQueryable dựa trên thuộc tính của item và giới hạn số lượng phần tử
-                                    var newIcollection = await _context.Entry(item)
-                                                         .Collection(property.Name)
-                                                         .Query()
-                                                         .Take(attr.take)
-                                                         .ToDynamicListAsync();
-
-                                    // Chuyển đổi và thêm từng phần tử từ danh sách động vào danh sách mới
-                                    foreach (var dynamicItem in newIcollection)
-                                    {
-                                        // Chuyển đổi phần tử từ kiểu dynamic sang kiểu cụ thể của itemType
-                                        var specificItem = Convert.ChangeType(dynamicItem, itemType);
-                                        newCollection.Add(specificItem);
-                                    }
-
-                                    // Gán danh sách mới cho thuộc tính tương ứng của item
-                                    property.SetValue(item, newCollection);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-
+            var pagedList = await query.ToPagedListAsync(filterOptions.PageNumber, filterOptions.PageSize);
+            var paged = MethodsHelper.GetPagedAsync<TViewModel>(pagedList);
+            var result = new FilterVM<TViewModel>(filterOptions, paged);
             return result;
         }
-        protected bool IsCollectionProperty(PropertyInfo property)
-        {
-            if (property.PropertyType.IsGenericType)
-            {
-                var genericTypeDefinition = property.PropertyType.GetGenericTypeDefinition();
-                if (genericTypeDefinition == typeof(ICollection<>))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        protected IQueryable<TEntity> Queryable()
-        {
-            IQueryable<TEntity> query = _dbSet.AsNoTracking().AsQueryable();
-            var virtualProperties = typeof(TEntity)
-                .GetProperties()
-                .Where(p => p.GetMethod.IsVirtual && !p.GetMethod.IsFinal && !IsCollectionProperty(p));
 
-            foreach (var property in virtualProperties)
-            {
-                query = query.Include(property.Name);
-            }
+        public virtual async Task<TViewModel?> FindByIdAsync(int id)
+        {
+            var result = await _query.FirstOrDefaultAsync(e => e.Id.Equals(id));
+            return result;
+        }
 
-            return query;
-        }
-        protected virtual IQueryable<TEntity> QueryableForGetByIdAsync()
+        public virtual async Task<TViewModel> UpdateAsync(TViewModel model)
         {
-            return Queryable();
-        }
-        protected virtual IQueryable<TEntity> QueryableForFilterAsync()
-        {
-            return Queryable();
+            var entity = _mapper.Map<TEntity>(model);
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return await _query.FirstAsync(e => e.Id.Equals(model.Id));
         }
     }
 }

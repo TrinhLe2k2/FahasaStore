@@ -1,10 +1,9 @@
-﻿using FahasaStoreAPI.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FahasaStoreAPI.Models.Entities
 {
-    public partial class AspNetRole : IEntity<int>
+    public partial class AspNetRole
     {
         public AspNetRole()
         {

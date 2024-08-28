@@ -1,4 +1,6 @@
-﻿using FahasaStoreAPI.Models.ViewModels.Entities;
+﻿using FahasaStoreAPI.Models.DTOs.Entities;
+using FahasaStoreAPI.Models.ViewModels;
+using FahasaStoreAPI.Models.ViewModels.Entities;
 using X.PagedList;
 
 namespace FahasaStoreAPI.Repositories.Interfaces
@@ -6,7 +8,9 @@ namespace FahasaStoreAPI.Repositories.Interfaces
     public interface IFahasaStoreRepository
     {
         Task<FlashSaleVM?> FlashSaleTodayAsync(int pageNumber, int pageSize);
-        Task<IPagedList<BookVM>> TrendingBooks(string trendingBy, int pageNumber, int pageSize);
+        Task<IPagedList<BookDto>> TrendingBooks(string trendingBy, int pageNumber, int pageSize);
         Task<IPagedList<BookVM>> TopSellingBooksByCategory(int categoryId, int pageNumber, int pageSize);
+        Task<DataOptionsFilterBook> DataOptionsFilterBook();
+        Task<ResultFilterBook> FilterBook(OptionsFilterBook optionsFilterBook);
     }
 }

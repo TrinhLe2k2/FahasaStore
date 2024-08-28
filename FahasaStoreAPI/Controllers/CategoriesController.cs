@@ -4,6 +4,7 @@ using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Models.DTOs.Entities;
 using FahasaStoreAPI.Models.Entities;
 using FahasaStoreAPI.Models.ViewModels;
+using FahasaStoreAPI.Models.ViewModels.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,9 @@ namespace FahasaStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : BaseController<Category, CategoryCreateDto, CategoryEditDto, int>
+    public class CategoryController : BaseController<Category, CategoryVM>
     {
-        public CategoriesController(IBaseService<Category, CategoryCreateDto, CategoryEditDto, int> service) : base(service)
+        public CategoryController(IBaseService<Category, CategoryVM> service) : base(service)
         {
         }
     }

@@ -4,6 +4,7 @@ using FahasaStoreAPI.Base.Implementations;
 using FahasaStoreAPI.Base.Interfaces;
 using FahasaStoreAPI.Constants;
 using FahasaStoreAPI.Identity;
+using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Models.DTOs.Entities;
 using FahasaStoreAPI.Models.Entities;
 using FahasaStoreAPI.Repositories.Interfaces;

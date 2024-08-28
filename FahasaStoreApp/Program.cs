@@ -26,8 +26,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddScoped(typeof(IBaseService<,,,>), typeof(BaseService<,,,>));
-builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
+//builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IFahasaStoreService, FahasaStoreService>();
 
 //builder.Services.AddScopedServicesFromAssembly(Assembly.GetExecutingAssembly(), "FahasaStoreAdminApp.Services.EntityService");
