@@ -1,0 +1,16 @@
+﻿@model ICollection<Province>
+@{
+    var pro = ViewData["Province"] as string;
+}
+<option value="">-- Chọn tỉnh/thành phố --</option>
+@foreach (var province in Model)
+{
+    if (pro == province.PROVINCE_NAME)
+    {
+        <option value="@province.PROVINCE_NAME" IdValue="@province.PROVINCE_ID" selected>@province.PROVINCE_NAME</option>
+    }
+    else
+    {
+        <option value="@province.PROVINCE_NAME" IdValue="@province.PROVINCE_ID">@province.PROVINCE_NAME</option>
+    }
+}

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using FahasaStoreApp.Base.Implementations;
-using FahasaStoreApp.Base.Interfaces;
+using FahasaStoreApp.Areas.User.Services;
+using FahasaStoreApp.Base;
 using FahasaStoreApp.Helpers;
 using FahasaStoreApp.Middleware;
 using FahasaStoreApp.Services.Implementations;
@@ -16,7 +16,7 @@ builder.Services.AddMemoryCache();
 // Thêm dịch vụ session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session timeout
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Thời gian session timeout
     options.Cookie.HttpOnly = true; // Cookie chỉ có thể truy cập thông qua HTTP
     options.Cookie.IsEssential = true; // Cookie là cần thiết cho ứng dụng
 });
@@ -26,9 +26,16 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
-//builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped(typeof(IBaseService<,,,>), typeof(BaseService<,,,>));
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IJwtTokenDecoder, JwtTokenDecoder>();
+builder.Services.AddScoped<IMethodsHelper, MethodsHelper>();
 builder.Services.AddScoped<IFahasaStoreService, FahasaStoreService>();
+builder.Services.AddScoped<IViettelPostService, ViettelPostService>();
+
+#region AddScoped For User
+builder.Services.AddScoped<IOrderUserService, OrderUserService>();
+#endregion
 
 //builder.Services.AddScopedServicesFromAssembly(Assembly.GetExecutingAssembly(), "FahasaStoreAdminApp.Services.EntityService");
 
@@ -62,12 +69,12 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Filter}/{id?}");
 
 // Thêm middleware session
 app.UseSession();

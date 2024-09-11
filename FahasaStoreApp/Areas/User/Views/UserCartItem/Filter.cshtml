@@ -1,0 +1,191 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<CartItemDetail>
+@{
+    var paged = Model.Paged;
+    var cartItem = new CartItemExtend();
+}
+
+<div class="bg-black bg-opacity-10">
+    <div class="container pt-4 d-flex align-items-center">
+        <h6 class="mb-0 fs-4 text-uppercase">Giỏ hàng</h6><span class="px-2">(@paged.PagedNavigation.TotalItemCount sản phẩm)</span>
+    </div>
+    <form asp-controller="UserOrder" asp-action="Create" method="get">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div id="ItemsCart">
+                        <div class="p-3 mb-2 bg-white rounded-3">
+                            <div class="row">
+                                <div class="col-7">
+                                    <input class="py-2" type="checkbox" id="select-all-checkbox">
+                                    <label role="button" for="select-all-checkbox">
+                                        Chọn tất cả (@paged.PagedNavigation.TotalItemCount sản phẩm)
+                                    </label>
+                                </div>
+                                <div class="col-2">
+                                    @Html.DisplayNameFor(model => cartItem.Quantity)
+                                </div>
+                                <div class="col-2">
+                                    @Html.DisplayNameFor(model => cartItem.IntoMoney)
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+                        </div>
+                        <div class="overflow-hidden bg-white rounded-3">
+                            <ul class="list-group list-group-flush py-3">
+                                @{
+                                    if (paged.Items.Any())
+                                    {
+                                        foreach (var item in paged.Items)
+                                        {
+                                            if (item.Book != null)
+                                            {
+                                                    <li id="cartItem_@item.Id" class="list-group-item">
+                                                        <div class="row">
+                                                            <div class="col-7">
+                                                                <div class="d-flex">
+                                                                    <input value="@item.Id" name="CartItemIds" class="cartItem-checkbox py-2" id="checkItem_@item.Id" type="checkbox" price="@item.IntoMoney">
+                                                                    <label for="checkItem_@item.Id">
+                                                                        <img src="@item.Book.BookPoster" width="120" height="120" class="object-fit-contain mx-2" />
+                                                                    </label>
+                                                                    <div class="d-flex flex-column justify-content-between">
+                                                                        <a href="/Home/Product/@item.BookId" class="mb-2 nav-link twoLine">@item.Book.Name</a>
+                                                                        <div>
+                                                                            <span class="fw-bold">@item.Book.CurrentPrice.ToString("N0") đ</span> <br />
+                                                                            <span class="text-decoration-line-through">@item.Book.Price.ToString("N0") đ</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-2 d-flex flex-column justify-content-center">
+                                                                <input type="number" value="@item.Quantity" ciId="@item.Id" ciUserId="@item.UserId" ciCartId="@item.CartId" ciBookId="@item.BookId" class="fs-6 px-1 py-1 text-center w-100" min="1" onchange="SubmitUpdateCartItemUser(this)" />
+                                                            </div>
+                                                            <div class="col-2 d-flex flex-column justify-content-center">
+                                                                <h6 class="text-danger fw-bold">@item.IntoMoney.ToString("N0") đ</h6>
+                                                            </div>
+                                                            <div class="col-1 d-flex flex-column justify-content-center">
+                                                                <a href="/User/UserCartItem/Delete" IdValue="@item.Id" onclick="HandlerCRUD(this, event)" class="nav-link p-2"><i class="bi bi-trash"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                            }
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mt-3 mt-lg-0">
+                    <div>
+                        @* voucher *@
+                        <div class="p-3 rounded-3 bg-white">
+                            <div class="text-primary d-flex justify-content-between align-items-center">
+                                <div class="fw-bold text-uppercase">
+                                    <i class="bi bi-gift"></i>
+                                    <span>Khuyến mãi</span>
+                                </div>
+                                <div>
+                                    <span role="button" class="text-primary ms-auto" data-bs-toggle="modal" data-bs-target="#vouchersModal" onclick="RenderPartialViewMethodGet('/User/HomeUser/VouchersUserFilter', 'boxDataUser', event)">Xem thêm</span>
+                                    <div class="modal fade" id="vouchersModal" tabindex="-1" aria-labelledby="vouchersModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header text-danger">
+                                                    <i class="bi bi-gift-fill fs-3"></i>
+                                                    <h1 class="modal-title fs-5 text-uppercase ms-3" id="vouchersModalLabel">Mã giảm giá</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body" id="boxDataUser">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <hr />
+
+                            <div class="mt-3">
+                                <div>
+                                    <div class="input-group mb-3">
+                                        <input type="number" id="VoucherId" hidden name="VoucherId">
+                                        <input type="number" id="IntoMoney" hidden class="form-control">
+                                        <input type="text" id="voucherCode" class="form-control" placeholder="Nhập mã khuyễn mãi">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="ApplyVoucherBtn()">Áp dụng</button>
+                                    </div>
+                                    <h6 class="text-black text-opacity-75">Khuyến mãi đã áp dụng</h6>
+                                    <div id="voucherResult"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* pay *@
+                        <div class="p-3 rounded-3 bg-white mt-3">
+                            <div class="fw-bold text-uppercase text-danger">
+                                <i class="bi bi-credit-card-2-back-fill"></i>
+                                <span>Thành toán</span>
+                            </div>
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <span class="fw-bold">Tổng tiền:</span>
+                                <div>
+                                    <span id="total-money" class="text-danger fw-bold fs-5">0 đ</span>
+                                    <span id="total-money-novoucher" class="text-decoration-line-through"></span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button id="buyNowBtn" type="submit" disabled class="btn btn-danger text-uppercase fw-bold fs-6 w-100">Mua ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8">
+                @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = paged.PagedNavigation, formId = "/User/UserCartItem/Filter?", renderINId = "Cart", methodGet = true }))
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    CheckboxHandeler();
+    function ApplyVoucherBtn() {
+        var voucherCode = $("#voucherCode").val();
+        var intoMoney = $("#IntoMoney").val();
+
+        if (voucherCode.trim() === "") {
+            $("#voucherResult").html("Please enter a voucher code.");
+            return;
+        }
+        
+        $.ajax({
+            url: `/User/HomeUser/ApplyVoucher?code=${voucherCode}&intoMoney=${intoMoney}`,
+            type: 'GET',
+            success: function (response) {
+                if (response.success) {
+                    let discount = intoMoney - intoMoney * response.data.discountPercent / 100;
+                    let finalDiscount = discount > response.data.maxDiscountAmount ? response.data.maxDiscountAmount : discount;
+                    finalDiscount = Math.floor(finalDiscount);
+                    $("#voucherResult").html("<div>Voucher applied successfully!</div> <div class='fw-bold'>Discount: " + finalDiscount.toLocaleString('en-US') + ' đ </div>');
+                    let totalMoney = intoMoney - finalDiscount;
+
+                    $('#total-money').text(totalMoney.toLocaleString('en-US') + ' đ');
+                    $('#total-money-novoucher').text(intoMoney.toLocaleString('en-US') + ' đ');
+                    $('#VoucherId').val(response.data.id);
+                } else {
+                    $("#voucherResult").html(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#voucherResult").html("An error occurred: " + error);
+            }
+        });
+    }
+
+</script>

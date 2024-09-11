@@ -1,0 +1,63 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<AddressExtend>
+@{
+    var paged = Model.Paged;
+    var address = paged.Items.OrderByDescending(e => e.Id).ToList();
+}
+
+<form asp-action="Filter" id="formUserAddressFilter">
+    <div>
+        <h5 class="text-uppercase">Sổ địa chỉ - @paged.PagedNavigation.TotalItemCount</h5><hr />
+        <a href="/User/UserAddress/Create" onclick="HandlerCRUD(this, event)" class="btn btn-danger mb-3">Thêm địa chỉ mới</a>
+        <div>
+            @{
+                if (address.Count > 0)
+                {
+                    var defaultAddress = address.FirstOrDefault(a => a.Default);
+                    if (defaultAddress != null)
+                    {
+                        <div class="my-3">
+                            <p class="text-uppercase fw-bold">Địa chỉ mặc định</p>
+                            <spanc class="my-2">@defaultAddress.ReceiverName, @defaultAddress.Phone</spanc>
+                            <div class="d-flex">
+                                <span class="my-2">@defaultAddress.Detail , @defaultAddress.Ward, @defaultAddress.District , @defaultAddress.Province</span>
+                                <a href="/User/UserAddress/Details" IdValue="@defaultAddress.Id" onclick="HandlerCRUD(this, event)" class="nav-link text-danger p-2"><i class="bi bi-eye-fill"></i></a>
+                                @if (defaultAddress.IsChanger)
+                                {
+                                    <div class="py-2">|</div>
+                                    <a href="/User/UserAddress/Edit" IdValue="@defaultAddress.Id" onclick="HandlerCRUD(this, event)" class="nav-link text-danger p-2"><i class="bi bi-pen-fill"></i></a>
+                                    <div class="py-2">|</div>
+                                    <a href="/User/UserAddress/Delete" IdValue="@defaultAddress.Id" onclick="HandlerCRUD(this, event)" class="nav-link text-danger p-2"><i class="bi bi-trash3-fill"></i></a>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <p class="text-uppercase fw-bold">Địa chỉ khác</p>
+                    foreach (var ar in address)
+                    {
+                        if (!ar.Default)
+                        {
+                            <div class="my-3">
+                                <span class="my-2">@ar.ReceiverName, @ar.Phone</span>
+                                <div class="d-flex">
+                                    <span class="my-2">@ar.Detail , @ar.Ward, @ar.District , @ar.Province</span>
+                                    <a href="/User/UserAddress/Details" IdValue="@ar.Id" onclick="HandlerCRUD(this, event)" class="nav-link text-danger p-2"><i class="bi bi-eye-fill"></i></a>
+                                    @if (ar.IsChanger)
+                                    {
+                                        <div class="py-2">|</div>
+                                        <a href="/User/UserAddress/Edit" IdValue="@ar.Id" onclick="HandlerCRUD(this, event)" class="nav-link text-danger p-2"><i class="bi bi-pen-fill"></i></a>
+                                        <div class="py-2">|</div>
+                                        <a href="/User/UserAddress/Delete" IdValue="@ar.Id" onclick="HandlerCRUD(this, event)" class="nav-link text-danger p-2"><i class="bi bi-trash3-fill"></i></a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            }
+        </div>
+        @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = paged.PagedNavigation, formId = "formUserAddressFilter", renderINId = "boxDataUser" }))
+    </div>
+</form>

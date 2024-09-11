@@ -1,18 +1,15 @@
 ﻿using AutoMapper;
+using FahasaStore.Models.Interfaces;
 using FahasaStoreAPI.Base.Interfaces;
 using FahasaStoreAPI.Models.DTOs;
-using FahasaStoreAPI.Models.Entities;
-using FahasaStoreAPI.Models.Interfaces;
 using FahasaStoreAPI.Models.ViewModels;
 using FahasaStoreAPI.Services.Extensions;
-using Humanizer;
-using X.PagedList;
 
 namespace FahasaStoreAPI.Base.Implementations
 {
     public class BaseService<TEntity, TViewModel> : IBaseService<TEntity, TViewModel>
         where TEntity : class
-        where TViewModel : class, IEntity<int>
+        where TViewModel : class, IEntity
     {
         protected readonly IBaseRepository<TEntity, TViewModel> _repository;
         protected readonly IMapper _mapper;

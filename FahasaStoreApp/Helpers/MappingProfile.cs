@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FahasaStoreAPI.Models.Entities;
-using FahasaStoreApp.Models.DTOs.Entities;
 
 namespace FahasaStoreApp.Helpers
 {

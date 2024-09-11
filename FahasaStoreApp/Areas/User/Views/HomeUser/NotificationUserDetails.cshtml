@@ -1,0 +1,38 @@
+﻿@using FahasaStore.Models
+@model NotificationExtend
+
+<div>
+    <!-- Button trigger modal -->
+    <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="appModalLabel">Thông báo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="px-4">
+                        <h5>
+                            @Html.DisplayFor(model => model.NotificationTypeName)
+                        </h5>
+                        <h6>
+                            @Html.DisplayFor(model => model.Title)
+                        </h6>
+                        <div>
+                            @Html.DisplayFor(model => model.Content)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+</script>

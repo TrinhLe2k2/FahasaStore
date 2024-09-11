@@ -1,6 +1,6 @@
-﻿@using FahasaStoreApp.Models.ViewModels.Entities
+﻿@using FahasaStore.Models
 @{
-    var topSellingBooksByCategory = ViewData["TopSellingBooksByCategory"] as List<BookVM>;
+    var topSellingBooksByCategory = ViewData["TopSellingBooksByCategory"] as List<BookExtend>;
 }
 
 @if (topSellingBooksByCategory != null && topSellingBooksByCategory.Any())
@@ -20,7 +20,7 @@
                                     <i class="bi bi-arrow-up-short text-success fw-bold fs-5"></i>
                                 </div>
                                 <div class="col-11 d-flex align-items-center flex-column flex-lg-row">
-                                    <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" class="rounded-start object-fit-cover" width="100" height="100" alt="...">
+                                    <img src="@book.BookPoster" class="rounded-start object-fit-cover" width="100" height="100" alt="...">
                                     <div class="d-flex flex-column px-2">
                                         <a href="" class="twoLine text-decoration-none">@book.Name</a>
                                         <small class="text-black-50">@book.AuthorName</small>
@@ -38,7 +38,7 @@
                     {
                         <div class="d-flex flex-column align-items-center flex-lg-row align-items-lg-start">
                             <a href="" class="p-2 text-center text-decoration-none d-md-flex align-items-md-center d-lg-block">
-                                <img src="@book.PosterImages.FirstOrDefault(e => e.ImageDefault == true)?.ImageUrl" width="240" height="240" class="object-fit-cover" />
+                                <img src="@book.BookPoster" width="240" height="240" class="object-fit-cover" />
                                 <span class="btn btn-danger">Xem ngay</span>
                             </a>
                             <div class="px-2 d-flex flex-column">
@@ -46,14 +46,6 @@
                                     <h6>@book.Name</h6>
                                 </a>
                                 <span>Tác giả: @book.AuthorName</span>
-
-                                @if (book.BookPartners.Any())
-                                {
-                                    foreach (var bp in book.BookPartners)
-                                    {
-                                        <span>@bp.PartnerTypeName : @bp.PartnerName</span>
-                                    }
-                                }
 
                                 <span class="fw-bold mt-2">@book.CurrentPrice.ToString("N0") đ</span>
                                 <div class="mb-2">

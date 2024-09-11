@@ -1,38 +1,72 @@
-﻿using FahasaStoreApp.Helpers;
-using FahasaStoreApp.Models.DTOs.Entities;
+﻿using FahasaStore.Models;
+using FahasaStoreApp.Helpers;
+using FahasaStoreApp.Models;
+using FahasaStoreApp.Models.DTOs;
+using FahasaStoreApp.Models.ViewModels;
 using FahasaStoreApp.Services.Interfaces;
-using System.Drawing.Printing;
-using System.Reflection;
 
 namespace FahasaStoreApp.Services.Implementations
 {
     public class UserService : IUserService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly UserLogined _userLogined;
+        private readonly IMethodsHelper _methodsHelper;
 
-        public UserService(IHttpClientFactory httpClientFactory, UserLogined userLogined)
+        public UserService(IHttpClientFactory httpClientFactory, IMethodsHelper methodsHelper)
         {
             _httpClientFactory = httpClientFactory;
-            _userLogined = userLogined;
-        }
-
-        public async Task<string> LoginAsync(Login model)
-        {
-            var result = await MethodsHelper.RequestHttpPost<string, Login>(_httpClientFactory, _userLogined, "https://localhost:7094/api/Users/login", model);
-            return result;
-        }
-
-        public async Task LogOutAsync()
-        {
-            var endpoint = $"https://localhost:7094/api/Users/logout";
-            var result = await MethodsHelper.RequestHttpGet<bool>(_httpClientFactory, _userLogined, endpoint);
+            _methodsHelper = methodsHelper;
         }
 
         public async Task<bool> RegisterAsync(Register model)
         {
-            var result = await MethodsHelper.RequestHttpPost<bool, Register>(_httpClientFactory, _userLogined, "https://localhost:7094/api/Users/login", model);
+            var endpoint = "/Users/Register";
+            var result = await _methodsHelper.RequestHttpPost<bool, Register>(_httpClientFactory, endpoint, model);
             return result;
         }
+
+        public async Task<UserLoginer?> LoginAsync(Login model)
+        {
+            var endpoint = "/Users/Login";
+            var result = await _methodsHelper.RequestHttpPost<UserLoginer?, Login>(_httpClientFactory, endpoint, model);
+            return result;
+        }
+
+        public async Task<AspNetUserExtend> UpdateAsync(AspNetUserExtend model)
+        {
+            var endpoint = "/Users/Update";
+            var result = await _methodsHelper.RequestHttpPut<AspNetUserExtend, AspNetUserExtend>(_httpClientFactory, endpoint, model);
+            return result;
+        }
+
+        public async Task<bool> LogOutAsync()
+        {
+            var endpoint = "/Users/Logout";
+            var result = await _methodsHelper.RequestHttpGet<bool>(_httpClientFactory, endpoint);
+            return result;
+        }
+
+        public async Task<PagedVM<NotificationExtend>> GetNotificationsAsync(int pageNumber, int pageSize)
+        {
+            var endpoint = $"/Users/GetNotifications?pageNumber={pageNumber}&pageSize={pageSize}";
+            var result = await _methodsHelper.RequestHttpGet<PagedVM<NotificationExtend>>(_httpClientFactory, endpoint);
+            return result;
+        }
+
+        public async Task<NotificationExtend?> GetNotificationDetailsByIdAsync(int notificationId)
+        {
+            var endpoint = $"/Users/GetNotificationDetailsById?notificationId={notificationId}";
+            var result = await _methodsHelper.RequestHttpGet<NotificationExtend>(_httpClientFactory, endpoint);
+            return result;
+        }
+
+        public async Task<AspNetUserDetail> GetProfileUserAsync()
+        {
+            var endpoint = $"/Users/GetProfileUser";
+            var result = await _methodsHelper.RequestHttpGet<AspNetUserDetail>(_httpClientFactory, endpoint);
+            return result;
+        }
+
+        
     }
 }

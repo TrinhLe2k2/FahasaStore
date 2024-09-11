@@ -1,7 +1,10 @@
-﻿using FahasaStoreAPI.Models.DTOs.Entities;
+﻿using FahasaStore.Models;
+using FahasaStoreAPI.Constants;
+using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FahasaStoreAPI.Controllers
 {
@@ -16,109 +19,102 @@ namespace FahasaStoreAPI.Controllers
             _userService = userService;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> LogIn([FromBody] Login model)
+        [HttpPost("Login")]
+        public async Task<IActionResult> LogIn(Login model)
         {
-            if (!ModelState.IsValid)
+            var userLoginer = await _userService.LoginAsync(model);
+            if (userLoginer == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new { Message = "LogIn failed." });
             }
-
-            try
-            {
-                var token = await _userService.LoginAsync(model);
-                return Ok(token);
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
+            return Ok(userLoginer);
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Register model)
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(Register model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var result = await _userService.RegisterAsync(model);
-                if (result)
-                {
-                    return Ok(new { Message = "Registration successful." });
-                }
-
-                return BadRequest(new { Message = "Registration failed." });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
+            var result = await _userService.RegisterAsync(model);
+            return Ok(result);
         }
 
-        [HttpGet("logout")]
+        [HttpGet("Logout")]
         public async Task<IActionResult> LogOut()
         {
-            await _userService.LogOutAsync();
-            return Ok(new { Message = "Logout successful." });
+            var result = await _userService.LogOutAsync();
+            return Ok(result);
         }
 
-        [HttpPost("add-role")]
-        public async Task<IActionResult> AddUserRole([FromBody] UserRole model)
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update(AspNetUserExtend model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var result = await _userService.AddUserRoleAsync(model.UserId, model.Role);
-                if (result)
-                {
-                    return Ok(new { Message = "Role added successfully." });
-                }
-
-                return BadRequest(new { Message = "Failed to add role." });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
+            var result = await _userService.UpdateAsync(model);
+            return Ok(result);
         }
 
-        [HttpPost("remove-role")]
-        public async Task<IActionResult> RemoveUserRole([FromBody] UserRole model)
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete(int userId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var result = await _userService.RemoveUserRoleAsync(model.UserId, model.Role);
-                if (result)
-                {
-                    return Ok(new { Message = "Role removed successfully." });
-                }
-
-                return BadRequest(new { Message = "Failed to remove role." });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
+            var result = await _userService.DeleteAsync(userId);
+            return Ok(result);
         }
 
-        [HttpGet("FindUser")]
-        public async Task<IActionResult> FindUser(string id)
+        [HttpPost("AddUserRole")]
+        public async Task<IActionResult> AddUserRole(int userId, string role)
         {
-            var u = await _userService.FindByIdAsync(id);
-            return Ok(u);
+            var result = await _userService.AddUserRoleAsync(userId, role);
+            return Ok(result);
+        }
+
+        [HttpPost("RemoveRoleUser")]
+        public async Task<IActionResult> RemoveRoleUser(int userId, string role)
+        {
+            var result = await _userService.RemoveUserRoleAsync(userId, role);
+            return Ok(result);
+        }
+
+        [Authorize(AppRole.Customer)]
+        [HttpGet("GetNotifications")]
+        public async Task<IActionResult> GetNotifications(int pageNumber, int pageSize)
+        {
+            var userId = User.FindFirst(c => c.Type == "UserId")?.Value;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            var result = await _userService.GetNotificationsAsync(int.Parse(userId), pageNumber, pageSize);
+            return Ok(result);
+        }
+
+        [Authorize(AppRole.Customer)]
+        [HttpGet("GetNotificationDetailsById")]
+        public async Task<IActionResult> GetNotificationDetailsById(int notificationId)
+        {
+            var userId = User.FindFirst(c => c.Type == "UserId")?.Value;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            var result = await _userService.GetNotificationDetailsByIdAsync(int.Parse(userId), notificationId);
+            return Ok(result);
+        }
+
+        [Authorize(AppRole.Customer)]
+        [HttpGet("GetProfileUser")]
+        public async Task<IActionResult> GetProfileUser()
+        {
+            var userId = User.FindFirst(c => c.Type == "UserId")?.Value;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            var result = await _userService.GetProfileUserAsync(int.Parse(userId));
+            return Ok(result);
         }
     }
 }

@@ -1,0 +1,163 @@
+﻿@model FahasaStore.Models.AddressBase
+
+<div>
+    <!-- Button trigger modal -->
+    <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="appModalLabel">Cập nhật chỉ mới</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="Edit" id="formUpdateAddressUser" onsubmit="RenderPartialView('formUpdateAddressUser', 'boxDataUser', event);">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row row-cols-1 row-cols-md-2">
+                            <div class="col">
+                                <div class="row row-cols-1 g-2">
+                                    <input asp-for="UserId" hidden />
+                                    <input asp-for="CreatedAt" hidden />
+                                    <div class="form-group">
+                                        <label asp-for="ReceiverName" class="control-label"></label>
+                                        <input asp-for="ReceiverName" class="form-control" />
+                                        <span asp-validation-for="ReceiverName" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Phone" class="control-label"></label>
+                                        <input asp-for="Phone" class="form-control" />
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row row-cols-1 g-2">
+                                    <div class="form-group">
+                                        <label asp-for="Province" class="control-label"></label>
+                                        <select asp-for="Province" class="form-control" id="Province" province="@Model.Province">
+                                            <option value="">-- Chọn tỉnh/thành phố --</option>
+                                        </select>
+                                        <span asp-validation-for="Province" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="District" class="control-label"></label>
+                                        <select asp-for="District" class="form-control" id="District" district="@Model.District">
+                                            <option value="">-- Chọn Quận/Huyện --</option>
+                                        </select>
+                                        <span asp-validation-for="District" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Ward" class="control-label"></label>
+                                        <select asp-for="Ward" class="form-control" id="Ward" ward="@Model.Ward">
+                                            <option value="">-- Chọn Phường/Xã --</option>
+                                        </select>
+                                        <span asp-validation-for="Ward" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Detail" class="control-label"></label>
+                                        <input asp-for="Detail" class="form-control" />
+                                        <span asp-validation-for="Detail" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" asp-for="Default" /> @Html.DisplayNameFor(model => model.Default)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <input type="submit" value="Cập Nhật" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+</script>
+
+<script>
+    $(document).ready(function () {
+        var province = $('#Province').attr("province");
+        var district = $('#District').attr("district");
+        var ward = $('#Ward').attr("ward");
+
+        // Load Provinces
+        $.ajax({
+            url: '/GetData/OnGetProvinces?province=' + province,
+            type: 'GET',
+            success: function (data) {
+                $('#Province').html(data);
+
+                // Set selected value for Province
+                $('#Province').val(province).trigger('change');
+            },
+            error: function () {
+                console.error('Error fetching province');
+            }
+        });
+
+        // Province change event
+        $('#Province').change(function () {
+            var selectedOption = $(this).find('option:selected');
+            var provinceId = $(selectedOption).attr("IdValue");
+
+            if (provinceId) {
+                $.ajax({
+                    url: '/GetData/OnGetDistricts?provinceId=' + provinceId + '&district=' + district,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#District').html(data);
+                        $('#District').prop('disabled', false);
+
+                        // Set selected value for District
+                        $('#District').val(district).trigger('change');
+                    },
+                    error: function () {
+                        console.error('Error fetching districts');
+                    }
+                });
+            } else {
+                $('#District').html('<option value="">-- Chọn quận/huyện --</option>').prop('disabled', true);
+                $('#Ward').html('<option value="">-- Chọn phường/xã --</option>').prop('disabled', true);
+            }
+        });
+
+        // District change event
+        $('#District').change(function () {
+            var selectedOption = $(this).find('option:selected');
+            var districtId = $(selectedOption).attr("IdValue");
+
+            if (districtId) {
+                $.ajax({
+                    url: '/GetData/OnGetWards?districtId=' + districtId + '&ward=' + ward,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#Ward').html(data);
+                        $('#Ward').prop('disabled', false);
+
+                        // Set selected value for Ward
+                        $('#Ward').val(ward);
+                    },
+                    error: function () {
+                        console.error('Error fetching wards');
+                    }
+                });
+            } else {
+                $('#Ward').html('<option value="">-- Chọn phường/xã --</option>').prop('disabled', true);
+            }
+        });
+    });
+
+</script>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

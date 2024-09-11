@@ -1,0 +1,23 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@model PagedVM<NotificationExtend>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Thông báo";
+}
+
+<div class="bg-black bg-opacity-10">
+    <div class="container pt-4">
+        <div class="bg-white rounded-3 py-3">
+            <div class="row">
+                @(await Html.RenderComponentAsync<SideBarUserComponent>(RenderMode.ServerPrerendered, new { active = 5 }))
+                <div class="col-lg-9 px-4" id="boxDataUser">
+                    @await Html.PartialAsync("/Areas/User/Views/HomeUser/NotificationsUseFilter.cshtml", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

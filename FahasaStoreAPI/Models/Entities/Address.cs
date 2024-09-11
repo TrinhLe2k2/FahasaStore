@@ -18,7 +18,7 @@ namespace FahasaStoreAPI.Models.Entities
         public string District { get; set; } = null!;
         public string Ward { get; set; } = null!;
         public string Detail { get; set; } = null!;
-        public bool DefaultAddress { get; set; }
+        public bool Default { get; set; }
         public DateTime? CreatedAt { get; set; }
 
         public virtual AspNetUser? User { get; set; }

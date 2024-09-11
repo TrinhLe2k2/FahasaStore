@@ -1,0 +1,109 @@
+﻿@model FahasaStore.Models.ReviewBase
+
+<div>
+    <!-- Button trigger modal -->
+    <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="appModalLabel">Chỉnh sửa đánh Giá</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="Edit" id="formEditReviewUser" onsubmit="RenderPartialView('formEditReviewUser', 'modal-for-crud', event);">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input asp-for="BookId" hidden />
+                        <input asp-for="UserId" hidden />
+                        <input asp-for="OrderItemId" hidden />
+                        <input asp-for="CreatedAt" hidden />
+                        <div class="mb-3 d-flex flex-column align-items-center">
+                            <input asp-for="Rating" min="1" max="5" hidden />
+                            <div class="stars fs-3">
+                                @for(int i = 1; i<= 5; i++)
+                                {
+                                    if(Model.Rating >= i)
+                                    {
+                                        <span class="star" style="color: gold" data-rating="@i">&#9733;</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="star" data-rating="@i">&#9733;</span>
+                                    }
+                                }
+                            </div>
+                            <div id="ratingDescription" class="ms-3"></div>
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cmtInput" class="form-label">Nội dung đánh giá</label>
+                            <textarea class="form-control" asp-for="Comment" oninput="updateCharacterCount()" rows="3" maxlength="250" placeholder="Nhập nội dung nhận xét của bạn về sản phẩm, tối đa 250 ký tự."></textarea>
+                            <div id="charCount" class="mt-3 text-end">Số ký tự còn lại: 250</div>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Đánh Giá" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        ReviewHandler();
+
+        function ReviewHandler() {
+            let starDescriptions = {
+                1: "Quá tệ",
+                2: "Không hài lòng",
+                3: "Bình thường",
+                4: "Hài lòng",
+                5: "Tuyệt vời",
+            };
+
+            let $stars = $("span[data-rating]");
+            let $ratingDescription = $("#ratingDescription");
+            let $ratingInput = $('input[name="Rating"]');
+
+            let valueRating = $("#Rating").val();
+            $ratingDescription.text(starDescriptions[valueRating]);
+
+            $stars.on("click", function () {
+                let rating = $(this).data("rating");
+                $ratingDescription.text(starDescriptions[rating]);
+                $ratingInput.val(rating);
+
+                $stars.each(function (index) {
+                    if (index + 1 <= rating) {
+                        $(this).css("color", "gold"); // Change color to gold
+                    } else {
+                        $(this).css("color", ""); // Reset color
+                    }
+                });
+            });
+        }
+    });
+    // review
+    function updateCharacterCount() {
+        var textarea = document.getElementById("Comment");
+        var charCount = document.getElementById("charCount");
+        var maxLength = textarea.getAttribute("maxlength");
+        var remainingChars = maxLength - textarea.value.length;
+        charCount.textContent = "Số ký tự còn lại: " + remainingChars;
+    }
+</script>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

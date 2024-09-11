@@ -1,0 +1,7 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Models.ViewModels
+@model FahasaStore.Models.OrderBase
+@{
+    Layout = null;
+}
+@await Html.PartialAsync("/Areas/User/Views/UserOrder/Create.cshtml", Model)

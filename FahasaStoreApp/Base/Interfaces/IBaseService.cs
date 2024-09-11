@@ -1,4 +1,5 @@
-﻿using FahasaStoreApp.Models.DTOs;
+﻿using FahasaStoreApp.Models;
+using FahasaStoreApp.Models.DTOs;
 using FahasaStoreApp.Models.Interfaces;
 using FahasaStoreApp.Models.ViewModels;
 

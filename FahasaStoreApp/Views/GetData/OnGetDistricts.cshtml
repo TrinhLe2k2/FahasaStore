@@ -1,0 +1,16 @@
+﻿@model ICollection<District>
+@{
+    var dis = ViewData["District"] as string;
+}
+<option value="">-- Chọn Quận/Huyện --</option>
+@foreach (var district in Model)
+{
+    if (dis == district.DISTRICT_NAME)
+    {
+        <option value="@district.DISTRICT_NAME" IdValue="@district.DISTRICT_ID" selected>@district.DISTRICT_NAME</option>
+    }
+    else
+    {
+        <option value="@district.DISTRICT_NAME" IdValue="@district.DISTRICT_ID">@district.DISTRICT_NAME</option>
+    }
+}

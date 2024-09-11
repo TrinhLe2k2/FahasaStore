@@ -1,0 +1,56 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@using Newtonsoft.Json
+@model PagedVM<ReviewExtend>
+
+@{
+    var reviews = Model.Items.ToList();
+    var bookId = reviews.FirstOrDefault()?.BookId;
+    // var userJson = Context.Session?.GetString("UserVM");
+    // var userLoginer = string.IsNullOrEmpty(userJson) ? null : JsonConvert.DeserializeObject<AspNetUserDetail>(userJson);
+}
+
+<div>
+    <ul class="list-group list-group-flush">
+        @{
+            if (reviews != null && reviews.Count > 0)
+            {
+                foreach (var review in reviews)
+                {
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-3 col-xl-2">
+                                <img src="@review.UserImageUrl" width="50" height="50" class="object-fit-contain rounded-circle me-2" />
+                                <span>@review.UserFullName</span>
+                                <div>
+                                    @{
+                                        for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= review.Rating)
+                                            {
+                                                <span style="color: gold;">★</span>
+                                            }
+                                            else
+                                            {
+                                                <span>★</span>
+                                            }
+                                        }
+                                    }
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                @review.Comment #@review.Id
+                                <div>
+                                    <small>@review.CreatedAt</small>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+            }
+        }
+    </ul>
+    @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = Model.PagedNavigation, formId = "/GetData/ProductReviews?bookId=" + bookId, renderINId = "boxProductReviews", methodGet = true }))
+</div>

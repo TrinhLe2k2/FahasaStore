@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FahasaStore.Models.Interfaces;
 using FahasaStoreAPI.Base.Interfaces;
 using FahasaStoreAPI.Helpers;
 using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Models.Entities;
-using FahasaStoreAPI.Models.Interfaces;
 using FahasaStoreAPI.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
@@ -14,7 +14,7 @@ namespace FahasaStoreAPI.Base.Implementations
 {
     public class BaseRepository<TEntity, TViewModel> : IBaseRepository<TEntity, TViewModel>
         where TEntity : class
-        where TViewModel : class, IEntity<int>
+        where TViewModel : class, IEntity
     {
         protected readonly FahasaStoreDBContext _context;
         protected readonly DbSet<TEntity> _dbSet;
@@ -127,7 +127,7 @@ namespace FahasaStoreAPI.Base.Implementations
             }
 
             var pagedList = await query.ToPagedListAsync(filterOptions.PageNumber, filterOptions.PageSize);
-            var paged = MethodsHelper.GetPagedAsync<TViewModel>(pagedList);
+            var paged = MethodsHelper.GetPaged<TViewModel>(pagedList);
             var result = new FilterVM<TViewModel>(filterOptions, paged);
             return result;
         }

@@ -3,6 +3,7 @@
     public class FilterOptions
     {
         public List<FilterItem> Filters { get; set; } = new List<FilterItem>();
+        public List<int> IntIds { get; set; } = new List<int>();
         public string SortField { get; set; } = "Id";
         public bool OrderByDescending { get; set; } = true;
         public int PageNumber { get; set; } = 1;

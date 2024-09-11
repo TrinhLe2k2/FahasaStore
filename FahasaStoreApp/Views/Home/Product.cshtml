@@ -1,14 +1,23 @@
-﻿@using FahasaStoreApp.Components
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
 @using FahasaStoreApp.Helpers
-@using FahasaStoreApp.Models.DTOs.Entities
-@using FahasaStoreApp.Models.ViewModels.Entities
+@using FahasaStoreApp.Models.DTOs
+@using FahasaStoreApp.Models.ViewModels
+@using Newtonsoft.Json
 @inject IHttpContextAccessor HttpContextAccessor
 @{
-    var userLogin = new UserLogined(HttpContextAccessor);
-    var product = ViewData["Product"] as BookVM;
-    var vouchers = ViewData["Vouchers"] as List<VoucherVM>;
-    var reviews = ViewData["Reviews"] as List<ReviewVM>;
-    var similarBooks = ViewData["SimilarBooks"] as List<BookDto>;
+    // var userJson = Context.Session?.GetString("UserVM");
+    var userJson = HttpContextAccessor.HttpContext?.Request.Cookies["UserLoginer"];
+    var userLoginer = string.IsNullOrEmpty(userJson) ? null : JsonConvert.DeserializeObject<UserLoginer>(userJson);
+
+    var dataProduct = ViewData["DataProduct"] as HomeProductVM;
+
+    var product = dataProduct?.Book;
+    var similarBooks = dataProduct?.SimilarBooks.Items.ToList();
+    var reviewsPaged = dataProduct?.Reviews;
+    var reviews = reviewsPaged?.Items.ToList();
+
+    var vouchers = ViewData["Vouchers"] as List<VoucherExtend>;
 
     ViewData["Title"] = product?.Name;
 }
@@ -28,7 +37,7 @@
                     <div class="col-5">
                         @if (product.PosterImages != null && product.PosterImages.Count > 0)
                         {
-                            var defaultPoster = product.PosterImages.First(p => p.ImageDefault == true);
+                            var defaultPoster = product.PosterImages.First(p => p.Default == true);
 
                             <div class="swiper mySwiper2-product-view">
                                 <div class="swiper-wrapper">
@@ -37,7 +46,7 @@
                                             <img src="@defaultPoster.ImageUrl" class="position-absolute w-100 h-100 object-fit-contain" alt="...">
                                         </div>
                                     </div>
-                                    @foreach (var poster in product.PosterImages.Where(p => p.ImageDefault == false).ToList())
+                                    @foreach (var poster in product.PosterImages.Where(p => p.Default == false).ToList())
                                     {
                                         <div class="swiper-slide">
                                             <div class="w-100 position-relative" style="padding-bottom: 100%;">
@@ -55,7 +64,7 @@
                                             <img src="@defaultPoster.ImageUrl" class="position-absolute w-100 h-100 object-fit-contain" alt="...">
                                         </div>
                                     </div>
-                                    @foreach (var poster in product.PosterImages.Where(p => p.ImageDefault == false).ToList())
+                                    @foreach (var poster in product.PosterImages.Where(p => p.Default == false).ToList())
                                     {
                                         <div class="swiper-slide">
                                             <div class="w-100 position-relative" style="padding-bottom: 100%;">
@@ -116,19 +125,51 @@
                                 Số lượng
                             </div>
                             <div class="col-9">
-                                <input type="number" id="order-quantity" value="1" class="fs-5 px-2 py-1 text-center w-25" min="1" max="@product.Quantity" />
+                                @if (userLoginer != null)
+                                {
+                                    <input type="number" oninput="OnInputQuantity(this)" value="1" class="fs-5 px-2 py-1 text-center w-25" min="1" max="@product.Quantity" />
+                                }
+                                else
+                                {
+                                    <input type="number" value="1" class="fs-5 px-2 py-1 text-center w-25" min="1" max="@product.Quantity" />
+                                }
                             </div>
                         </div>
                         <div class="d-flex mt-3">
-                            @Html.AntiForgeryToken()
-                            <form action="/User/AddCartItem" BookId="@product.Id" onsubmit="AddCartItem(this, event)">
-                                <input type="submit" value="Thêm vào giỏ hàng" class="btn btn-outline-danger fw-bold mx-1 py-2" />
-                            </form>
-                            <form asp-controller="User" asp-action="BuyNow" id="form-ByNow">
-                                <input type="number" id="Quantity" name="Quantity" hidden />
-                                <input type="number" name="BookId" value="@product.Id" hidden />
-                                <input type="submit" value="Mua ngay" class="btn btn-danger fw-bold mx-1 py-2" />
-                            </form>
+                            @if (userLoginer != null) 
+                            {
+                                <form asp-area="User" asp-controller="UserCartItem" asp-action="Create" onsubmit="SubmitReloadPOST(this, event)">
+                                    <input type="number" name="CartId" hidden value="@userLoginer.CartId" />
+                                    <input type="number" name="BookId" hidden value="@product.Id" />
+                                    <input type="number" name="Quantity" hidden value="1" />
+                                    <button type="submit" class="btn btn-outline-danger fw-bold mx-1 py-2">
+                                        Thêm vào giỏ hàng <i class="bi bi-cart-plus"></i>
+                                    </button>
+                                </form>
+
+                                <form asp-area="User" asp-controller="UserOrder" asp-action="BuyNow" method="get">
+                                    <input type="number" name="CartId" hidden value="@userLoginer.CartId" />
+                                    <input type="number" name="BookId" hidden value="@product.Id" />
+                                    <input type="number" name="Quantity" hidden value="1" />
+                                    <button type="submit" class="btn btn-danger fw-bold mx-1 py-2">
+                                        Mua ngay <i class="bi bi-bag-heart"></i>
+                                    </button>
+                                </form>
+                                <script>
+                                    function OnInputQuantity(element) {
+                                        var quantity = $(element).val();
+                                        var orderQuantityInputs = $('input[name="Quantity"]');
+                                        orderQuantityInputs.each(function () {
+                                            $(this).val(quantity);
+                                        });
+                                    }
+                                </script>
+                            }
+                            else
+                            {
+                                <a href="/Accounts/Login" onclick="HandlerCRUD(this, event)" class="btn btn-outline-danger fw-bold mx-1 py-2">Thêm vào giỏ hàng <i class="bi bi-cart-check"></i></a>
+                                <a href="/Accounts/Login" onclick="HandlerCRUD(this, event)" class="btn btn-danger fw-bold mx-1 py-2">Mua ngay <i class="bi bi-bag-heart"></i></a>
+                            }
                         </div>
                     </div>
                 </div>
@@ -208,13 +249,13 @@
                                     <div class="card position-relative">
                                         <a href="~/Home/Product/@book.Id" class="text-decoration-none mx-2" style="color: #000;" title="@book.Name">
                                             <div class="w-100 position-relative" style="padding-bottom: 100%;">
-                                                <img src="@book.poster" class="card-img-top position-absolute w-100 h-100 object-fit-cover" alt="...">
+                                                <img src="@book.BookPoster" class="card-img-top position-absolute w-100 h-100 object-fit-cover" alt="...">
                                             </div>
                                             <div class="card-body p-1">
                                                 <h6 class="card-title twoLine">@book.Name</h6>
                                                 <div class="d-flex flex-column justify-content-start">
                                                     <div>
-                                                        <span class="card-text text-danger fw-bold">@book.CurrentPrice.ToString("N0")) đ</span>
+                                                        <span class="card-text text-danger fw-bold">@book.CurrentPrice.ToString("N0") đ</span>
                                                         <small class="position-absolute top-0 end-0 bg-danger text-white px-2 ms-2 rounded-start">- @book.DiscountPercentage %</small>
                                                     </div>
                                                     <small class="card-text text-decoration-line-through">@book.Price.ToString("N0") đ</small>
@@ -232,7 +273,6 @@
             </div>
         }
         
-
         @* Infomation Product *@
         <div class="container mt-4">
             <div class="p-3 bg-white rounded-3">
@@ -317,6 +357,7 @@
                 </div>
             </div>
         </div>
+
         @* review *@
         <div class="container mt-4 review">
             <div class="p-3 bg-white rounded-3">
@@ -383,88 +424,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mt-4">
-                    <ul class="list-group list-group-flush">
-                        @{
-                            if (reviews != null && reviews.Count > 0)
-                            {
-                                if (userLogin.CurrentUser != null)
-                                {
-                                    var reviewOfUser = reviews.FirstOrDefault(r => r.UserId == userLogin.CurrentUser.Id);
-                                    if (reviewOfUser != null)
-                                    {
-                                        <li class="list-group-item" id="reviewOfUser">
-                                            <div class="row">
-                                                <div class="col-3 col-xl-2">
-                                                    <img src="@userLogin.CurrentUser.ImageUrl" width="50" height="50" class="object-fit-contain rounded-circle me-2" />
-                                                    <span>@userLogin.CurrentUser.FullName</span>
-                                                    <div id="reviewOfUser_rating">
-                                                        @{
-                                                            for (int i = 1; i <= 5; i++)
-                                                            {
-                                                                if (i <= reviewOfUser.Rating)
-                                                                {
-                                                                    <span style="color: gold;">★</span>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <span>★</span>
-                                                                }
-                                                            }
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <span id="reviewOfUser_comment">@reviewOfUser.Comment</span>
-                                                    <div class="d-flex justify-content-between">
-                                                        <small>@reviewOfUser.CreatedAt</small>
-                                                        <div class="btn-group" role="group">
-                                                            <a href="/User/EditReview" IdValue="@reviewOfUser.Id" onclick="HandlerCRUD(this, event)" data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-danger"><i class="bi bi-pen"></i></a>
-                                                            <a href="/User/DeleteReview" IdValue="@reviewOfUser.Id" onclick="HandlerCRUD(this, event)" data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-danger"><i class="bi bi-trash3"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    }
-                                }
-                                foreach (var review in reviews)
-                                {
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-3 col-xl-2">
-                                                <img src="@review.User?.ImageUrl" width="50" height="50" class="object-fit-contain rounded-circle me-2" />
-                                                <span>@review.User?.FullName</span>
-                                                <div>
-                                                    @{
-                                                        for (int i = 1; i <= 5; i++)
-                                                        {
-                                                            if (i <= review.Rating)
-                                                            {
-                                                                <span style="color: gold;">★</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span>★</span>
-                                                            }
-                                                        }
-                                                    }
-                                                </div>
-
-                                            </div>
-                                            <div class="col">
-                                                @review.Comment #@review.Id
-                                                <div>
-                                                    <small>@review.CreatedAt</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                }
-                            }
-                        }
-                    </ul>
-                </div>
+                @if (reviews != null && reviews.Count > 0)
+                {
+                    <div class="row mt-4" id="boxProductReviews">
+                        @await Html.PartialAsync("/Views/GetData/ProductReviews.cshtml", reviewsPaged)
+                    </div>
+                }
             </div>
         </div>
         
@@ -479,16 +444,7 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            var orderQuantityInput = $('#order-quantity');
-            var quantityInput = $('#Quantity');
-
-            quantityInput.val(orderQuantityInput.val());
-
-            orderQuantityInput.on('input', function () {
-                quantityInput.val(orderQuantityInput.val());
-            });
-        });
+        
     </script>
     <script>
         // view product

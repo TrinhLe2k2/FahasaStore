@@ -1,11 +1,10 @@
-﻿using FahasaStoreAPI.Models.DTOs;
+﻿using FahasaStore.Models.Interfaces;
+using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Models.DTOs.Entities;
-using FahasaStoreAPI.Models.Entities;
-using FahasaStoreAPI.Models.Interfaces;
 
 namespace FahasaStoreAPI.Models.ViewModels.Entities
 {
-    public class WebsiteVM : IEntity<int>
+    public class WebsiteVM : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
@@ -17,7 +16,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public string Email { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
     }
-    public class VoucherVM : IEntity<int>
+    public class VoucherVM : IEntity
     {
         public VoucherVM()
         {
@@ -40,7 +39,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<OrderDto> Orders { get; set; }
     }
-    public class TopicContentVM : IEntity<int>
+    public class TopicContentVM : IEntity
     {
         public int Id { get; set; }
         public int? TopicId { get; set; }
@@ -50,7 +49,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual TopicDto? Topic { get; set; }
     }
-    public class TopicVM : IEntity<int>
+    public class TopicVM : IEntity
     {
         public TopicVM()
         {
@@ -65,7 +64,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<TopicContentDto> TopicContents { get; set; }
     }
-    public class SubcategoryVM : IEntity<int>
+    public class SubcategoryVM : IEntity
     {
         public SubcategoryVM()
         {
@@ -84,7 +83,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual CategoryDto? Category { get; set; }
         public virtual ICollection<BookDto> Books { get; set; }
     }
-    public class StatusVM : IEntity<int>
+    public class StatusVM : IEntity
     {
         public StatusVM()
         {
@@ -99,7 +98,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<OrderStatusDto> OrderStatuses { get; set; }
     }
-    public class ReviewVM : IEntity<int>
+    public class ReviewVM : IEntity
     {
         public int Id { get; set; }
         public int? BookId { get; set; }
@@ -114,7 +113,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual OrderDto? Order { get; set; }
         public virtual AspNetUserDto? User { get; set; }
     }
-    public class PosterImageVM : IEntity<int>
+    public class PosterImageVM : IEntity
     {
         public int Id { get; set; }
         public int? BookId { get; set; }
@@ -125,7 +124,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual BookDto? Book { get; set; }
     }
-    public class PlatformVM : IEntity<int>
+    public class PlatformVM : IEntity
     {
         public int Id { get; set; }
         public string PlatformName { get; set; } = null!;
@@ -134,7 +133,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public string Link { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
     }
-    public class PaymentMethodVM : IEntity<int>
+    public class PaymentMethodVM : IEntity
     {
         public PaymentMethodVM()
         {
@@ -152,7 +151,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<OrderDto> Orders { get; set; }
     }
-    public class PaymentVM : IEntity<int>
+    public class PaymentVM : IEntity
     {
         public int Id { get; set; }
         public int? OrderId { get; set; }
@@ -160,7 +159,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual OrderDto? Order { get; set; }
     }
-    public class PartnerTypeVM : IEntity<int>
+    public class PartnerTypeVM : IEntity
     {
         public PartnerTypeVM()
         {
@@ -175,7 +174,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<PartnerDto> Partners { get; set; }
     }
-    public class PartnerVM : IEntity<int>
+    public class PartnerVM : IEntity
     {
         public PartnerVM()
         {
@@ -197,7 +196,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual PartnerTypeDto? PartnerType { get; set; }
         public virtual ICollection<BookPartnerDto> BookPartners { get; set; }
     }
-    public class OrderStatusVM : IEntity<int>
+    public class OrderStatusVM : IEntity
     {
         public int Id { get; set; }
         public int? OrderId { get; set; }
@@ -207,7 +206,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual OrderDto? Order { get; set; }
         public virtual StatusDto? Status { get; set; }
     }
-    public class OrderItemVM : IEntity<int>
+    public class OrderItemVM : IEntity
     {
         public int Id { get; set; }
         public int? OrderId { get; set; }
@@ -220,7 +219,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual BookDto? Book { get; set; }
         public virtual OrderDto? Order { get; set; }
     }
-    public class OrderVM : IEntity<int>
+    public class OrderVM : IEntity
     {
         public OrderVM()
         {
@@ -237,6 +236,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public string? Note { get; set; }
         public DateTime? CreatedAt { get; set; }
 
+        public int IntoMoney { get; set; } = 0;
         public int CountOrderItems { get; set; } = 0;
         public int CountOrderStatuses { get; set; } = 0;
         public int CountReviews { get; set; } = 0;
@@ -250,7 +250,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual ICollection<OrderStatusDto> OrderStatuses { get; set; }
         public virtual ICollection<ReviewDto> Reviews { get; set; }
     }
-    public class NotificationTypeVM : IEntity<int>
+    public class NotificationTypeVM : IEntity
     {
         public NotificationTypeVM()
         {
@@ -265,7 +265,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<NotificationDto> Notifications { get; set; }
     }
-    public class NotificationVM : IEntity<int>
+    public class NotificationVM : IEntity
     {
         public int Id { get; set; }
         public int? NotificationTypeId { get; set; }
@@ -278,7 +278,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual NotificationTypeDto? NotificationType { get; set; }
         public virtual AspNetUserDto? User { get; set; }
     }
-    public class MenuVM : IEntity<int>
+    public class MenuVM : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
@@ -287,7 +287,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
     }
-    public class FlashSaleBookVM : IEntity<int>
+    public class FlashSaleBookVM : IEntity
     {
         public int Id { get; set; }
         public int? FlashSaleId { get; set; }
@@ -302,7 +302,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual BookDto? Book { get; set; }
         public virtual FlashSaleDto? FlashSale { get; set; }
     }
-    public class FlashSaleVM : IEntity<int>
+    public class FlashSaleVM : IEntity
     {
         public FlashSaleVM()
         {
@@ -318,7 +318,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<FlashSaleBookDto> FlashSaleBooks { get; set; }
     }
-    public class FavouriteVM : IEntity<int>
+    public class FavouriteVM : IEntity
     {
         public int Id { get; set; }
         public int? UserId { get; set; }
@@ -328,7 +328,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual BookDto? Book { get; set; }
         public virtual AspNetUserDto? User { get; set; }
     }
-    public class DimensionVM : IEntity<int>
+    public class DimensionVM : IEntity
     {
         public DimensionVM()
         {
@@ -346,7 +346,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<BookDto> Books { get; set; }
     }
-    public class CoverTypeVM : IEntity<int>
+    public class CoverTypeVM : IEntity
     {
         public CoverTypeVM()
         {
@@ -361,7 +361,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<BookDto> Books { get; set; }
     }
-    public class CategoryVM : IEntity<int>
+    public class CategoryVM : IEntity
     {
         public CategoryVM()
         {
@@ -378,7 +378,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<SubcategoryDto> Subcategories { get; set; }
     }
-    public class CartItemVM : IEntity<int>
+    public class CartItemVM : IEntity
     {
         public int Id { get; set; }
         public int? CartId { get; set; }
@@ -389,7 +389,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual BookDto? Book { get; set; }
         public virtual CartDto? Cart { get; set; }
     }
-    public class CartVM : IEntity<int>
+    public class CartVM : IEntity
     {
         public CartVM()
         {
@@ -405,7 +405,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual AspNetUserDto? User { get; set; }
         public virtual ICollection<CartItemDto> CartItems { get; set; }
     }
-    public class BookPartnerVM : IEntity<int>
+    public class BookPartnerVM : IEntity
     {
         public int Id { get; set; }
         public int? BookId { get; set; }
@@ -420,7 +420,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual BookDto? Book { get; set; }
         public virtual PartnerDto? Partner { get; set; }
     }
-    public class BookVM : IEntity<int>
+    public class BookVM : IEntity
     {
         public BookVM()
         {
@@ -462,7 +462,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual ICollection<BookPartnerDto> BookPartners { get; set; }
         public virtual ICollection<PosterImageDto> PosterImages { get; set; }
     }
-    public class BannerVM : IEntity<int>
+    public class BannerVM : IEntity
     {
         public int Id { get; set; }
         public string? PublicId { get; set; }
@@ -471,7 +471,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public string Content { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
     }
-    public class AuthorVM : IEntity<int>
+    public class AuthorVM : IEntity
     {
         public AuthorVM()
         {
@@ -486,7 +486,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<BookDto> Books { get; set; }
     }
-    public class AspNetUserVM : IEntity<int>
+    public class AspNetUserVM : IEntity
     {
         public AspNetUserVM()
         {
@@ -495,7 +495,6 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
             Notifications = new HashSet<NotificationDto>();
             Orders = new HashSet<OrderDto>();
             Reviews = new HashSet<ReviewDto>();
-            Roles = new HashSet<AspNetRoleDto>();
         }
 
         public int Id { get; set; }
@@ -510,7 +509,6 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public int CountAddresses { get; set; } = 0;
         public int CountFavourites { get; set; } = 0;
         public int CountNotifications { get; set; } = 0;
-        public int Count { get; set; } = 0;
         public int CountOrders { get; set; } = 0;
         public int CountReviews { get; set; } = 0;
         public int CountRoles { get; set; } = 0;
@@ -522,9 +520,9 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
         public virtual ICollection<OrderDto> Orders { get; set; }
         public virtual ICollection<ReviewDto> Reviews { get; set; }
 
-        public virtual ICollection<AspNetRoleDto> Roles { get; set; }
+        public virtual IList<string>? Role { get; set; }
     }
-    public class AspNetRoleVM : IEntity<int>
+    public class AspNetRoleVM : IEntity
     {
         public AspNetRoleVM()
         {
@@ -538,7 +536,7 @@ namespace FahasaStoreAPI.Models.ViewModels.Entities
 
         public virtual ICollection<AspNetUserDto> Users { get; set; }
     }
-    public class AddressVM : IEntity<int>
+    public class AddressVM : IEntity
     {
         public AddressVM()
         {

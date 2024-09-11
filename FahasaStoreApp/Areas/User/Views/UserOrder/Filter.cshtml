@@ -1,0 +1,66 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Constants
+@using FahasaStoreApp.Models.DTOs
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<OrderExtend>
+
+@{
+    var paged = Model.Paged;
+}
+
+<div id="totalItemDiv" TotalItemCount="@paged.PagedNavigation.TotalItemCount">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1"><strong>#</strong></div>
+            <div class="col-2"><strong>Ngày</strong></div>
+            <div class="col-3"><strong>Người Nhận</strong></div>
+            <div class="col-3"><strong>Thành Tiền</strong></div>
+            <div class="col-2"><strong>Trạng Thái</strong></div>
+            <div class="col-1"></div>
+        </div>
+        @{
+            int index = 0;
+            if (paged.Items.Any())
+            {
+                foreach (var order in paged.Items)
+                {
+                    index = index + 1;
+                    <div class="row my-3">
+                        <div class="col-1">
+                            #@order.Id
+                            @if (!string.IsNullOrEmpty(order.OrderLastStatus))
+                            {
+                                if (order.OrderLastStatus.Equals(OrderStatusConst.Completed))
+                                {
+                                    <br />
+                                    <i class="bi bi-bag-check-fill text-success"></i>
+                                }
+                                else if (order.OrderLastStatus.Equals(OrderStatusConst.Cancelled))
+                                {
+                                    <br />
+                                    <i class="bi bi-bag-x-fill text-danger"></i>
+                                }
+                                else if (order.OrderLastStatus.Equals(OrderStatusConst.Returned))
+                                {
+                                    <br />
+                                    <i class="bi bi-cart-dash-fill text-warning"></i>
+                                }
+                            }
+                        </div>
+                        <div class="col-2">@((order.CreatedAt != null) ? order.CreatedAt.Value.ToString("dd/MM/yyyy (HH:mm)") : "Không có ngày tạo")</div>
+                        <div class="col-3">@order.ReceiverName</div>
+                        <div class="col-3">@order.IntoMoney.ToString("N0") đ</div>
+                        <div class="col-2">@order.OrderLastStatus</div>
+                        <div class="col-1"><a href="/User/UserOrder/Details" IdValue="@order.Id" onclick="HandlerCRUD(this, event)" class="nav-link p-2 pt-0"><i class="bi bi-eye"></i></a></div>
+                    </div>
+                }
+            }
+        }
+    </div>
+    @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = paged.PagedNavigation, formId = "formUserOrderFilter", renderINId = "boxDataUser" }))
+</div>
+
+<script>
+    $('#TotalItemCount').text($('#totalItemDiv').attr('TotalItemCount'));
+</script>

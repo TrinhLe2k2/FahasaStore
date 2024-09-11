@@ -13,6 +13,7 @@ namespace FahasaStoreAPI.Models.Entities
         public string Address { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public bool Default { get; set; }
         public DateTime? CreatedAt { get; set; }
     }
 }

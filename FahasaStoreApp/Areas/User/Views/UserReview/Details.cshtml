@@ -1,0 +1,62 @@
+﻿@model FahasaStore.Models.ReviewDetail
+
+<div>
+    <!-- Button trigger modal -->
+    <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="appModalLabel">Thông tin chi tiết</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <dl class="row px-4">
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.BookName)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.BookName)
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Rating)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (Model.Rating >= i)
+                                {
+                                    <span class="star" style="color: gold" data-rating="@i">&#9733;</span>
+                                }
+                                else
+                                {
+                                    <span class="star" data-rating="@i">&#9733;</span>
+                                }
+                            }
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Comment)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.Comment)
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.CreatedAt)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.CreatedAt)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+</script>

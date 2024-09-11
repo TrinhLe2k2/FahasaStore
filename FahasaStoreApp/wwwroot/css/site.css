@@ -97,7 +97,6 @@ a {
 }
 
 .oneLine {
-    color: #000;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -107,7 +106,6 @@ a {
 }
 
 .twoLine {
-    color: #000;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -169,6 +167,8 @@ a {
 
 .card:hover {
     border: 1px solid var(--primary-color-fahasa);
+    /*background-color: #808080;
+    color: #fff;*/
 }
 
 .page-link {
@@ -209,6 +209,7 @@ a {
     .nav-pills .nav-link:hover {
         transition: transform linear 0.3s;
         transform: translateX(5%);
+        font-weight: bold;
     }
 
 .nav-link:hover,
@@ -222,6 +223,10 @@ a {
 .notification-btn:hover,
 .notification .show.notification-btn {
     color: var(--primary-color-fahasa) !important;
+}
+
+.dropdown-item {
+    border-radius: 4px;
 }
 
 .user .dropdown-menu .dropdown-item:active,

@@ -1,6 +1,5 @@
-﻿using FahasaStoreAPI.Models.DTOs;
-using FahasaStoreAPI.Models.Entities;
-using FahasaStoreAPI.Models.Interfaces;
+﻿using FahasaStore.Models.Interfaces;
+using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Models.ViewModels;
 using X.PagedList;
 
@@ -8,7 +7,7 @@ namespace FahasaStoreAPI.Base.Interfaces
 {
     public interface IBaseService<TEntity, TViewModel>
         where TEntity : class
-        where TViewModel : class, IEntity<int>
+        where TViewModel : class, IEntity
     {
         Task<TViewModel> AddAsync(TViewModel model);
         Task<IEnumerable<TViewModel>> AddRangeAsync(IEnumerable<TViewModel> models);

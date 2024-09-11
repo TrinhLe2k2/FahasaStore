@@ -1,0 +1,16 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<CartItemDetail>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Giỏ Hàng";
+    var paged = Model.Paged;
+    var cartItem = new CartItemExtend();
+}
+
+<div id="Cart">
+    @await Html.PartialAsync("/Areas/User/Views/UserCartItem/Filter.cshtml", Model)
+</div>
+
+
+

@@ -1,0 +1,128 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@model AspNetUserDetail
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.FullName;
+}
+
+<div class="bg-black bg-opacity-10">
+    <div class="container pt-4">
+        <div class="bg-white rounded-3 py-3">
+            <div class="row">
+                @(await Html.RenderComponentAsync<SideBarUserComponent>(RenderMode.ServerPrerendered, new { active = 0 }))
+                <div class="col-lg-9 px-4" id="boxDataUser">
+                    <div>
+                        <h5 class="text-uppercase">Bảng điều khiển</h5><hr />
+                        <div>
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.Id)</h6>
+                                    <a href="/User/Information" onclick="HandlerCRUD(this, event)" class="nav-link">Chỉnh sửa</a>
+                                </div>
+                                <div class="rounded-3" style="background-color: antiquewhite;">
+                                    <dl class="row p-4">
+                                        <dt class="col-sm-3">
+                                            @Html.DisplayNameFor(model => model.FullName)
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            @Model.FullName
+                                        </dd>
+                                        <dt class="col-sm-3">
+                                            @Html.DisplayNameFor(model => model.Email)
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            @Model.Email
+                                        </dd>
+                                        <dt class="col-sm-3">
+                                            @Html.DisplayNameFor(model => model.PhoneNumber)
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            @Model.PhoneNumber
+                                        </dd>
+                                        <dt class="col-sm-3">
+                                            @Html.DisplayNameFor(model => model.OrdersCount)
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            @Model.OrdersCount
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div> <hr />
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.DefaultAddress)</h6>
+                                    <a href="/User/UserAddress/Index" class="nav-link">Xem thêm</a>
+                                </div>
+                                @if (Model.DefaultAddress != null)
+                                {
+                                    <dl class="row px-4">
+                                        <dt class="col-sm-3">
+                                            @Html.DisplayNameFor(model => Model.DefaultAddress.ReceiverName)
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            @Model.DefaultAddress.ReceiverName
+                                        </dd>
+                                        <dt class="col-sm-3">
+                                            @Html.DisplayNameFor(model => Model.DefaultAddress.Phone)
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            @Model.DefaultAddress.Phone
+                                        </dd>
+                                        <dt class="col-sm-3">
+                                            @Html.DisplayNameFor(model => Model.DefaultAddress.Detail)
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            @Model.DefaultAddress.Detail , @Model.DefaultAddress.Ward, @Model.DefaultAddress.District , @Model.DefaultAddress.Province
+                                        </dd>
+                                        <dt class="col-sm-3">
+                                            @Html.DisplayNameFor(model => Model.DefaultAddress.Default)
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            <input checked type="checkbox" disabled />
+                                        </dd>
+                                    </dl>
+                                }
+                            </div> <hr />
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h6 class="text-uppercase mb-0">@Html.DisplayNameFor(model => model.Orders)</h6>
+                                    <a href="/User/UserOrder/Index" class="nav-link">Xem tất cả</a>
+                                </div>
+                                <div class="container-fluid">
+                                    @await Html.PartialAsync("/Areas/User/Views/UserOrder/Filter.cshtml", new FilterVM<OrderExtend> { Paged = new PagedVM<OrderExtend> { Items = Model.Orders } })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@* <div class="col-lg-3">
+                    <button class="btn btn-danger d-lg-none m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsiveControlUser" aria-controls="offcanvasResponsiveControlUser"><i class="bi bi-layout-sidebar-inset"></i></button>
+                    <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="offcanvasResponsiveControlUser" aria-labelledby="offcanvasResponsiveControlUserLabel">
+                        <div class="offcanvas-header">
+                            <h5 class="offcanvas-title" id="offcanvasResponsiveControlUserLabel">Trình điều khiển</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasResponsiveControlUser" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <div class="user_control w-100">
+                                <div class="nav d-block flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                    <a class="nav-link active" onclick="RenderPartialViewMethodGet('/User/HomeUser/ControllerUser', 'boxDataUser', event)" data-bs-toggle="pill" role="button" aria-selected="true">Bảng điều khiển tài khoản</a>
+                                    <a class="nav-link" onclick="RenderPartialViewMethodGet('/User/UserAddress/Index', 'boxDataUser', event)" data-bs-toggle="pill" role="button" aria-selected="false">Sổ địa chỉ</a>
+                                    <a class="nav-link" onclick="RenderPartialViewMethodGet('/User/HomeUser/VouchersUser', 'boxDataUser', event)" data-bs-toggle="pill" role="button" aria-selected="false">Ví voucher</a>
+                                    <a class="nav-link" onclick="RenderPartialViewMethodGet('/User/UserOrder/Index', 'boxDataUser', event)" data-bs-toggle="pill" role="button" aria-selected="false">Đơn hàng của tôi</a>
+                                    <a class="nav-link" onclick="RenderPartialViewMethodGet('/User/UserReview/Index', 'boxDataUser', event)" data-bs-toggle="pill" role="button" aria-selected="false">Nhận xét của tôi</a>
+                                    <a class="nav-link" id="notificationBtn" onclick="RenderPartialViewMethodGet('/User/HomeUser/NotificationsUser', 'boxDataUser', event)" data-bs-toggle="pill" role="button" aria-selected="false">Thông báo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> *@

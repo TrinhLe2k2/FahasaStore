@@ -1,8 +1,8 @@
-﻿namespace FahasaStoreAPI.Models.Interfaces
+﻿namespace FahasaStore.Models.Interfaces
 {
-    public interface IEntity<TKey>
+    public interface IEntity
     {
-        TKey Id { get; set; }
-        //DateTime? CreatedAt { get; set; }
+        int Id { get; set; }
+        DateTime? CreatedAt { get; set; }
     }
 }

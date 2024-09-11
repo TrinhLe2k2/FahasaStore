@@ -1,0 +1,201 @@
+﻿namespace FahasaStore.Models
+{
+    public class AddressExtend : AddressBase
+    {
+        public bool IsChanger { get; set; } = false;
+        public int OrdersCount { get; set; } = 0;
+    }
+
+    public class AspNetUserExtend : AspNetUserBase
+    {
+        public int AddressesCount { get; set; } = 0;
+        public int FavouritesCount { get; set; } = 0;
+        public int NotificationsCount { get; set; } = 0;
+        public int OrdersCount { get; set; } = 0;
+        public int ReviewsCount { get; set; } = 0;
+        public int RolesCount { get; set; } = 0;
+    }
+
+    public class AuthorExtend : AuthorBase
+    {
+        public int CountBooks { get; set; } = 0;
+    }
+
+    public class BannerExtend : BannerBase
+    {
+
+    }
+
+    public class BookExtend : BookBase
+    {
+        public int Solded { get; set; } = 0;
+        public int CurrentPrice { get; set; } = 0;
+        public int FavouritesCount { get; set; } = 0;
+        public string? SubcategoryName { get; set; }
+        public string? AuthorName { get; set; }
+        public string? CoverTypeName { get; set; }
+        public string? DimensionName { get; set; }
+        public string? BookPoster { get; set; }
+        public double RateAverage { get; set; } = 0;
+        public int RateCount { get; set; } = 0;
+        public int Rate1Percentage { get; set; } = 0;
+        public int Rate2Percentage { get; set; } = 0;
+        public int Rate3Percentage { get; set; } = 0;
+        public int Rate4Percentage { get; set; } = 0;
+        public int Rate5Percentage { get; set; } = 0;
+    }
+
+    public class BookPartnerExtend : BookPartnerBase
+    {
+        public string? PartnerName { get; set; }
+        public int? PartnerTypeId { get; set; } = 0;
+        public string? PartnerTypeName { get; set; }
+    }
+
+    public class CartExtend : CartBase
+    {
+        public int CartItemsCount { get; set; } = 0;
+        public List<int> BookIds { get; set; } = new List<int>();
+    }
+
+    public class CartItemExtend : CartItemBase
+    {
+        public int IntoMoney { get; set; } = 0;
+    }
+
+    public class CategoryExtend : CategoryBase
+    {
+        public int CountSubcategories { get; set; } = 0;
+    }
+
+    public class CoverTypeExtend : CoverTypeBase
+    {
+        public int CountBooks { get; set; } = 0;
+    }
+
+    public class DimensionExtend : DimensionBase
+    {
+        public int CountBooks { get; set; } = 0;
+    }
+
+    public class FavouriteExtend : FavouriteBase
+    {
+
+    }
+
+    public class FlashSaleExtend : FlashSaleBase
+    {
+        public int CountFlashSaleBooks { get; set; } = 0;
+    }
+
+    public class FlashSaleBookExtend : FlashSaleBookBase
+    {
+        public int Solded { get; set; } = 0;
+        public int PriceFS { get; set; } = 0;
+    }
+
+    public class MenuExtend : MenuBase
+    {
+
+    }
+
+    public class NotificationExtend : NotificationBase
+    {
+        public string? NotificationTypeName { get; set; }
+    }
+
+    public class NotificationTypeExtend : NotificationTypeBase
+    {
+        public int CountNotifications { get; set; } = 0;
+    }
+
+    public class OrderExtend : OrderBase
+    {
+        public int IntoMoney { get; set; } = 0;
+        public string? ReceiverName { get; set; }
+        public string? OrderLastStatus { get; set; }
+        public bool isCancelable { get; set; } = false;
+        public bool isReturnable { get; set; } = false;
+        public bool isCompletable { get; set; } = false;
+        public int CountOrderItems { get; set; } = 0;
+        public int CountOrderStatuses { get; set; } = 0;
+    }
+
+    public class OrderItemExtend : OrderItemBase
+    {
+        public int? ReviewId { get; set; }
+        public bool HasReview { get; set; } = false;
+        public int PriceBook { get; set; } = 0;
+        public int IntoMoney { get; set; } = 0;
+    }
+
+    public class OrderStatusExtend : OrderStatusBase
+    {
+        public string? StatusName { get; set; }
+    }
+
+    public class PartnerExtend : PartnerBase
+    {
+        public string? PartnerTypeName { get; set; }
+        public int CountBookPartners { get; set; } = 0;
+    }
+
+    public class PartnerTypeExtend : PartnerTypeBase
+    {
+        public int CountPartners { get; set; } = 0;
+    }
+
+    public class PaymentMethodExtend : PaymentMethodBase
+    {
+        public int CountOrders { get; set; } = 0;
+    }
+
+    public class PlatformExtend : PlatformBase
+    {
+
+    }
+
+    public class PosterImageExtend : PosterImageBase
+    {
+
+    }
+
+    public class ReviewExtend : ReviewBase
+    {
+        public string? UserImageUrl { get; set; }
+        public string? UserFullName { get; set; }
+        public string? BookName { get; set; }
+        public string? BookPoster { get; set; }
+    }
+
+    public class StatusExtend : StatusBase
+    {
+        public int CountOrderStatuses { get; set; } = 0;
+    }
+
+    public class SubcategoryExtend : SubcategoryBase
+    {
+        public string? CategoryName { get; set; }
+        public int CountBooks { get; set; } = 0;
+    }
+
+    public class TopicExtend : TopicBase
+    {
+        public int CountTopicContents { get; set; } = 0;
+    }
+
+    public class TopicContentExtend : TopicContentBase
+    {
+
+    }
+
+    public class VoucherExtend : VoucherBase
+    {
+        public int CountOrders { get; set; } = 0;
+    }
+
+    public class WebsiteExtend : WebsiteBase
+    {
+
+    }
+}

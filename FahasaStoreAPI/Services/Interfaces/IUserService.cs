@@ -1,21 +1,20 @@
-﻿using FahasaStoreAPI.Identity;
+﻿using FahasaStore.Models;
 using FahasaStoreAPI.Models.DTOs;
+using FahasaStoreAPI.Models.ViewModels;
 
 namespace FahasaStoreAPI.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<ApplicationUser> FindByEmailAsync(string email);
-        Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
-        Task<IList<string>> GetRolesAsync(ApplicationUser user);
-        Task<ApplicationUser> FindByIdAsync(string userId);
-        Task<bool> CreateAsync(ApplicationUser user, string password);
-        Task<bool> UpdateAsync(ApplicationUser user);
-        Task<bool> DeleteAsync(ApplicationUser user);
-        Task<string> LoginAsync(Login model);
         Task<bool> RegisterAsync(Register model);
-        Task LogOutAsync();
-        Task<bool> AddUserRoleAsync(string userId, string role);
-        Task<bool> RemoveUserRoleAsync(string userId, string role);
+        Task<UserLoginer?> LoginAsync(Login model);
+        Task<bool> UpdateAsync(AspNetUserExtend model);
+        Task<bool> DeleteAsync(int userId);
+        Task<bool> LogOutAsync();
+        Task<bool> AddUserRoleAsync(int userId, string role);
+        Task<bool> RemoveUserRoleAsync(int userId, string role);
+        Task<PagedVM<NotificationExtend>> GetNotificationsAsync(int userId, int pageNumber, int pageSize);
+        Task<NotificationExtend?> GetNotificationDetailsByIdAsync(int userId, int notificationId);
+        Task<AspNetUserDetail> GetProfileUserAsync(int userId);
     }
 }

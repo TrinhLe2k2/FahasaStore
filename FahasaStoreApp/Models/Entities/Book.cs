@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace FahasaStoreAPI.Models.Entities
 {
     public partial class Book

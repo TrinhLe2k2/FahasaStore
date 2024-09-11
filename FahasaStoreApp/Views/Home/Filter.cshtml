@@ -1,4 +1,4 @@
-﻿@using FahasaStoreApp.Models.DTOs.Entities
+﻿@using FahasaStore.Models
 @using FahasaStoreApp.Models.ViewModels
 @model OptionsFilterBook
 @{
@@ -26,7 +26,7 @@
     </div>
     <div class="container">
         <div class="bg-white rounded-3 p-3">
-            <form asp-controller="GetData" asp-action="FilterBook" class="w-100" id="filterForm">
+            <form asp-controller="GetData" asp-action="FilterBook" class="w-100" id="filterForm" onsubmit="RenderPartialView('filterForm', 'filterResults', event)">
                 <input type="search" id="SearchNameFilter" name="SearchName" hidden />
                 <div class="row">
                     <div class="col-3">
@@ -295,7 +295,7 @@
                     <div class="col-12 col-lg-9">
                         <div class="d-flex justify-content-end">
                             @{
-                                var bookdto = new BookDto();
+                                var bookdto = new BookExtend();
                                     <div>
                                         <div class="input-group">
                                             <select asp-for="SortBy" class="form-select">
@@ -340,7 +340,7 @@
     <script>
         function SubmitFormFilter() {
             $('#SearchNameFilter').val($('#SearchNameLayout').val());
-            RenderPartialView("filterForm", "filterResults");
+            $('#filterForm').submit();
         }
 
         function UpdateFormFilter() {
@@ -367,6 +367,7 @@
         }
 
         function resetAllFilters() {
+            $('#SearchNameLayout').val("");
             $('input[type="radio"]').prop('checked', false);
             SubmitFormFilter();
         }

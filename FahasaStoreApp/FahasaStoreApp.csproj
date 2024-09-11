@@ -13,21 +13,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Base\Implementations\**" />
+    <Compile Remove="Base\Interfaces\**" />
     <Compile Remove="Views\Categories\**" />
+    <Content Remove="Base\Implementations\**" />
+    <Content Remove="Base\Interfaces\**" />
     <Content Remove="Views\Categories\**" />
+    <EmbeddedResource Remove="Base\Implementations\**" />
+    <EmbeddedResource Remove="Base\Interfaces\**" />
     <EmbeddedResource Remove="Views\Categories\**" />
+    <None Remove="Base\Implementations\**" />
+    <None Remove="Base\Interfaces\**" />
     <None Remove="Views\Categories\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\AccountsController.cs" />
     <Compile Remove="Controllers\CategoriesController.cs" />
     <Compile Remove="Controllers\UserController.cs" />
-    <Compile Remove="Models\ViewModels\Entities\BookPartnerVM.cs" />
-    <Compile Remove="Models\ViewModels\Entities\BookVM.cs" />
-    <Compile Remove="Models\ViewModels\Entities\FlashSaleBookVM.cs" />
-    <Compile Remove="Models\ViewModels\Entities\FlashSaleVM.cs" />
-    <Compile Remove="Models\ViewModels\Entities\UserVM.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +48,7 @@
     <PackageReference Include="Humanizer" Version="2.14.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
@@ -56,6 +59,7 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\HomeAdmin\" />
+    <Folder Include="Areas\User\Data\" />
   </ItemGroup>
 
 </Project>

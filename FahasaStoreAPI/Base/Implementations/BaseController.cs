@@ -1,12 +1,7 @@
-﻿using FahasaStoreAPI.Base.Interfaces;
+﻿using FahasaStore.Models.Interfaces;
+using FahasaStoreAPI.Base.Interfaces;
 using FahasaStoreAPI.Models.DTOs;
-using FahasaStoreAPI.Models.Entities;
-using FahasaStoreAPI.Models.Interfaces;
-using FahasaStoreAPI.Models.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using X.PagedList;
 
 namespace FahasaStoreAPI.Base.Implementations
 {
@@ -14,7 +9,7 @@ namespace FahasaStoreAPI.Base.Implementations
     [ApiController]
     public class BaseController<TEntity, TViewModel> : ControllerBase
         where TEntity : class
-        where TViewModel : class, IEntity<int>
+        where TViewModel : class, IEntity
     {
         protected readonly IBaseService<TEntity, TViewModel> _service;
 

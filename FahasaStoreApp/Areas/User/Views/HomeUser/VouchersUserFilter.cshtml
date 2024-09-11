@@ -1,0 +1,30 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@model PagedVM<VoucherExtend>
+
+<div>
+    <h5 class="text-uppercase">Ví voucher - @Model.PagedNavigation.TotalItemCount</h5><hr />
+    <div class="row g-3 mb-3">
+        @{
+            if (Model.Items.Any())
+            {
+                foreach (var voucher in Model.Items)
+                {
+                    <div>
+                        <div class="d-flex align-items-center bg-light border rounded-3 p-2">
+                            <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/ico_coupongreen.svg?q=105721" width="75" height="75" class="object-fit-contain me-2" />
+                            <div class="flex-grow-1">
+                                <div class="oneLine text-uppercase fw-bold">@voucher.Name</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <a href="/User/HomeUser/VoucheUserDetails" IdValue="@voucher.Id" onclick="HandlerCRUD(this, event)" class="nav-link">Chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+    @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = Model.PagedNavigation, formId = "/User/HomeUser/VouchersUserFilter?", renderINId = "boxDataUser", methodGet = true }))
+</div>

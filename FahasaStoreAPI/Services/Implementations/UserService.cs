@@ -1,179 +1,62 @@
-﻿using AutoMapper;
-using CloudinaryDotNet.Actions;
-using FahasaStoreAPI.Base.Implementations;
-using FahasaStoreAPI.Base.Interfaces;
-using FahasaStoreAPI.Constants;
-using FahasaStoreAPI.Identity;
+﻿using FahasaStore.Models;
 using FahasaStoreAPI.Models.DTOs;
-using FahasaStoreAPI.Models.DTOs.Entities;
-using FahasaStoreAPI.Models.Entities;
+using FahasaStoreAPI.Models.ViewModels;
 using FahasaStoreAPI.Repositories.Interfaces;
 using FahasaStoreAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace FahasaStoreAPI.Services.Implementations
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IRoleRepository _roleRepository;
         private readonly IConfiguration _configuration;
 
-        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IConfiguration configuration)
+        public UserService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
-            _roleRepository = roleRepository;
             _configuration = configuration;
         }
 
-        public async Task<ApplicationUser> FindByEmailAsync(string email)
+        public async Task<UserLoginer?> LoginAsync(Login model)
         {
-            return await _userRepository.FindByEmailAsync(email);
+            var loginer = await _userRepository.LoginAsync(model);
+            return loginer;
         }
-
-        public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+        public async Task<bool> AddUserRoleAsync(int userId, string role)
         {
-            return await _userRepository.CheckPasswordAsync(user, password);
+            return await _userRepository.AddUserRoleAsync(userId, role);
         }
-
-        public async Task<IList<string>> GetRolesAsync(ApplicationUser user)
+        public async Task<bool> DeleteAsync(int userId)
         {
-            return await _userRepository.GetRolesAsync(user);
+            return await _userRepository.DeleteAsync(userId);
         }
-
-        public async Task<ApplicationUser> FindByIdAsync(string userId)
+        public async Task<bool> LogOutAsync()
         {
-            return await _userRepository.FindByIdAsync(userId);
+            return await _userRepository.LogOutAsync();
         }
-
-        public async Task<bool> CreateAsync(ApplicationUser user, string password)
-        {
-            return await _userRepository.CreateAsync(user, password);
-        }
-
-        public async Task<bool> UpdateAsync(ApplicationUser user)
-        {
-            return await _userRepository.UpdateAsync(user);
-        }
-
-        public async Task<bool> DeleteAsync(ApplicationUser user)
-        {
-            return await _userRepository.DeleteAsync(user);
-        }
-
-        public async Task<string> LoginAsync(Login model)
-        {
-            var user = await _userRepository.FindByEmailAsync(model.Email);
-            var passwordValid = await _userRepository.CheckPasswordAsync(user, model.Password);
-
-            if (user == null || !passwordValid)
-            {
-                throw new Exception("User not found or Invalid password.");
-            }
-
-            var authClaims = new List<Claim>
-            {
-                new Claim("UserId", user.Id.ToString()),
-                new Claim("FullName", user.FullName),
-                new Claim(ClaimTypes.Email, model.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            var userRoles = await _userRepository.GetRolesAsync(user);
-            foreach (var role in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, role.ToString()));
-            }
-
-            var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(2),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authenKey, SecurityAlgorithms.HmacSha512Signature)
-            );
-
-            var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return accessToken;
-        }
-
         public async Task<bool> RegisterAsync(Register model)
         {
-            var user = new ApplicationUser
-            {
-                UserName = model.Email.Split('@')[0],
-                Email = model.Email,
-                FullName = model.FullName,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            var userResult = await _userRepository.CreateAsync(user, model.Password);
-            if (userResult)
-            {
-                var userCurrent = await _userRepository.FindByEmailAsync(user.Email);
-                if (userCurrent == null)
-                {
-                    throw new Exception("User current not found.");
-                }
-
-                var roleExists = await _roleRepository.ExistsAsync(AppRole.Customer);
-                if (!roleExists)
-                {
-                    var roleNew = await _roleRepository.CreateAsync(new IdentityRole<int> { Name = AppRole.Customer });
-                    if (!roleNew)
-                    {
-                        throw new Exception("Failed to create the role.");
-                    }
-                    
-                }
-
-                var roleResult = await _userRepository.AddToRoleAsync(userCurrent, AppRole.Customer);
-                if (!roleResult)
-                {
-                    throw new Exception("Failed to add role to the user.");
-                }
-            }
-            return userResult;
+            return await _userRepository.RegisterAsync(model);
         }
-
-        public async Task<bool> AddUserRoleAsync(string userId, string role)
+        public async Task<bool> RemoveUserRoleAsync(int userId, string role)
         {
-            var roleExists = await _roleRepository.ExistsAsync(userId);
-            if (!roleExists)
-            {
-                throw new Exception("Role not found.");
-            }
-            var user = await _userRepository.FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new Exception("User not found.");
-            }
-
-            return await _userRepository.AddToRoleAsync(user, role);
+            return await _userRepository.RemoveUserRoleAsync(userId, role);
         }
-
-        public async Task<bool> RemoveUserRoleAsync(string userId, string role)
+        public async Task<bool> UpdateAsync(AspNetUserExtend model)
         {
-            var user = await _userRepository.FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new Exception("User not found.");
-            }
-
-            return await _userRepository.RemoveFromRoleAsync(user, role);
+            return await _userRepository.UpdateAsync(model);
         }
-
-        public async Task LogOutAsync()
+        public async Task<PagedVM<NotificationExtend>> GetNotificationsAsync(int userId, int pageNumber, int pageSize)
         {
-            await _userRepository.LogOutAsync();
+            return await _userRepository.GetNotificationsAsync(userId, pageNumber, pageSize);
+        }
+        public async Task<NotificationExtend?> GetNotificationDetailsByIdAsync(int userId, int notificationId)
+        {
+            return await _userRepository.GetNotificationDetailsByIdAsync(userId, notificationId);
+        }
+        public async Task<AspNetUserDetail> GetProfileUserAsync(int userId)
+        {
+            return await _userRepository.GetProfileUserAsync(userId);
         }
     }
 }

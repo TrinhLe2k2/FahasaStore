@@ -7,7 +7,7 @@ namespace FahasaStoreAPI.Models.Entities
     {
         public int Id { get; set; }
         public int? BookId { get; set; }
-        public int? OrderId { get; set; }
+        public int? OrderItemId { get; set; }
         public int? UserId { get; set; }
         public int Rating { get; set; }
         public string? Comment { get; set; }
@@ -15,7 +15,7 @@ namespace FahasaStoreAPI.Models.Entities
         public DateTime? CreatedAt { get; set; }
 
         public virtual Book? Book { get; set; }
-        public virtual Order? Order { get; set; }
+        public virtual OrderItem? OrderItem { get; set; }
         public virtual AspNetUser? User { get; set; }
     }
 }

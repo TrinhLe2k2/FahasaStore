@@ -1,16 +1,15 @@
 ﻿
-using FahasaStoreApp.Models.DTOs.Entities;
-using FahasaStoreApp.Models.ViewModels.Entities;
+using FahasaStore.Models;
 
 namespace FahasaStoreApp.Models.ViewModels
 {
     public class DataOptionsFilterBook
     {
-        public List<CategoryVM> Categories { get; set; } = new List<CategoryVM>();
-        public List<PartnerTypeVM> PartnerTypes { get; set; } = new List<PartnerTypeVM>();
-        public List<AuthorDto> Authors { get; set; } = new List<AuthorDto>();
-        public List<CoverTypeDto> CoverTypes { get; set; } = new List<CoverTypeDto>();
-        public List<DimensionDto> Dimensions { get; set; } = new List<DimensionDto>();
+        public List<CategoryDetail> Categories { get; set; } = new List<CategoryDetail>();
+        public List<PartnerTypeDetail> PartnerTypes { get; set; } = new List<PartnerTypeDetail>();
+        public List<AuthorExtend> Authors { get; set; } = new List<AuthorExtend>();
+        public List<CoverTypeExtend> CoverTypes { get; set; } = new List<CoverTypeExtend>();
+        public List<DimensionExtend> Dimensions { get; set; } = new List<DimensionExtend>();
         public List<string> Price { get; set; } = new List<string> { "0 - 200000", "200000 - 400000", "400000 - 600000", "Trên 600,000đ" };
         public List<string> SortBy { get; set; } = new List<string> { "CurrentPrice", "CreatedAt", "Name" };
     }
@@ -40,6 +39,6 @@ namespace FahasaStoreApp.Models.ViewModels
     public class ResultFilterBook
     {
         public OptionsFilterBook optionsFilterBook { get; set; } = new OptionsFilterBook();
-        public PagedVM<BookDto> books { get; set; } = new PagedVM<BookDto>();
+        public PagedVM<BookExtend> books { get; set; } = new PagedVM<BookExtend>();
     }
 }

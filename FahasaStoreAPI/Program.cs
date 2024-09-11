@@ -1,11 +1,10 @@
 using AutoMapper;
 using FahasaStoreAPI;
-using FahasaStoreAPI.Base.Implementations;
-using FahasaStoreAPI.Base.Interfaces;
+using FahasaStoreAPI.Areas.Base;
+using FahasaStoreAPI.Areas.Customer;
 using FahasaStoreAPI.Constants;
 using FahasaStoreAPI.Identity;
 using FahasaStoreAPI.Mappers;
-using FahasaStoreAPI.Models.DTOs.Entities;
 using FahasaStoreAPI.Models.Entities;
 using FahasaStoreAPI.Repositories.Implementations;
 using FahasaStoreAPI.Repositories.Interfaces;
@@ -73,23 +72,42 @@ builder.Services.AddDbContext<FahasaStoreDBContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("myStore"));
 });
 
+#region AddScoped
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 builder.Services.AddScoped<IBookRecommendationSystem, BookRecommendationSystem>();
+
 builder.Services.AddScoped<IFahasaStoreRepository, FahasaStoreRepository>();
 builder.Services.AddScoped<IFahasaStoreService, FahasaStoreService>();
-
-//builder.Services.AddScoped<IBookRepository, BookRepository>();
-//builder.Services.AddScoped<IBookService, BookService>();
-
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddScoped<IRoleService, RoleService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
-builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
+builder.Services.AddScoped(typeof(ICustomerBaseRepository<,,,>), typeof(CustomerBaseRepository<,,,>));
+builder.Services.AddScoped(typeof(ICustomerBaseService<,,,>), typeof(CustomerBaseService<,,,>));
+
+#region Customer Repository - Service
+
+builder.Services.AddScoped<ICustomerAddressRepository, CustomerAddressRepository>();
+builder.Services.AddScoped<ICustomerAddressService, CustomerAddressService>();
+
+builder.Services.AddScoped<ICustomerOrderRepository, CustomerOrderRepository>();
+builder.Services.AddScoped<ICustomerOrderService, CustomerOrderService>();
+
+builder.Services.AddScoped<ICustomerOrderItemRepository, CustomerOrderItemRepository>();
+builder.Services.AddScoped<ICustomerOrderItemService, CustomerOrderItemService>();
+
+builder.Services.AddScoped<ICustomerCartItemRepository, CustomerCartItemRepository>();
+builder.Services.AddScoped<ICustomerCartItemService, CustomerCartItemService>();
+
+builder.Services.AddScoped<ICustomerReviewRepository, CustomerReviewRepository>();
+builder.Services.AddScoped<ICustomerReviewService, CustomerReviewService>();
+
+builder.Services.AddScoped<ICustomerFavouriteRepository, CustomerFavouriteRepository>();
+builder.Services.AddScoped<ICustomerFavouriteService, CustomerFavouriteService>();
+#endregion
+
+#endregion
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -129,14 +147,6 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireRole(AppRole.Customer);
     });
-    //options.AddPolicy(AppRole.Staff, policy =>
-    //{
-    //    policy.RequireRole(AppRole.Staff);
-    //});
-    //options.AddPolicy("AdminOrStaff", policy =>
-    //{
-    //    policy.RequireRole(AppRole.Admin, AppRole.Staff);
-    //});
 });
 
 var app = builder.Build();

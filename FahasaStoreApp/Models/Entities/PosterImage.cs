@@ -9,7 +9,7 @@ namespace FahasaStoreAPI.Models.Entities
         public int? BookId { get; set; }
         public string? PublicId { get; set; }
         public string? ImageUrl { get; set; }
-        public bool ImageDefault { get; set; }
+        public bool Default { get; set; }
         public DateTime? CreatedAt { get; set; }
 
         public virtual Book? Book { get; set; }

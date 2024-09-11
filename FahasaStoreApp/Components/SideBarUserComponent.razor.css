@@ -1,0 +1,15 @@
+﻿
+.user_control a.list-group-item {
+    border: none;
+}
+
+    .user_control a.list-group-item:hover {
+        transform: translateX(5%);
+        transition: all linear 0.3s;
+    }
+
+    .user_control a.list-group-item.active {
+        background-color: transparent;
+        color: var(--primary-color-fahasa);
+        font-weight: 500;
+    }

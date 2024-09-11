@@ -1,0 +1,16 @@
+﻿@model ICollection<Ward>
+@{
+    var war = ViewData["Ward"] as string;
+}
+<option value="">-- Chọn Phường/Xã --</option>
+@foreach (var ward in Model)
+{
+    if (war == ward.WARDS_NAME)
+    {
+        <option value="@ward.WARDS_NAME" IdValue="@ward.WARDS_ID" selected>@ward.WARDS_NAME</option>
+    }
+    else
+    {
+        <option value="@ward.WARDS_NAME" IdValue="@ward.WARDS_ID">@ward.WARDS_NAME</option>
+    }
+}

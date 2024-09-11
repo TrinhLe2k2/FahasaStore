@@ -1,9 +1,9 @@
-﻿using FahasaStoreAPI.Models.Entities;
-using FahasaStoreApp.Base.Interfaces;
-using FahasaStoreApp.Models.DTOs;
-using FahasaStoreApp.Models.Interfaces;
-using FahasaStoreApp.Models.ViewModels.Entities;
+﻿using FahasaStore.Models;
+using FahasaStoreApp.Models.ViewModels;
+using FahasaStoreApp.Services.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
+using NuGet.Common;
 
 namespace FahasaStoreApp.Middleware
 {
@@ -12,46 +12,39 @@ namespace FahasaStoreApp.Middleware
         private readonly RequestDelegate _next;
         private readonly IMemoryCache _cache;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LayoutDataMiddleware(RequestDelegate next, IMemoryCache cache, IServiceScopeFactory serviceScopeFactory)
+        public LayoutDataMiddleware(RequestDelegate next, IMemoryCache cache, IServiceScopeFactory serviceScopeFactory, IHttpContextAccessor httpContextAccessor)
         {
             _next = next;
             _cache = cache;
             _serviceScopeFactory = serviceScopeFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            context.Items["Categories"] = await GetData<Category, CategoryVM>("Categories", new FilterOptions());
-
-            var web = await GetData<Website, WebsiteVM>("Website", new FilterOptions { PageSize = 1 });
-
-            context.Items["Website"] = web.LastOrDefault();
-
-            context.Items["Platforms"] = await GetData<FahasaStoreAPI.Models.Entities.Platform, PlatformVM>(
-                    "Platforms", new FilterOptions { PageSize = 5 });
-
-            context.Items["Topics"] = await GetData<Topic, TopicVM>(
-                    "Topics", new FilterOptions { PageSize = 4 } );
-
-            await _next(context);
-        }
-
-        public async Task<IEnumerable<TViewModel>> GetData<T, TViewModel>(string cacheKey, FilterOptions filterOptions) 
-            where T : class
-            where TViewModel : class, IEntity<int>
-        {
+            var cacheKey = "DataForHomeLayout";
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                var dataService = scope.ServiceProvider.GetRequiredService<IBaseService<T, TViewModel>>();
-                if (!_cache.TryGetValue(cacheKey, out IEnumerable<TViewModel>? data) || data == null)
+                var dataService = scope.ServiceProvider.GetRequiredService<IFahasaStoreService>();
+                if (!_cache.TryGetValue(cacheKey, out HomeLayoutVM? data) || data == null)
                 {
-                    var dataFilter = await dataService.FilterAsync(filterOptions);
-                    data = dataFilter.Paged.Items;
+                    var dataForHomeLayout = await dataService.DataForHomeLayout(10, 5, 4);
+                    data = dataForHomeLayout;
                     _cache.Set(cacheKey, data, TimeSpan.FromHours(1));
                 }
-                return data;
+                context.Items["HomeLayout"] = data;
             }
+
+            var userLoginer = _httpContextAccessor.HttpContext?.Request.Cookies["UserLoginer"];
+            if (!string.IsNullOrEmpty(userLoginer))
+            {
+                var user = JsonConvert.DeserializeObject<AspNetUserDetail>(userLoginer);
+                context.Items["UserLoginer"] = user;
+            }
+
+            await _next(context);
         }
     }
 }

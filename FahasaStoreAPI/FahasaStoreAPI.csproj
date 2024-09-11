@@ -7,16 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Base\**" />
+    <Compile Remove="Models\DTOs\Entities\**" />
     <Compile Remove="Models\Entities2\**" />
+    <Compile Remove="Models\ViewModels\Entities\**" />
+    <Content Remove="Base\**" />
+    <Content Remove="Models\DTOs\Entities\**" />
     <Content Remove="Models\Entities2\**" />
+    <Content Remove="Models\ViewModels\Entities\**" />
+    <EmbeddedResource Remove="Base\**" />
+    <EmbeddedResource Remove="Models\DTOs\Entities\**" />
     <EmbeddedResource Remove="Models\Entities2\**" />
+    <EmbeddedResource Remove="Models\ViewModels\Entities\**" />
+    <None Remove="Base\**" />
+    <None Remove="Models\DTOs\Entities\**" />
     <None Remove="Models\Entities2\**" />
+    <None Remove="Models\ViewModels\Entities\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\BannersController.cs" />
     <Compile Remove="Controllers\BooksController.cs" />
     <Compile Remove="Controllers\CategoriesController.cs" />
+    <Compile Remove="Controllers\EntitiesController.cs" />
     <Compile Remove="Controllers\FlashSaleBooksController.cs" />
     <Compile Remove="Controllers\FlashSalesController.cs" />
     <Compile Remove="Controllers\MenusController.cs" />
@@ -25,22 +38,21 @@
     <Compile Remove="Controllers\SubcategoriesController.cs" />
     <Compile Remove="Controllers\TopicContentsController.cs" />
     <Compile Remove="Controllers\TopicsController.cs" />
-    <Compile Remove="Controllers\UsersController.cs" />
     <Compile Remove="Controllers\WebsitesController.cs" />
-    <Compile Remove="Models\ViewModels\Entities\BookPartnerVM.cs" />
-    <Compile Remove="Models\ViewModels\Entities\BookVM.cs" />
-    <Compile Remove="Models\ViewModels\Entities\FlashSaleBookVM.cs" />
-    <Compile Remove="Models\ViewModels\Entities\FlashSaleVM.cs" />
     <Compile Remove="Repositories\Implementations\BookRepository.cs" />
+    <Compile Remove="Repositories\Implementations\RoleRepository.cs" />
     <Compile Remove="Repositories\Implementations\SubcategoryRepository.cs" />
     <Compile Remove="Repositories\Implementations\TopicRepository.cs" />
     <Compile Remove="Repositories\Interfaces\IBookRepository.cs" />
+    <Compile Remove="Repositories\Interfaces\IRoleRepository.cs" />
     <Compile Remove="Repositories\Interfaces\ISubcategoryRepository.cs" />
     <Compile Remove="Repositories\Interfaces\ITopicRepository.cs" />
     <Compile Remove="Services\Implementations\BookService.cs" />
+    <Compile Remove="Services\Implementations\RoleService.cs" />
     <Compile Remove="Services\Implementations\SubcategoryService.cs" />
     <Compile Remove="Services\Implementations\TopicService.cs" />
     <Compile Remove="Services\Interfaces\IBookService.cs" />
+    <Compile Remove="Services\Interfaces\IRoleService.cs" />
     <Compile Remove="Services\Interfaces\ISubcategoryService.cs" />
     <Compile Remove="Services\Interfaces\ITopicService.cs" />
   </ItemGroup>
@@ -67,6 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\" />
     <Folder Include="Middleware\" />
     <Folder Include="Repositories\Extensions\" />
   </ItemGroup>

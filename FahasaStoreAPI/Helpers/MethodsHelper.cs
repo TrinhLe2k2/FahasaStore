@@ -1,14 +1,11 @@
-﻿using FahasaStoreAPI.Models.Entities;
-using FahasaStoreAPI.Models.ViewModels;
-using FahasaStoreAPI.Models.ViewModels.Entities;
-using System.Linq.Expressions;
+﻿using FahasaStoreAPI.Models.ViewModels;
 using X.PagedList;
 
 namespace FahasaStoreAPI.Helpers
 {
     public static class MethodsHelper
     {
-        public static PagedVM<T> GetPagedAsync<T>(IPagedList<T> pagedList)
+        public static PagedVM<T> GetPaged<T>(IPagedList<T> pagedList)
         {
             int maxPages = 5;
             int totalPages = pagedList.PageCount;

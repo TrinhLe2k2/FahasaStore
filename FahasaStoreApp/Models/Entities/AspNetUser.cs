@@ -11,8 +11,10 @@ namespace FahasaStoreAPI.Models.Entities
             AspNetUserClaims = new HashSet<AspNetUserClaim>();
             AspNetUserLogins = new HashSet<AspNetUserLogin>();
             AspNetUserTokens = new HashSet<AspNetUserToken>();
+            CartItems = new HashSet<CartItem>();
             Favourites = new HashSet<Favourite>();
             Notifications = new HashSet<Notification>();
+            OrderItems = new HashSet<OrderItem>();
             Orders = new HashSet<Order>();
             Reviews = new HashSet<Review>();
             Roles = new HashSet<AspNetRole>();
@@ -43,8 +45,10 @@ namespace FahasaStoreAPI.Models.Entities
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
         public virtual ICollection<Favourite> Favourites { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
 

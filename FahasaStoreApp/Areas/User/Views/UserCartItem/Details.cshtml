@@ -1,0 +1,28 @@
+﻿@model FahasaStore.Models.CartItemDetail
+@{
+    var item = Model;
+}
+<div class="row">
+    <div class="col-7">
+        <div class="d-flex">
+            <input class="cartItem-checkbox py-2" id="checkItem_@item.Id" type="checkbox" value="@item.Id" price="@item.IntoMoney">
+            <label for="checkItem_@item.Id">
+                <img src="@item.Book?.BookPoster" width="120" height="120" class="object-fit-contain mx-2" />
+            </label>
+            <div class="d-flex flex-column justify-content-between">
+                <a href="#" class="mb-2 nav-link twoLine">@item.Book?.Name</a>
+                <div>
+                    <span class="fw-bold">@item.Book?.CurrentPrice.ToString("N0") đ</span> <br />
+                    <span class="text-decoration-line-through">@item.Book?.Price.ToString("N0") đ</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-2 d-flex flex-column justify-content-center">
+        <input name="Quantity" type="number" value="@item.Quantity" ciId="@item.Id" ciUserId="@item.UserId" ciCartId="@item.CartId" ciBookId="@item.BookId" class="fs-6 px-1 py-1 text-center w-100" min="1" onchange="SubmitUpdateCartItemUser(this)" />
+    </div>
+    <div class="col-2 d-flex flex-column justify-content-center">
+        <h6 class="text-danger fw-bold">@item.IntoMoney.ToString("N0") đ</h6>
+    </div>
+    <div class="col-1 d-flex flex-column justify-content-center"><a href="/User/DeleteCartItem" IdValue="@item.Id" onclick="HandlerCRUD(this, event)" class="nav-link"><h6 class="fw-bold"><i class="bi bi-trash"></i></h6></a></div>
+</div>

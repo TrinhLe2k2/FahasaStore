@@ -1,0 +1,52 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Constants
+@using FahasaStoreApp.Models.DTOs
+@using FahasaStoreApp.Models.ViewModels
+
+@model FilterVM<OrderExtend>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Đơn hàng";
+    var paged = Model.Paged;
+    var Filters = new List<FilterItem>
+    {
+        new FilterItem()
+    };
+}
+
+<div class="bg-black bg-opacity-10">
+    <div class="container pt-4">
+        <div class="bg-white rounded-3 py-3">
+            <div class="row">
+                @(await Html.RenderComponentAsync<SideBarUserComponent>(RenderMode.ServerPrerendered, new { active = 3 }))
+                <div class="col-lg-9 px-4">
+                    <form asp-action="Filter" id="formUserOrderFilter">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @if (!paged.PagedNavigation.PageCount.Equals(0))
+                            {
+                                <h5 class="text-uppercase mb-0">Đơn hàng của tôi - <span id="TotalItemCount">@paged.PagedNavigation.TotalItemCount</span> </h5>
+                            }
+                            <div>
+                                <input asp-for="@Filters[0].TypeOfKey" value="string" hidden />
+                                <input asp-for="@Filters[0].Key" value="OrderLastStatus" hidden />
+                                <select asp-for="@Filters[0].Value" class="form-select" onchange="RenderPartialView('formUserOrderFilter', 'boxDataUser', event)">
+                                    <option value="">-- Order status --</option>
+                                    <option value="@OrderStatusConst.Completed">@OrderStatusConst.Completed</option>
+                                    <option value="@OrderStatusConst.Returning">@OrderStatusConst.Returning</option>
+                                    <option value="@OrderStatusConst.Returned">@OrderStatusConst.Returned</option>
+                                    <option value="@OrderStatusConst.Cancelled">@OrderStatusConst.Cancelled</option>
+                                </select>
+                            </div>
+                        </div><hr />
+                        <div id="boxDataUser">
+                            @await Html.PartialAsync("/Areas/User/Views/UserOrder/Filter.cshtml", Model)
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -11,39 +11,42 @@ namespace FahasaStoreApp.Base.Implementations
         where TViewModel : class, IEntity<int>
     {
         protected readonly IHttpClientFactory _httpClientFactory;
-        protected readonly UserLogined _userLogined;
-        protected readonly string _api;
+        protected readonly IMethodsHelper _methodsHelper;
 
-        public BaseService(IHttpClientFactory httpClientFactory, UserLogined userLogined)
+        public BaseService(IHttpClientFactory httpClientFactory, IMethodsHelper methodsHelper)
         {
             _httpClientFactory = httpClientFactory;
-            _userLogined = userLogined;
-            _api = $"https://localhost:7094/api/{MethodsHelper.PluralizeWord<TEntity>()}";
+            _methodsHelper = methodsHelper;
         }
 
         public virtual async Task<TViewModel> GetByIdAsync(int id)
         {
-            return await MethodsHelper.RequestHttpGet<TViewModel>(_httpClientFactory, _userLogined, _api + "/" + id);
+            string endpoint = "/" + _methodsHelper.PluralizeWord<TEntity>() + "/" + id;
+            return await _methodsHelper.RequestHttpGet<TViewModel>(_httpClientFactory, endpoint);
         }
 
         public virtual async Task<TViewModel> CreateAsync(TViewModel model)
         {
-            return await MethodsHelper.RequestHttpPost<TViewModel, TViewModel>(_httpClientFactory, _userLogined, _api, model);
+            string endpoint = "/" + _methodsHelper.PluralizeWord<TEntity>();
+            return await _methodsHelper.RequestHttpPost<TViewModel, TViewModel>(_httpClientFactory, endpoint, model);
         }
 
         public virtual async Task<TViewModel> UpdateAsync(int id, TViewModel model)
         {
-            return await MethodsHelper.RequestHttpPut<TViewModel>(_httpClientFactory, _userLogined, _api + "/" + id, model);
+            string endpoint = "/" + _methodsHelper.PluralizeWord<TEntity>() + "/" + id;
+            return await _methodsHelper.RequestHttpPut<TViewModel, TViewModel>(_httpClientFactory, endpoint, model);
         }
 
         public virtual async Task<bool> DeleteAsync(int id)
         {
-            return await MethodsHelper.RequestHttpDelete(_httpClientFactory, _userLogined, _api + "/" + id);
+            string endpoint = "/" + _methodsHelper.PluralizeWord<TEntity>()+ "/" + id;
+            return await _methodsHelper.RequestHttpDelete<bool>(_httpClientFactory, endpoint);
         }
 
         public virtual async Task<FilterVM<TViewModel>> FilterAsync(FilterOptions filterOptions)
         {
-            return await MethodsHelper.RequestHttpPost<FilterVM<TViewModel>, FilterOptions>(_httpClientFactory, _userLogined, _api + "/Filter", filterOptions);
+            string endpoint = "/" + _methodsHelper.PluralizeWord<TEntity>() + "/Filter";
+            return await _methodsHelper.RequestHttpPost<FilterVM<TViewModel>, FilterOptions>(_httpClientFactory, endpoint, filterOptions);
         }
     }
 }

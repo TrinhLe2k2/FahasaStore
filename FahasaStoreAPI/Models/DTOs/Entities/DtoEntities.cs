@@ -79,6 +79,8 @@ namespace FahasaStoreAPI.Models.DTOs.Entities
 
         public string? UserAvatar { get; set; }
         public string? UserFullName { get; set; }
+        public string? BookName { get; set; }
+        public string? BookPoster { get; set; }
     }
     public class PosterImageDto
     {
@@ -136,7 +138,6 @@ namespace FahasaStoreAPI.Models.DTOs.Entities
         public DateTime? CreatedAt { get; set; }
 
         public string? PartnerTypeName { get; set; }
-
         public int CountBookPartners { get; set; } = 0;
     }
     public class OrderStatusDto
@@ -157,6 +158,8 @@ namespace FahasaStoreAPI.Models.DTOs.Entities
         public int? Price { get; set; }
         public int? DiscountPercentage { get; set; }
         public DateTime? CreatedAt { get; set; }
+
+        public int IntoMoney { get; set; } = 0;
     }
     public class OrderDto
     {
@@ -167,6 +170,10 @@ namespace FahasaStoreAPI.Models.DTOs.Entities
         public int? PaymentMethodId { get; set; }
         public string? Note { get; set; }
         public DateTime? CreatedAt { get; set; }
+
+        public int IntoMoney { get; set; } = 0;
+        public string? ReceiverName { get; set; }
+        public string? OrderLastStatus { get; set; }
 
         public int CountOrderItems { get; set; } = 0;
         public int CountOrderStatuses { get; set; } = 0;
@@ -189,6 +196,8 @@ namespace FahasaStoreAPI.Models.DTOs.Entities
         public string Content { get; set; } = null!;
         public bool IsRead { get; set; }
         public DateTime? CreatedAt { get; set; }
+
+        public string? NotificationTypeName { get; set; }
     }
     public class MenuDto
     {
@@ -334,7 +343,6 @@ namespace FahasaStoreAPI.Models.DTOs.Entities
         public int CountAddresses { get; set; } = 0;
         public int CountFavourites { get; set; } = 0;
         public int CountNotifications { get; set; } = 0;
-        public int Count { get; set; } = 0;
         public int CountOrders { get; set; } = 0;
         public int CountReviews { get; set; } = 0;
         public int CountRoles { get; set; } = 0;

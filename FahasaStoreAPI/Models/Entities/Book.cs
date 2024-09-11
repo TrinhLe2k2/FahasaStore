@@ -1,5 +1,4 @@
-﻿using FahasaStoreAPI.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FahasaStoreAPI.Models.Entities

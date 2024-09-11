@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using CloudinaryDotNet.Actions;
+using FahasaStore.Models;
 using FahasaStoreAPI.Helpers;
 using FahasaStoreAPI.Models.DTOs;
-using FahasaStoreAPI.Models.DTOs.Entities;
 using FahasaStoreAPI.Models.Entities;
 using FahasaStoreAPI.Models.ViewModels;
-using FahasaStoreAPI.Models.ViewModels.Entities;
 using FahasaStoreAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -27,8 +25,8 @@ namespace FahasaStoreAPI.Repositories.Implementations
         private List<RSProduct> rSProducts = new List<RSProduct>();
 
         // Tạo một mảng các ký tự đặc biệt bạn muốn loại bỏ
-        private char[] punctuationChars = { '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', '{', ']', '}', '\\', '|', ';', ':', '\'', '"', '<', ',', '>', '.', '/', '?' };
-        private string[] stopWords = {
+        private readonly char[] punctuationChars = { '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', '{', ']', '}', '\\', '|', ';', ':', '\'', '"', '<', ',', '>', '.', '/', '?' };
+        private readonly string[] stopWords = {
                 "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín", "mười",
                 "và", "hoặc", "của", "trong", "ở", "tới", "đến", "cho", "về", "với", "cùng", "là",
                 "được", "từ", "đi", "điều", "này", "đó"
@@ -100,7 +98,7 @@ namespace FahasaStoreAPI.Repositories.Implementations
             _bookFeatureVectors = featureVectors;
         }
 
-        public async Task<PagedVM<BookDto>> FindSimilarBooks(int bookId, int pageNumber, int pageSize)
+        public async Task<PagedVM<BookExtend>> FindSimilarBooks(int bookId, int pageNumber, int pageSize)
         {
             await InitializeFeatureVectorsAsync();
             // Ensure the feature vectors are initialized
@@ -140,14 +138,14 @@ namespace FahasaStoreAPI.Repositories.Implementations
                 .OrderByDescending(e => e.Value)
                 .Select(e => e.Key)
                 .ToPagedList(pageNumber, pageSize);
-            var paged0 = MethodsHelper.GetPagedAsync(similarBookIdsPageList);
+            var paged0 = MethodsHelper.GetPaged(similarBookIdsPageList);
 
             // Retrieve the book details in one query
-            var similarBooksPageList = await _context.Books.AsNoTracking().ProjectTo<BookDto>(_mapper.ConfigurationProvider)
+            var similarBooksPageList = await _context.Books.AsNoTracking().ProjectTo<BookExtend>(_mapper.ConfigurationProvider)
                 .Where(b => similarBookIdsPageList.Contains(b.Id))
                 .ToPagedListAsync(pageNumber, pageSize);
 
-            var paged = MethodsHelper.GetPagedAsync(similarBooksPageList);
+            var paged = MethodsHelper.GetPaged(similarBooksPageList);
             paged.PagedNavigation.TotalItemCount = paged0.PagedNavigation.TotalItemCount;
             paged.PagedNavigation.PageCount = paged0.PagedNavigation.PageCount;
             paged.PagedNavigation.HasNextPage = paged0.PagedNavigation.HasNextPage;
@@ -160,7 +158,7 @@ namespace FahasaStoreAPI.Repositories.Implementations
             return paged;
         }
 
-        public async Task<PagedVM<BookDto>> FindSimilarBooksBasedOnCart(List<int> bookIdsInCart, int pageNumber, int pageSize, string aggregationMethod = "average")
+        public async Task<PagedVM<BookExtend>> FindSimilarBooksBasedOnCart(List<int> bookIdsInCart, int pageNumber, int pageSize, string aggregationMethod = "average")
         {
             await InitializeFeatureVectorsAsync();
             // Ensure the feature vectors are initialized
@@ -177,7 +175,7 @@ namespace FahasaStoreAPI.Repositories.Implementations
 
             if (!bookIdsInCart.Any())
             {
-                return MethodsHelper.GetPagedAsync(await _context.Books.AsNoTracking().ProjectTo<BookDto>(_mapper.ConfigurationProvider).OrderByDescending(book => book.CreatedAt).ToPagedListAsync(pageNumber, pageSize));
+                return MethodsHelper.GetPaged(await _context.Books.AsNoTracking().ProjectTo<BookExtend>(_mapper.ConfigurationProvider).OrderByDescending(book => book.CreatedAt).ToPagedListAsync(pageNumber, pageSize));
             }
 
             var cartVectors = bookIdsInCart.Select(id => _bookFeatureVectors[id]);
@@ -219,11 +217,23 @@ namespace FahasaStoreAPI.Repositories.Implementations
                 .Select(e => e.Key)
                 .ToPagedList(pageNumber, pageSize);
 
-            var similarBooksPageList = await _context.Books.AsNoTracking().ProjectTo<BookDto>(_mapper.ConfigurationProvider)
+            var paged0 = MethodsHelper.GetPaged(similarBookIds);
+
+            var similarBooksPageList = await _context.Books.AsNoTracking().ProjectTo<BookExtend>(_mapper.ConfigurationProvider)
                 .Where(b => similarBookIds.Contains(b.Id))
                 .ToPagedListAsync(pageNumber, pageSize);
 
-            return MethodsHelper.GetPagedAsync(similarBooksPageList);
+            var paged = MethodsHelper.GetPaged(similarBooksPageList);
+            paged.PagedNavigation.TotalItemCount = paged0.PagedNavigation.TotalItemCount;
+            paged.PagedNavigation.PageCount = paged0.PagedNavigation.PageCount;
+            paged.PagedNavigation.HasNextPage = paged0.PagedNavigation.HasNextPage;
+            paged.PagedNavigation.HasPreviousPage = paged0.PagedNavigation.HasPreviousPage;
+            paged.PagedNavigation.IsFirstPage = paged0.PagedNavigation.IsFirstPage;
+            paged.PagedNavigation.IsLastPage = paged0.PagedNavigation.IsLastPage;
+            paged.PagedNavigation.StartPage = paged0.PagedNavigation.StartPage;
+            paged.PagedNavigation.EndPage = paged0.PagedNavigation.EndPage;
+
+            return paged;
         }
 
         private Dictionary<int, double[]> FeatureVectorAsync(RSProduct rSProduct)

@@ -1,0 +1,32 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@model PagedVM<NotificationExtend>
+
+<div>
+    <h5 class="text-uppercase">Thông báo của tôi - @Model.PagedNavigation.TotalItemCount</h5><hr />
+    <div class="row g-3 mb-3">
+        @{
+            if (Model.Items.Any())
+            {
+                foreach (var noti in Model.Items)
+                {
+                    <div>
+                        <a href="/User/HomeUser/NotificationUserDetails" IdValue="@noti.Id" onclick="HandlerCRUD(this, event)" class="text-decoration-none">
+                            <div class="card" style="@(noti.IsRead ? "" : "border: 1px solid var(--primary-color-fahasa);")">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">@noti.NotificationTypeName</h5>
+                                        <span class="ms-auto">@(noti.IsRead ? "" : "Chưa đọc")</span>
+                                    </div>
+                                    <div class="text-truncate">@noti.Content</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        }
+    </div>
+    @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = Model.PagedNavigation, formId = "/User/HomeUser/NotificationsUseFilter?", renderINId = "boxDataUser", methodGet = true }))
+</div>

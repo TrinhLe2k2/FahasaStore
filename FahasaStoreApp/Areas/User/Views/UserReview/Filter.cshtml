@@ -1,0 +1,64 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<ReviewExtend>
+
+@{
+    var paged = Model.Paged;
+}
+
+<form asp-action="Filter" id="formUserReviewFilter">
+    <div>
+        <h5 class="text-uppercase">Nhận xét của tôi - @paged.PagedNavigation.TotalItemCount</h5><hr />
+        @if (paged.Items.Any())
+        {
+            <div class="row g-3">
+                <div>
+                    <div class="row">
+                        <div class="col-2 d-none d-sm-block"><strong>Ngày</strong></div>
+                        <div class="col-4 col-sm-3"><strong>Sách</strong></div>
+                        <div class="col-2"><strong>Đánh giá</strong></div>
+                        <div class="col-4 col-sm-3"><strong>Nội dung</strong></div>
+                        <div class="col-2"></div>
+                    </div>
+                </div>
+                @foreach (var review in paged.Items)
+                {
+                    <div>
+                        <div class="row">
+                            <div class="col-2 d-none d-sm-block">
+                                @((review.CreatedAt != null) ? review.CreatedAt.Value.ToString("dd/MM/yyyy") : "Không có ngày tạo")
+                            </div>
+                            <div class="col-4 col-sm-3"><a href="/Home/Product/@review.BookId" class="nav-link twoLine">@review.BookName</a></div>
+                            <div class="col-2">
+                                @{
+                                    for (int rate = 1; rate <= 5; rate++)
+                                    {
+                                        if (review.Rating >= rate)
+                                        {
+                                            <span style="color: gold">★</span>
+                                        }
+                                        else
+                                        {
+                                            <span>★</span>
+                                        }
+                                    }
+                                }
+                            </div>
+                            <div class="col-4 col-sm-3"><span class="text-truncatet-row-double">@review.Comment</span></div>
+                            <div class="col-2">
+                                <div class="d-flex">
+                                    <a href="/User/UserReview/Details" IdValue="@review.Id" onclick="HandlerCRUD(this, event)" class="nav-link p-2"><i class="bi bi-eye"></i></a>
+                                    <a href="/User/UserReview/Edit" IdValue="@review.Id" onclick="HandlerCRUD(this, event)" class="nav-link p-2"><i class="bi bi-pencil"></i></a>
+                                    <a href="/User/UserReview/Delete" IdValue="@review.Id" onclick="HandlerCRUD(this, event)" class="nav-link p-2"><i class="bi bi-trash3"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        }
+        @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = paged.PagedNavigation, formId = "formUserReviewFilter", renderINId = "boxDataUser" }))
+    </div>
+</form>
