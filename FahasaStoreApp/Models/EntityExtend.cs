@@ -8,6 +8,7 @@
 
     public class AspNetUserExtend : AspNetUserBase
     {
+        public int CartId { get; set; } = 0;
         public int AddressesCount { get; set; } = 0;
         public int FavouritesCount { get; set; } = 0;
         public int NotificationsCount { get; set; } = 0;
@@ -18,7 +19,7 @@
 
     public class AuthorExtend : AuthorBase
     {
-        public int CountBooks { get; set; } = 0;
+        public int BooksCount { get; set; } = 0;
     }
 
     public class BannerExtend : BannerBase
@@ -65,17 +66,17 @@
 
     public class CategoryExtend : CategoryBase
     {
-        public int CountSubcategories { get; set; } = 0;
+        public int SubcategoriesCount { get; set; } = 0;
     }
 
     public class CoverTypeExtend : CoverTypeBase
     {
-        public int CountBooks { get; set; } = 0;
+        public int BooksCount { get; set; } = 0;
     }
 
     public class DimensionExtend : DimensionBase
     {
-        public int CountBooks { get; set; } = 0;
+        public int BooksCount { get; set; } = 0;
     }
 
     public class FavouriteExtend : FavouriteBase
@@ -85,13 +86,16 @@
 
     public class FlashSaleExtend : FlashSaleBase
     {
-        public int CountFlashSaleBooks { get; set; } = 0;
+        public int FlashSaleBooksCount { get; set; } = 0;
     }
 
     public class FlashSaleBookExtend : FlashSaleBookBase
     {
         public int Solded { get; set; } = 0;
         public int PriceFS { get; set; } = 0;
+        public DateTime FlashSaleStartDate { get; set; }
+        public DateTime FlashSaleEndDate { get; set;}
+        public string BookName { get; set; } = null!;
     }
 
     public class MenuExtend : MenuBase
@@ -102,11 +106,12 @@
     public class NotificationExtend : NotificationBase
     {
         public string? NotificationTypeName { get; set; }
+        public string? UserFullName { get; set; }
     }
 
     public class NotificationTypeExtend : NotificationTypeBase
     {
-        public int CountNotifications { get; set; } = 0;
+        public int NotificationsCount { get; set; } = 0;
     }
 
     public class OrderExtend : OrderBase
@@ -117,8 +122,8 @@
         public bool isCancelable { get; set; } = false;
         public bool isReturnable { get; set; } = false;
         public bool isCompletable { get; set; } = false;
-        public int CountOrderItems { get; set; } = 0;
-        public int CountOrderStatuses { get; set; } = 0;
+        public int OrderItemsCount { get; set; } = 0;
+        public int OrderStatusesCount { get; set; } = 0;
     }
 
     public class OrderItemExtend : OrderItemBase
@@ -137,17 +142,17 @@
     public class PartnerExtend : PartnerBase
     {
         public string? PartnerTypeName { get; set; }
-        public int CountBookPartners { get; set; } = 0;
+        public int BookPartnersCount { get; set; } = 0;
     }
 
     public class PartnerTypeExtend : PartnerTypeBase
     {
-        public int CountPartners { get; set; } = 0;
+        public int PartnersCount { get; set; } = 0;
     }
 
     public class PaymentMethodExtend : PaymentMethodBase
     {
-        public int CountOrders { get; set; } = 0;
+        public int OrdersCount { get; set; } = 0;
     }
 
     public class PlatformExtend : PlatformBase
@@ -170,18 +175,18 @@
 
     public class StatusExtend : StatusBase
     {
-        public int CountOrderStatuses { get; set; } = 0;
+        public int OrderStatusesCount { get; set; } = 0;
     }
 
     public class SubcategoryExtend : SubcategoryBase
     {
         public string? CategoryName { get; set; }
-        public int CountBooks { get; set; } = 0;
+        public int BooksCount { get; set; } = 0;
     }
 
     public class TopicExtend : TopicBase
     {
-        public int CountTopicContents { get; set; } = 0;
+        public int TopicContentsCount { get; set; } = 0;
     }
 
     public class TopicContentExtend : TopicContentBase
@@ -191,7 +196,7 @@
 
     public class VoucherExtend : VoucherBase
     {
-        public int CountOrders { get; set; } = 0;
+        public int OrdersCount { get; set; } = 0;
     }
 
     public class WebsiteExtend : WebsiteBase

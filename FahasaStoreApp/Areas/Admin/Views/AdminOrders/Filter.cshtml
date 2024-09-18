@@ -1,0 +1,72 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Constants
+@using FahasaStoreApp.Models.DTOs
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<OrderExtend>
+
+@{
+    TempData["NameController"] = "AdminOrders";
+
+    var paged = Model.Paged;
+    var extend = new OrderExtend();
+}
+
+<div id="totalItemDiv" TotalItemCount="@paged.PagedNavigation.TotalItemCount">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => extend.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => extend.CreatedAt)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => extend.ReceiverName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => extend.IntoMoney)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => extend.OrderLastStatus)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in paged.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @((item.CreatedAt != null) ? item.CreatedAt.Value.ToString("dd/MM/yyyy (HH:mm)") : "Không có ngày tạo")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReceiverName)
+                    </td>
+                    <td>
+                        @item.IntoMoney.ToString("N0") đ
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderLastStatus)
+                    </td>
+                    <td>
+                        <a href="/Admin/@TempData["NameController"]/Details" class="btn btn-outline-info" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-eye"></i></a> |
+                        @if (item.OrderLastStatus != null && !item.OrderLastStatus.Equals(OrderStatusConst.Cancelled) && !item.OrderLastStatus.Equals(OrderStatusConst.Completed) && !item.OrderLastStatus.Equals(OrderStatusConst.Returned))
+                        {
+                            <a href="/Admin/@TempData["NameController"]/UpdateOrderStatus" IdValue="@item.Id" class="btn btn-outline-primary" onclick="HandlerCRUD(this, event)">Update Status</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = paged.PagedNavigation, formId = "Filter", renderINId = "boxData" }))
+</div>
+
+<script>
+    $('#TotalItemCount').text($('#totalItemDiv').attr('TotalItemCount'));
+</script>

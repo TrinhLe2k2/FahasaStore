@@ -1,11 +1,12 @@
 ﻿using FahasaStore.Models;
-using FahasaStoreAPI.Models.Entities;
+using FahasaStoreApp.Areas.Base;
 using FahasaStoreApp.Areas.User.Models;
 using FahasaStoreApp.Areas.User.Services;
-using FahasaStoreApp.Base;
+using FahasaStoreApp.Constants;
 using FahasaStoreApp.Models;
 using FahasaStoreApp.Models.DTOs;
-using FahasaStoreApp.Services.Interfaces;
+using FahasaStoreApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net.Http;
@@ -13,16 +14,17 @@ using System.Net.Http;
 namespace FahasaStoreApp.Areas.User.Controllers
 {
     [Area("User")]
-    public class UserOrderController : BaseController<CustomerOrder, OrderDetail, OrderExtend, OrderBase>
+    [Authorize(Policy = AppRole.Customer)]
+    public class UserOrderController : BaseController<CustomerOrders, OrderDetail, OrderExtend, OrderBase>
     {
-        private readonly IBaseService<CustomerAddress, AddressDetail, AddressExtend, AddressBase> _serviceAddress;
-        private readonly IBaseService<CustomerCartItem, CartItemDetail, CartItemDetail, CartItemBase> _serviceCartItem;
+        private readonly IBaseService<CustomerAddresses, AddressDetail, AddressExtend, AddressBase> _serviceAddress;
+        private readonly IBaseService<CustomerCartItems, CartItemDetail, CartItemDetail, CartItemBase> _serviceCartItem;
         private readonly IFahasaStoreService _fahasaStoreService;
         private readonly IOrderUserService _OrderUserService;
         public UserOrderController(
             IOrderUserService service,
-            IBaseService<CustomerAddress, AddressDetail, AddressExtend, AddressBase> serviceAddress,
-            IBaseService<CustomerCartItem, CartItemDetail, CartItemDetail, CartItemBase> serviceCartItem,
+            IBaseService<CustomerAddresses, AddressDetail, AddressExtend, AddressBase> serviceAddress,
+            IBaseService<CustomerCartItems, CartItemDetail, CartItemDetail, CartItemBase> serviceCartItem,
             IFahasaStoreService fahasaStoreService
             ) 
             : base(service)
@@ -40,13 +42,13 @@ namespace FahasaStoreApp.Areas.User.Controllers
             if (addCI.Data != null)
             {
                 order.CartItemIds.Add(addCI.Data.Id);
-                await Create(order);
+                await CreateNew(order);
                 return View();
             }
             return RedirectToAction("Product", "Home", new {id = model.BookId, area = ""});
         }
 
-        public override async Task<IActionResult> Create(OrderBase model)
+        public async Task<IActionResult> CreateNew(OrderBase model)
         {
             var addressResponse = await _serviceAddress.FilterAsync(new FilterOptions { SortField = "Default" });
             var addressSelectList = addressResponse?.Data?.Paged.Items.Select(e => new

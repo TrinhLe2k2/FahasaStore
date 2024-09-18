@@ -1,10 +1,10 @@
 ﻿@inject IHttpContextAccessor httpContextAccessor
-@using FahasaStoreAPI.Models.Entities
+@using FahasaStore.Models
 @using FahasaStoreApp.Helpers
-@model IEnumerable<Category>
+@model IEnumerable<CategoryDetail>
 @{
     var userLogin = new UserLogined(httpContextAccessor);
-    var categories = ViewData["categories"] as List<Category>;
+    var categories = ViewData["categories"] as List<CategoryDetail>;
 }
 <!-- HTML của bạn sử dụng model data -->
 <section id="header">

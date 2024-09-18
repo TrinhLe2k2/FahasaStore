@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FahasaStoreAPI.Models.Entities;
 
 namespace FahasaStoreApp.Helpers
 {

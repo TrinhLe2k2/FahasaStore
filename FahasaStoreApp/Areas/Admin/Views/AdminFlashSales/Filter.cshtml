@@ -1,0 +1,56 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.DTOs
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<FlashSaleExtend>
+
+@{
+    TempData["NameController"] = "AdminFlashSales";
+
+    var paged = Model.Paged;
+    var extend = new FlashSaleExtend();
+}
+
+<div id="totalItemDiv" TotalItemCount="@paged.PagedNavigation.TotalItemCount">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => extend.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => extend.StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => extend.EndDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in paged.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @item.StartDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @item.EndDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        <a href="/Admin/@TempData["NameController"]/Edit" class="btn btn-outline-primary" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                        <a href="/Admin/@TempData["NameController"]/Delete" class="btn btn-outline-danger" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = paged.PagedNavigation, formId = "Filter", renderINId = "boxData" }))
+</div>
+
+<script>
+    $('#TotalItemCount').text($('#totalItemDiv').attr('TotalItemCount'));
+</script>

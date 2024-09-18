@@ -1,0 +1,115 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Constants
+@model BookDetail
+
+<div>
+    <!-- Button trigger modal -->
+    <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="appModalLabel">Thông tin chi tiết</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="mb-3">
+                                <strong>
+                                    @Html.DisplayNameFor(model => model.PosterImages)
+                                </strong>
+                            </div>
+                            <div id="listPosterImages">
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <dl class="row">
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Id)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Html.DisplayFor(model => model.Id)
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Subcategory)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Model.Subcategory?.Name
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Author)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Model.Author?.Name
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.CoverType)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Model.CoverType?.TypeName
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Dimension)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Model.Dimension?.Length x @Model.Dimension?.Width x @Model.Dimension?.Height @Model.Dimension?.Unit
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Html.DisplayFor(model => model.Name)
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Description)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Html.DisplayFor(model => model.Description)
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Price)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Model.Price.ToString("N0") đ
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.DiscountPercentage)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Html.DisplayFor(model => model.DiscountPercentage)
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Quantity)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Html.DisplayFor(model => model.Quantity)
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.Weight)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Html.DisplayFor(model => model.Weight)
+                                </dd>
+                                <dt class="col-sm-3">
+                                    @Html.DisplayNameFor(model => model.PageCount)
+                                </dt>
+                                <dd class="col-sm-9">
+                                    @Html.DisplayFor(model => model.PageCount)
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+</script>

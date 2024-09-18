@@ -1,6 +1,8 @@
-﻿using FahasaStoreAPI.Models.ViewModels;
-using FahasaStoreAPI.Services.Interfaces;
+﻿using FahasaStoreAPI.Models.Entities;
+using FahasaStoreAPI.Models.ViewModels;
+using FahasaStoreAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FahasaStoreAPI.Controllers
 {
@@ -114,10 +116,12 @@ namespace FahasaStoreAPI.Controllers
         }
 
         [HttpGet("GetPaymentMethods")]
-        public async Task<IActionResult> GetPaymentMethods(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetPaymentMethods(int pageNumber = 1, int pageSize = 10)
         {
             var result = await _fahasaStoreService.GetPaymentMethodsAsync(pageNumber, pageSize);
             return Ok(result);
         }
+
+        
     }
 }

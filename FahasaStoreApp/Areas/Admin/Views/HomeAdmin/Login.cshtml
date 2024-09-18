@@ -1,0 +1,107 @@
+﻿@using FahasaStoreApp.Models.DTOs
+@model Login
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Fahasa - Login</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom fonts for this template-->
+    <link href="/LayoutAdmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/LayoutAdmin/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- toastr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+</head>
+
+<body class="bg-gradient-primary">
+    <div class="container">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image d-flex align-content-center">
+                                <div class="px-3">
+                                    <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/fahasa-logo.png" class="w-100 object-fit-cover" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                    </div>
+                                    <form asp-action="Login" asp-controller="Accounts" asp-area="">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <input name="redirectAnother" value="/Admin/HomeAdmin/Index" hidden />
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Email" class="control-label"></label>
+                                            <input asp-for="Email" class="form-control" />
+                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Password" class="control-label"></label>
+                                            <div class="input-group" id="passwordBox">
+                                                <input asp-for="Password" class="form-control" type="password" />
+                                                <button type="button" class="btn btn-outline-secondary" onclick="ShowHide('passwordBox')">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group form-check mb-3">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
+                                            </label>
+                                        </div>
+                                        <div class="form-group d-flex justify-content-end">
+                                            <input type="submit" value="Đăng Nhập" class="btn btn-danger"/>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/LayoutAdmin/vendor/jquery/jquery.min.js"></script>
+    <script src="/LayoutAdmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/LayoutAdmin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/LayoutAdmin/js/sb-admin-2.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <!-- toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+
+</html>

@@ -1,16 +1,14 @@
 using AutoMapper;
 using FahasaStoreAPI;
+using FahasaStoreAPI.Areas.Admin;
 using FahasaStoreAPI.Areas.Base;
 using FahasaStoreAPI.Areas.Customer;
 using FahasaStoreAPI.Constants;
 using FahasaStoreAPI.Identity;
 using FahasaStoreAPI.Mappers;
 using FahasaStoreAPI.Models.Entities;
-using FahasaStoreAPI.Repositories.Implementations;
-using FahasaStoreAPI.Repositories.Interfaces;
-using FahasaStoreAPI.Services.Extensions;
-using FahasaStoreAPI.Services.Implementations;
-using FahasaStoreAPI.Services.Interfaces;
+using FahasaStoreAPI.Repositories;
+using FahasaStoreAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -80,8 +78,11 @@ builder.Services.AddScoped<IBookRecommendationSystem, BookRecommendationSystem>(
 builder.Services.AddScoped<IFahasaStoreRepository, FahasaStoreRepository>();
 builder.Services.AddScoped<IFahasaStoreService, FahasaStoreService>();
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICustomerExtendRepository, CustomerExtendRepository>();
+builder.Services.AddScoped<ICustomerExtendService, CustomerExtendService>();
+
+builder.Services.AddScoped<IAdminExtendRepository, AdminExtendRepository>();
+builder.Services.AddScoped<IAdminExtendService, AdminExtendService>();
 
 builder.Services.AddScoped(typeof(ICustomerBaseRepository<,,,>), typeof(CustomerBaseRepository<,,,>));
 builder.Services.AddScoped(typeof(ICustomerBaseService<,,,>), typeof(CustomerBaseService<,,,>));
@@ -105,6 +106,106 @@ builder.Services.AddScoped<ICustomerReviewService, CustomerReviewService>();
 
 builder.Services.AddScoped<ICustomerFavouriteRepository, CustomerFavouriteRepository>();
 builder.Services.AddScoped<ICustomerFavouriteService, CustomerFavouriteService>();
+#endregion
+
+#region Admin Repository - Service
+
+builder.Services.AddScoped<IAdminAddressRepository, AdminAddressRepository>();
+builder.Services.AddScoped<IAdminAddressService, AdminAddressService>();
+
+builder.Services.AddScoped<IAdminAspNetUserRepository, AdminAspNetUserRepository>();
+builder.Services.AddScoped<IAdminAspNetUserService, AdminAspNetUserService>();
+
+builder.Services.AddScoped<IAdminAuthorRepository, AdminAuthorRepository>();
+builder.Services.AddScoped<IAdminAuthorService, AdminAuthorService>();
+
+builder.Services.AddScoped<IAdminBannerRepository, AdminBannerRepository>();
+builder.Services.AddScoped<IAdminBannerService, AdminBannerService>();
+
+builder.Services.AddScoped<IAdminBookRepository, AdminBookRepository>();
+builder.Services.AddScoped<IAdminBookService, AdminBookService>();
+
+builder.Services.AddScoped<IAdminBookPartnerRepository, AdminBookPartnerRepository>();
+builder.Services.AddScoped<IAdminBookPartnerService, AdminBookPartnerService>();
+
+builder.Services.AddScoped<IAdminCartRepository, AdminCartRepository>();
+builder.Services.AddScoped<IAdminCartService, AdminCartService>();
+
+builder.Services.AddScoped<IAdminCartItemRepository, AdminCartItemRepository>();
+builder.Services.AddScoped<IAdminCartItemService, AdminCartItemService>();
+
+builder.Services.AddScoped<IAdminCategoryRepository, AdminCategoryRepository>();
+builder.Services.AddScoped<IAdminCategoryService, AdminCategoryService>();
+
+builder.Services.AddScoped<IAdminCoverTypeRepository, AdminCoverTypeRepository>();
+builder.Services.AddScoped<IAdminCoverTypeService, AdminCoverTypeService>();
+
+builder.Services.AddScoped<IAdminDimensionRepository, AdminDimensionRepository>();
+builder.Services.AddScoped<IAdminDimensionService, AdminDimensionService>();
+
+builder.Services.AddScoped<IAdminFavouriteRepository, AdminFavouriteRepository>();
+builder.Services.AddScoped<IAdminFavouriteService, AdminFavouriteService>();
+
+builder.Services.AddScoped<IAdminFlashSaleRepository, AdminFlashSaleRepository>();
+builder.Services.AddScoped<IAdminFlashSaleService, AdminFlashSaleService>();
+
+builder.Services.AddScoped<IAdminFlashSaleBookRepository, AdminFlashSaleBookRepository>();
+builder.Services.AddScoped<IAdminFlashSaleBookService, AdminFlashSaleBookService>();
+
+builder.Services.AddScoped<IAdminMenuRepository, AdminMenuRepository>();
+builder.Services.AddScoped<IAdminMenuService, AdminMenuService>();
+
+builder.Services.AddScoped<IAdminNotificationRepository, AdminNotificationRepository>();
+builder.Services.AddScoped<IAdminNotificationService, AdminNotificationService>();
+
+builder.Services.AddScoped<IAdminNotificationTypeRepository, AdminNotificationTypeRepository>();
+builder.Services.AddScoped<IAdminNotificationTypeService, AdminNotificationTypeService>();
+
+builder.Services.AddScoped<IAdminOrderRepository, AdminOrderRepository>();
+builder.Services.AddScoped<IAdminOrderService, AdminOrderService>();
+
+builder.Services.AddScoped<IAdminOrderItemRepository, AdminOrderItemRepository>();
+builder.Services.AddScoped<IAdminOrderItemService, AdminOrderItemService>();
+
+builder.Services.AddScoped<IAdminOrderStatusRepository, AdminOrderStatusRepository>();
+builder.Services.AddScoped<IAdminOrderStatusService, AdminOrderStatusService>();
+
+builder.Services.AddScoped<IAdminPartnerRepository, AdminPartnerRepository>();
+builder.Services.AddScoped<IAdminPartnerService, AdminPartnerService>();
+
+builder.Services.AddScoped<IAdminPartnerTypeRepository, AdminPartnerTypeRepository>();
+builder.Services.AddScoped<IAdminPartnerTypeService, AdminPartnerTypeService>();
+
+builder.Services.AddScoped<IAdminPaymentMethodRepository, AdminPaymentMethodRepository>();
+builder.Services.AddScoped<IAdminPaymentMethodService, AdminPaymentMethodService>();
+
+builder.Services.AddScoped<IAdminPlatformRepository, AdminPlatformRepository>();
+builder.Services.AddScoped<IAdminPlatformService, AdminPlatformService>();
+
+builder.Services.AddScoped<IAdminPosterImageRepository, AdminPosterImageRepository>();
+builder.Services.AddScoped<IAdminPosterImageService, AdminPosterImageService>();
+
+builder.Services.AddScoped<IAdminReviewRepository, AdminReviewRepository>();
+builder.Services.AddScoped<IAdminReviewService, AdminReviewService>();
+
+builder.Services.AddScoped<IAdminStatusRepository, AdminStatusRepository>();
+builder.Services.AddScoped<IAdminStatusService, AdminStatusService>();
+
+builder.Services.AddScoped<IAdminSubcategoryRepository, AdminSubcategoryRepository>();
+builder.Services.AddScoped<IAdminSubcategoryService, AdminSubcategoryService>();
+
+builder.Services.AddScoped<IAdminTopicRepository, AdminTopicRepository>();
+builder.Services.AddScoped<IAdminTopicService, AdminTopicService>();
+
+builder.Services.AddScoped<IAdminTopicContentRepository, AdminTopicContentRepository>();
+builder.Services.AddScoped<IAdminTopicContentService, AdminTopicContentService>();
+
+builder.Services.AddScoped<IAdminVoucherRepository, AdminVoucherRepository>();
+builder.Services.AddScoped<IAdminVoucherService, AdminVoucherService>();
+
+builder.Services.AddScoped<IAdminWebsiteRepository, AdminWebsiteRepository>();
+builder.Services.AddScoped<IAdminWebsiteService, AdminWebsiteService>();
+
 #endregion
 
 #endregion

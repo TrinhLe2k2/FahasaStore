@@ -156,7 +156,7 @@ namespace FahasaStoreAPI.Areas.Customer
                 .ProjectTo<OrderDetail>(_mapper.ConfigurationProvider)
                 .FirstAsync(e => e.Id.Equals(orderId) && e.UserId.Equals(userId));
 
-            if (order.CountOrderStatuses <= 2)
+            if (order.OrderItemsCount <= 2)
             {
                 var status = await _context.Statuses
                     .ProjectTo<StatusBase>(_mapper.ConfigurationProvider)

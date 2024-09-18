@@ -1,4 +1,4 @@
-﻿using FahasaStoreAPI.Models.Entities;
+﻿using FahasaStore.Models;
 using Newtonsoft.Json;
 
 namespace FahasaStoreApp.Helpers
@@ -12,13 +12,13 @@ namespace FahasaStoreApp.Helpers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public AspNetUser? CurrentUser
+        public AspNetUserDetail? CurrentUser
         {
             get
             {
                 var userJson = _httpContextAccessor.HttpContext?.Session.GetString("User");
                 if (userJson == null) return null;
-                return JsonConvert.DeserializeObject<AspNetUser>(userJson) ?? null;
+                return JsonConvert.DeserializeObject<AspNetUserDetail>(userJson) ?? null;
             }
             set
             {

@@ -1,0 +1,178 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Constants
+@model OrderDetail
+
+<div>
+    <!-- Button trigger modal -->
+    <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="appModalLabel">Thông tin chi tiết</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="d-flex justify-content-between py-3">
+                            <div>
+                                <strong>
+                                    Mã đơn hàng #@Model.Id <br />
+                                    @if (!string.IsNullOrEmpty(Model.OrderLastStatus))
+                                    {
+                                        if (Model.OrderLastStatus.Equals(OrderStatusConst.Completed))
+                                        {
+                                            <span class="text-success">Đơn hàng đã hoàn thành</span> <i class="bi bi-bag-check-fill"></i>
+                                        }
+                                        else if (Model.OrderLastStatus.Equals(OrderStatusConst.Cancelled))
+                                        {
+                                            <span class="text-danger">Đơn hàng đã hủy</span> <i class="bi bi-bag-x-fill text-danger"></i>
+                                        }
+                                        else if (Model.OrderLastStatus.Equals(OrderStatusConst.Returned))
+                                        {
+                                            <span class="text-warning">Đơn hàng đã hoàn trả</span> <i class="bi bi-cart-dash-fill text-warning"></i>
+                                        }
+                                        else
+                                        {
+                                            <span>Đơn hàng chưa hoàn thành</span> <i class="bi bi-bag-check-fill"></i>
+                                        }
+                                    }
+                                </strong>
+                            </div>
+                            <div>Ngày mua: @((Model.CreatedAt != null) ? Model.CreatedAt.Value.ToString("dd/MM/yyyy") : "Không có ngày tạo")</div>
+                        </div>
+                        <div class="py-3 rounded-3" style="background-color: antiquewhite;">
+                            <div class="row text-center">
+                                @{
+                                    if (Model.OrderStatuses.Count > 0)
+                                    {
+                                        foreach (var item in Model.OrderStatuses)
+                                        {
+                                            <div class="col">
+                                                <div>@item.StatusName</div>
+                                                <div>@((item.CreatedAt != null) ? item.CreatedAt.Value.ToString("dd/MM/yyyy") : "Không có ngày tạo")</div>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="row row-cols-1 row-cols-lg-3 g-3 py-3">
+                            <div>
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Thông tin người nhận</h6>
+                                        <div>
+                                            @if (Model.Address != null)
+                                            {
+                                                <div>@Model.Address.ReceiverName</div>
+                                                <div>Tel: @Model.Address.Phone</div>
+                                                <div>@Model.Address.Detail , @Model.Address.Ward, @Model.Address.District , @Model.Address.Province</div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Phương thức thanh toán</h6>
+                                        <div>@Model.PaymentMethod?.Name</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Tổng tiền</h6>
+                                        @if (Model.Voucher != null)
+                                        {
+                                            <div>
+                                                Giá trị đơn hàng: @Model.IntoMoney.ToString("N0") đ
+                                            </div>
+                                            <div>
+                                                Voucher: @Model.Voucher.Code, Giảm @Model.Reduce.ToString("N0") đ
+                                            </div>
+                                        }
+                                        <div>Tổng tiền: <span class="text-danger fw-bold">@Model.TotalToPay.ToString("N0") đ</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-3" style="border: 1px solid #dee2e6;">
+                            Ghi chú: @Model.Note
+                        </div>
+                        <div class="py-3 rounded-3">
+                            <h6>Sản phẩm (@Model.OrderItems.Count)</h6>
+                            <div class="row g-3">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-2 text-center"><strong>Hình ảnh</strong></div>
+                                        <div class="col-5"><strong>Tên sản phẩm</strong></div>
+                                        <div class="col-2 text-center"><strong>Giá bán</strong></div>
+                                        <div class="col-1 text-center"><strong>SL</strong></div>
+                                        <div class="col-2 text-center"><strong>Thành tiền</strong></div>
+                                    </div>
+                                </div>
+                                @{
+                                    if (Model.OrderItems.Count > 0)
+                                    {
+                                        foreach (var oi in Model.OrderItems)
+                                        {
+                                            <div>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <div class="position-relative" style="padding-bottom: 100%;">
+                                                            <img src="@oi.Book?.BookPoster" class="position-absolute object-fit-contain mx-2 w-100 h-100" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <a href="/Home/Product/@oi.Book?.Id" class="nav-link">
+                                                            <span class="text-truncatet-row-double">@oi.Book?.Name</span>
+                                                        </a>
+                                                        @if (Model.IsComplete == true)
+                                                        {
+                                                            if (oi.HasReview)
+                                                            {
+                                                                <div class="d-flex flex-column justify-content-around align-items-start h-100">
+                                                                    <div class="btn-group" role="group">
+                                                                        <a href="/User/UserReview/Edit" IdValue="@oi.ReviewId" onclick="HandlerCRUD(this, event)" data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-danger"><i class="bi bi-pen"></i></a>
+                                                                        <a href="/User/UserReview/Delete" IdValue="@oi.ReviewId" onclick="HandlerCRUD(this, event)" data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-danger"><i class="bi bi-trash3"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="d-flex flex-column justify-content-around align-items-start h-100">
+                                                                    <a href="/User/UserReview/Create?BookId=@oi.Book?.Id&OrderItemId=@oi.Id" onclick="HandlerCRUD(this, event)" data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-danger">Đánh giá</a>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-2 text-center">
+                                                        <span class="fw-bold">@oi.PriceBook.ToString("N0") đ</span> <br class="d-none d-md-block" />
+                                                        <span class="text-decoration-line-through">@oi.Price.ToString("N0") đ</span>
+                                                    </div>
+                                                    <div class="col-1 text-center">@oi.Quantity</div>
+                                                    <div class="col-2 text-center"><h6 class="fw-bold">@oi.IntoMoney.ToString("N0") đ</h6></div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+</script>

@@ -1,26 +1,26 @@
 ﻿namespace FahasaStoreApp.Areas.User.Models
 {
-    public class CustomerAddress
+    public class CustomerAddresses
     {
     }
 
-    public class CustomerCartItem
+    public class CustomerCartItems
     {
     }
 
-    public class CustomerFavourite
+    public class CustomerFavourites
     {
     }
 
-    public class CustomerOrderItem
+    public class CustomerOrderItems
     {
     }
 
-    public class CustomerOrder
+    public class CustomerOrders
     {
     }
 
-    public class CustomerReview
+    public class CustomerReviews
     {
     }
 }

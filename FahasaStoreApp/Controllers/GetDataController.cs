@@ -1,5 +1,5 @@
 ﻿using FahasaStoreApp.Models.ViewModels;
-using FahasaStoreApp.Services.Interfaces;
+using FahasaStoreApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreApp.Controllers

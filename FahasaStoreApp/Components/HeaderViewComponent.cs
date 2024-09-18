@@ -1,5 +1,4 @@
-﻿using FahasaStoreAPI.Models.Entities;
-using FahasaStoreApp.Models.DTOs;
+﻿using FahasaStoreApp.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 

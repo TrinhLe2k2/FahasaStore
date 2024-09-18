@@ -1,9 +1,8 @@
-﻿using FahasaStoreAPI.Models.Entities;
-using FahasaStoreApp.Constants;
+﻿using FahasaStoreApp.Constants;
 using FahasaStoreApp.Models;
 using FahasaStoreApp.Models.DTOs;
 using FahasaStoreApp.Models.ViewModels;
-using FahasaStoreApp.Services.Interfaces;
+using FahasaStoreApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 

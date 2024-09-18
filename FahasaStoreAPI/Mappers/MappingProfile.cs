@@ -122,9 +122,7 @@ namespace FahasaStoreAPI.Mappers
                 .ReverseMap();
 
             CreateMap<FlashSale, FlashSaleBase>().ReverseMap();
-            CreateMap<FlashSale, FlashSaleExtend>()
-                .ForMember(dest => dest.CountFlashSaleBooks, opt => opt.MapFrom(src => src.FlashSaleBooks.Count))
-                .ReverseMap();
+            CreateMap<FlashSale, FlashSaleExtend>().ReverseMap();
             CreateMap<FlashSale, FlashSaleDetail>()
                 .IncludeBase<FlashSale, FlashSaleExtend>()
                 .ForMember(dest => dest.FlashSaleBooks, opt => opt.MapFrom(src => src.FlashSaleBooks.OrderByDescending(e => e.Id).Take(10)))
@@ -180,11 +178,10 @@ namespace FahasaStoreAPI.Mappers
                         src.OrderStatuses.OrderBy(e => e.Id).LastOrDefault().Status.Name.Equals(OrderStatusConst.Shipped)
                     ) ? true : false
                  ))
-                .ForMember(destination => destination.CountOrderItems, opt => opt.MapFrom(src => src.OrderItems.Count))
-                .ForMember(destination => destination.CountOrderStatuses, opt => opt.MapFrom(src => src.OrderStatuses.Count))
+                .ForMember(destination => destination.QuantityBooksCount, opt => opt.MapFrom(src => src.OrderItems.Sum(e => e.Quantity)))
                 .ForMember(destination => destination.IntoMoney, opt => opt.MapFrom(src => src.OrderItems.Sum(e => e.Quantity * (e.Price - (e.Price * e.DiscountPercentage / 100)))))
                 .ForMember(destination => destination.ReceiverName, opt => opt.MapFrom(src => src.Address != null ? src.Address.ReceiverName : default))
-                .ForMember(destination => destination.OrderLastStatus, opt => opt.MapFrom(src => src.OrderStatuses.OrderBy(os => os.Id).LastOrDefault().Status.Name))
+                .ForMember(destination => destination.OrderLastStatus, opt => opt.MapFrom(src => src.OrderStatuses.OrderBy(os => os.Id).Last().Status.Name))
                 .ReverseMap();
             CreateMap<Order, OrderDetail>()
                 .IncludeBase<Order, OrderExtend>()
@@ -259,9 +256,7 @@ namespace FahasaStoreAPI.Mappers
                 .ReverseMap();
 
             CreateMap<Topic, TopicBase>().ReverseMap();
-            CreateMap<Topic, TopicExtend>()
-                .ForMember(dest => dest.CountTopicContents, opt => opt.MapFrom(src => src.TopicContents.Count))
-                .ReverseMap();
+            CreateMap<Topic, TopicExtend>().ReverseMap();
             CreateMap<Topic, TopicDetail>()
                 .IncludeBase<Topic, TopicExtend>()
                 .ReverseMap();
@@ -273,9 +268,7 @@ namespace FahasaStoreAPI.Mappers
                 .ReverseMap();
 
             CreateMap<Voucher, VoucherBase>().ReverseMap();
-            CreateMap<Voucher, VoucherExtend>()
-                .ForMember(destination => destination.CountOrders, opt => opt.MapFrom(src => src.Orders.Count))
-                .ReverseMap();
+            CreateMap<Voucher, VoucherExtend>().ReverseMap();
 
             CreateMap<Voucher, VoucherDetail>()
                 .IncludeBase<Voucher, VoucherExtend>()

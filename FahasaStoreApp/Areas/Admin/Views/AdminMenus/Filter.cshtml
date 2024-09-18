@@ -1,0 +1,60 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Components
+@using FahasaStoreApp.Models.DTOs
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<MenuExtend>
+
+@{
+    var paged = Model.Paged;
+    var menuExtend = new MenuExtend();
+}
+
+<div id="totalItemDiv" TotalItemCount="@paged.PagedNavigation.TotalItemCount">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => menuExtend.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => menuExtend.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => menuExtend.Link)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => menuExtend.ImageUrl)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in paged.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Link)
+                    </td>
+                    <td>
+                        <img src="@item.ImageUrl" alt="Image" width="50" height="50" class="object-fit-contain" />
+                    </td>
+                    <td>
+                        <a href="/Admin/AdminMenus/Edit" class="btn btn-outline-primary" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-pencil"></i></a> |
+                        <a href="/Admin/AdminMenus/Delete" class="btn btn-outline-danger" IdValue="@item.Id" onclick="HandlerCRUD(this, event)"><i class="bi bi-trash3"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @(await Html.RenderComponentAsync<PaginatedComponent>(RenderMode.ServerPrerendered, new { pagedNavigation = paged.PagedNavigation, formId = "Filter", renderINId = "boxData" }))
+</div>
+
+<script>
+    $('#TotalItemCount').text($('#totalItemDiv').attr('TotalItemCount'));
+</script>

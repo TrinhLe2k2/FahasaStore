@@ -1,6 +1,7 @@
-﻿using FahasaStoreApp.Helpers;
+﻿using FahasaStoreApp.Areas.User.Services;
+using FahasaStoreApp.Helpers;
 using FahasaStoreApp.Models.DTOs;
-using FahasaStoreApp.Services.Interfaces;
+using FahasaStoreApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -47,7 +48,7 @@ namespace FahasaStoreApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(Login model)
+        public async Task<IActionResult> Login(Login model, string redirectAnother = "")
         {
             if (!ModelState.IsValid)
             {
@@ -61,44 +62,63 @@ namespace FahasaStoreApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            var expirationDate = model.RememberMe ? DateTimeOffset.Now.AddDays(30) : DateTimeOffset.Now.AddHours(10); // Thời gian hết hạn của cookie
+
+            #region Lưu token vào cookie
+
             // Lưu token vào cookie
             var accessToken = userLoginer.AccessToken ?? "";
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true, // Ngăn chặn truy cập cookie từ JavaScript, tăng bảo mật
                 Secure = false, // Chỉ gửi cookie qua HTTPS, giúp bảo mật
-                Expires = model.RememberMe ? DateTimeOffset.Now.AddDays(30) : DateTimeOffset.Now.AddSeconds(10), // Thời gian hết hạn của cookie
+                Expires = expirationDate,
                 SameSite = SameSiteMode.Strict // Bảo vệ khỏi tấn công CSRF
             };
             Response.Cookies.Append("AccessToken", accessToken, cookieOptions);
             var accessTokenRead = HttpContext.Request.Cookies["AccessToken"];
+            userLoginer.AccessToken = "";
 
+            #endregion
+
+            #region Lưu user vào cookie
             // Lưu userVM vào session
             //HttpContext.Session.SetString("UserVM", JsonConvert.SerializeObject(userLoginer.User));
 
-            var userDTO = new UserLoginer
-            {
-                UserId = userLoginer.UserId,
-                FullName = userLoginer.FullName,
-                ImageUrl = userLoginer.ImageUrl,
-                CartId =userLoginer.CartId
-            };
-
-            var userJson = JsonConvert.SerializeObject(userDTO);
+            var userJson = JsonConvert.SerializeObject(userLoginer);
             Response.Cookies.Append("UserLoginer", userJson, cookieOptions);
+            Response.Cookies.Append("UserLoginer_Expires", expirationDate.ToString(), cookieOptions);
             var userLoginerRead = HttpContext.Request.Cookies["UserLoginer"];
 
-            return RedirectToAction("Index", "HomeUser", new { area = "User" });
+            #endregion
+
+            if (string.IsNullOrEmpty(redirectAnother))
+            {
+                return RedirectToAction("Index", "HomeUser", new { area = "User" });
+            }
+            else
+            {
+                return Redirect(redirectAnother);
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(string redirectAnother = "")
         {
             await _userService.LogOutAsync();
             Response.Cookies.Delete("AccessToken");
             Response.Cookies.Delete("UserLoginer");
+            Response.Cookies.Delete("UserLoginer_Expires");
             HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Home");
+
+            if (string.IsNullOrEmpty(redirectAnother))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return Redirect(redirectAnother);
+            }
         }
     }
 }

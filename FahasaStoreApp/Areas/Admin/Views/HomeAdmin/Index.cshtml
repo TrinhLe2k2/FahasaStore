@@ -1,44 +1,366 @@
-﻿@model FahasaStoreApp.Models.Register
+﻿@using FahasaStoreApp.Models.DTOs
+@model IEnumerable<MonthlyStatisticsDTO>
+@{
+    ViewData["Title"] = "Doanh Thu";
+    ViewData["ActiveSidebar"] = 0;
 
-<h4>Register</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
+    var year = Model.Select(st => st.Year).ToArray().FirstOrDefault();
+    var months = Model.Select(st => st.Month).ToArray();
+    var revenues = Model.Select(st => st.TotalRevenue).ToArray();
+    var completedOrders = Model.Select(st => st.CompletedOrdersCount).ToArray();
+    var canceledOrders = Model.Select(st => st.CancelledOrdersCount).ToArray();
+    var notCompletedOrdersCount = Model.Select(st => st.NotCompletedOrdersCount).ToArray();
+    var shippedOrdersCount = Model.Select(st => st.ShippedOrdersCount).ToArray();
+    var returnedOrdersCount = Model.Select(st => st.ReturnedOrdersCount).ToArray();
+    var ordersCount = Model.Select(st => st.OrdersCount).ToArray();
+
+    var newUsers = Model.Select(st => st.NewUsersInMonthCount).ToArray();
+    var totalBooksSold = Model.Select(st => st.TotalBooksSold).ToArray();
+}
+
+<div class="container-fluid">
+    <form asp-action="Index">
+        <div class="row row-cols-4 justify-content-end">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <input type="number" placeholder="Doanh thu năm" name="year" value="@year" class="form-control">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Hoàn thành</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <input type="number" placeholder="Tháng này" disabled value="@months[DateTime.Now.Month - 1]" class="form-control">
+                    <button class="btn btn-outline-secondary" disabled type="submit" id="button-addon2">Hoàn thành</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </form>
+    
+    <div class="row">
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Doanh thu (Tháng này)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@revenues[DateTime.Now.Month - 1].ToString("#,##0 ₫")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword" class="control-label"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <!-- Earnings (Year) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Doanh thu (Năm)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@revenues.Sum().ToString("#,##0 ₫")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+
+        <!-- Orders Completed Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Đơn hàng hoàn thành
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@completedOrders[DateTime.Now.Month - 1]</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
+
+        <!-- Orders Canceled Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Đơn hàng hủy
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@canceledOrders[DateTime.Now.Month - 1]</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-times-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Đơn hàng chưa hoàn thành
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@notCompletedOrdersCount[DateTime.Now.Month - 1]</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Đơn hàng đã giao
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@shippedOrdersCount[DateTime.Now.Month - 1]</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Đơn hàng trong tháng
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ordersCount[DateTime.Now.Month - 1]</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 p-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Đơn hàng đã trả
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@returnedOrdersCount[DateTime.Now.Month - 1]</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Biểu đồ doanh thu</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar h-100">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <hr>
+                    Thống kê doanh thu từng tháng trong năm.
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Biểu đồ số lượng sách đã bán</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-line h-100">
+                        <canvas id="booksSoldChart"></canvas>
+                    </div>
+                    <hr>
+                    Thống kê số sách đã bán từng tháng trong năm.
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Biểu đồ đơn hàng</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar h-100">
+                        <canvas id="orderChart"></canvas>
+                    </div>
+                    <hr>
+                    Thống kê số lượng đơn hàng từng tháng trong năm.
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Revenue Chart
+        var ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctxRevenue, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(months)),
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: @Html.Raw(Json.Serialize(revenues)),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        callback: function (value, index, values) {
+                            return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                        }
+
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
+
+        // Books Sold Chart
+        var ctxBooksSold = document.getElementById('booksSoldChart').getContext('2d');
+        var booksSoldChart = new Chart(ctxBooksSold, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(months)),
+                datasets: [{
+                    label: 'Số sách đã bán',
+                    data: @Html.Raw(Json.Serialize(totalBooksSold)),
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Order Chart
+        var ctxOrder = document.getElementById('orderChart').getContext('2d');
+        var orderChart = new Chart(ctxOrder, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(months)),  // Tháng
+                datasets: [
+                    {
+                        label: 'Đơn hàng hoàn thành',
+                        data: @Html.Raw(Json.Serialize(completedOrders)),  // Số lượng đơn hàng hoàn thành
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Màu xanh lá nhạt
+                        borderColor: 'rgba(75, 192, 192, 1)',  // Màu xanh lá
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Đơn hàng bị hủy',
+                        data: @Html.Raw(Json.Serialize(canceledOrders)),  // Số lượng đơn hàng bị hủy
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',  // Màu đỏ nhạt
+                        borderColor: 'rgba(255, 99, 132, 1)',  // Màu đỏ
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Đơn hàng chưa hoàn thành',
+                        data: @Html.Raw(Json.Serialize(notCompletedOrdersCount)),  // Số lượng đơn hàng chưa hoàn thành
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',  // Màu vàng nhạt
+                        borderColor: 'rgba(255, 206, 86, 1)',  // Màu vàng
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Đơn hàng đã giao',
+                        data: @Html.Raw(Json.Serialize(shippedOrdersCount)),  // Số lượng đơn hàng đã giao
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',  // Màu xanh dương nhạt
+                        borderColor: 'rgba(54, 162, 235, 1)',  // Màu xanh dương
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Đơn hàng đã trả lại',
+                        data: @Html.Raw(Json.Serialize(returnedOrdersCount)),  // Số lượng đơn hàng đã trả lại
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',  // Màu tím nhạt
+                        borderColor: 'rgba(153, 102, 255, 1)',  // Màu tím
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toLocaleString('vi-VN');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 }

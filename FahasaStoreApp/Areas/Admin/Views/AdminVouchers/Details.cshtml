@@ -1,0 +1,77 @@
+﻿@model FahasaStore.Models.VoucherDetail
+
+<div>
+    <!-- Button trigger modal -->
+    <button type="button" id="btn-toggle" class="btn btn-primary" hidden data-bs-toggle="modal" data-bs-target="#appModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="appModalLabel">Thông tin chi tiết</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <dl class="row px-4">
+                        <p class="btn btn-outline-success">@Model.Name</p>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Code)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.Code)
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Description)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.Description)
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.DiscountPercent)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.DiscountPercent)
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.StartDate)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @((Model.CreatedAt != null) ? Model.StartDate.ToString("dd/MM/yyyy") : "Không có ngày tạo")
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.EndDate)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @((Model.CreatedAt != null) ? Model.EndDate.ToString("dd/MM/yyyy") : "Không có ngày tạo")
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.MinOrderAmount)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Model.MinOrderAmount.ToString("N0") đ
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.MaxDiscountAmount)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Model.MaxDiscountAmount.ToString("N0") đ
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.UsageLimit)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.UsageLimit)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btn-toggle").click();
+</script>

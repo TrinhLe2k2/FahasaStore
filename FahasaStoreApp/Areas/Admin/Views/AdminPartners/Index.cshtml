@@ -1,0 +1,64 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Models.DTOs
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<PartnerExtend>
+@{
+    var extend = new PartnerExtend();
+    var Filters = new List<FilterItem>
+    {
+        new FilterItem(),
+        new FilterItem()
+    };
+
+    Model.FilterOptions.Filters = Filters;
+
+    var paged = Model.Paged;
+
+    TempData["NameController"] = "AdminPartners";
+    ViewData["Title"] = TempData["NameController"];
+    ViewData["TotalItemCount"] = paged.PagedNavigation.TotalItemCount;
+
+    ViewData["ActiveSidebar"] = 7;
+    ViewData["UrlCurrent"] = $"/Admin/{TempData["NameController"]}/Index";
+}
+<form asp-action="Filter" id="Filter">
+    <div class="d-flex justify-content-end align-items-center mb-3">
+        <a href="/Admin/@TempData["NameController"]/Create" class="btn btn-primary me-3" onclick="HandlerCRUD(this, event)">Add new</a>
+        <div class="border rounded-3 flex-grow-1 order-1 order-sm-0 me-3">
+            <div class="p-1 d-flex">
+                <input asp-for="@Filters[0].TypeOfKey" value="string" hidden />
+                <input asp-for="@Filters[0].Key" value="Name" hidden />
+                <input asp-for="@Filters[0].Value" type="search" placeholder="Bạn muốn tìm kiếm gì?" class="border-0 flex-grow-1" style="outline: none;" />
+                <button type="button" class="border-0 px-4 py-1 rounded-3" onclick="RenderPartialView('Filter', 'boxData', event)">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="me-3">
+            <input asp-for="@Filters[1].TypeOfKey" value="string" hidden />
+            <input asp-for="@Filters[1].Key" value="PartnerTypeName" hidden />
+            <select asp-for="@Filters[1].Value" class="form-select" asp-items="ViewBag.PartnerTypes" onchange="RenderPartialView('Filter', 'boxData', event)">
+                <option value="">-- Filter By PartnerType --</option>
+            </select>
+        </div>
+        <div class="me-3">
+            <select name="SortField" class="form-select" onchange="RenderPartialView('Filter', 'boxData', event)">
+                <option value="@nameof(extend.Id)">-- Sắp xếp theo --</option>
+                <option value="@nameof(extend.Id)">@Html.DisplayNameFor(model => extend.Id)</option>
+                <option value="@nameof(extend.Name)">@Html.DisplayNameFor(model => extend.Name)</option>
+                <option value="@nameof(extend.PartnerTypeName)">@Html.DisplayNameFor(model => extend.PartnerTypeName)</option>
+                <option value="@nameof(extend.CreatedAt)">@Html.DisplayNameFor(model => extend.CreatedAt)</option>
+            </select>
+        </div>
+        <div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" name="OrderByDescending" value="false" onchange="RenderPartialView('Filter', 'boxData', event)" /> @Html.DisplayNameFor(model => model.FilterOptions.OrderByDescending)
+                </label>
+            </div>
+        </div>
+    </div>
+    <div id="boxData">
+        @await Html.PartialAsync($"/Areas/Admin/Views/{TempData["NameController"]}/Filter.cshtml", Model)
+    </div>
+</form>

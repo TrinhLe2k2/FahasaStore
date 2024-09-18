@@ -1,0 +1,31 @@
+﻿
+<label for="@idInputFile" role="button" class="rounded-3 ">
+    <div id="imagePreview_@idInputFile" class="position-relative overflow-hidden rounded-3 imagePreview ">
+        <img src="https://cdn1.iconfinder.com/data/icons/rounded-black-basic-ui/139/Photo_Add-RoundedBlack-512.png" width="120" height="120" class="object-fit-contain rounded-3" />
+        <div class="overlay rounded-3"><i class="bi bi-camera"></i></div>
+    </div>
+</label>
+
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        var src = $('#ImageUrl').attr('value');
+        $('#imagePreview_@idInputFile img').attr('src', src);
+
+        $('#@idInputFile').change(function (event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function () {
+                var dataURL = reader.result;
+                $('#imagePreview_@idInputFile img').attr('src', dataURL);
+            };
+            reader.readAsDataURL(input.files[0]);
+        });
+    });
+</script>
+
+@code {
+    [Parameter]
+    public string? idInputFile { get; set; }
+}

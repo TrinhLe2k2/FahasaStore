@@ -1,4 +1,5 @@
 ﻿using FahasaStore.Models.Interfaces;
+using FahasaStoreApp.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace FahasaStore.Models
@@ -27,6 +28,7 @@ namespace FahasaStore.Models
         public string? UserName { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class AuthorBase : IEntity
@@ -44,6 +46,7 @@ namespace FahasaStore.Models
         public string Title { get; set; } = null!;
         public string Content { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class BookBase : IEntity
@@ -96,6 +99,7 @@ namespace FahasaStore.Models
         public string? PublicId { get; set; }
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class CoverTypeBase : IEntity
@@ -144,11 +148,14 @@ namespace FahasaStore.Models
     public class MenuBase : IEntity
     {
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; } = null!;
+        [Required]
         public string Link { get; set; } = null!;
         public string? PublicId { get; set; }
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class NotificationBase : IEntity
@@ -215,6 +222,7 @@ namespace FahasaStore.Models
         public string? PublicId { get; set; }
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class PartnerTypeBase : IEntity
@@ -242,6 +250,7 @@ namespace FahasaStore.Models
         public string? ImageUrl { get; set; }
         public string Link { get; set; } = null!;
         public DateTime? CreatedAt { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class PosterImageBase : IEntity
@@ -281,6 +290,7 @@ namespace FahasaStore.Models
         public string? PublicId { get; set; }
         public string? ImageUrl { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class TopicBase : IEntity
@@ -305,8 +315,14 @@ namespace FahasaStore.Models
         public string Name { get; set; } = null!;
         public string Code { get; set; } = null!;
         public string? Description { get; set; }
+        [Range(0, 100, ErrorMessage = "DiscountPercent must be between 1 and 100.")]
         public int DiscountPercent { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        [DateGreaterThan("StartDate", ErrorMessage = "EndDate must be greater than or equal to StartDate.")]
         public DateTime EndDate { get; set; }
         public int MinOrderAmount { get; set; }
         public int MaxDiscountAmount { get; set; }

@@ -1,21 +1,24 @@
 ﻿using FahasaStore.Models;
+using FahasaStoreApp.Areas.Base;
 using FahasaStoreApp.Areas.User.Models;
-using FahasaStoreApp.Base;
+using FahasaStoreApp.Constants;
 using FahasaStoreApp.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreApp.Areas.User.Controllers
 {
     [Area("User")]
-    public class UserReviewController : BaseController<CustomerReview, ReviewDetail, ReviewExtend, ReviewBase>
+    [Authorize(Policy = AppRole.Customer)]
+    public class UserReviewController : BaseController<CustomerReviews, ReviewDetail, ReviewExtend, ReviewBase>
     {
-        public UserReviewController(IBaseService<CustomerReview, ReviewDetail, ReviewExtend, ReviewBase> service) : base(service)
+        public UserReviewController(IBaseService<CustomerReviews, ReviewDetail, ReviewExtend, ReviewBase> service) : base(service)
         {
         }
 
-        public override Task<IActionResult> Create(ReviewBase model)
+        public override Task<IActionResult> Create()
         {
-            return base.Create(model);
+            return base.Create();
         }
 
         public override Task<IActionResult> Delete(int id)

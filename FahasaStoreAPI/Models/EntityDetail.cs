@@ -170,7 +170,7 @@
             get {
                 if (Voucher != null)
                 {
-                    var reduceOrder = IntoMoney - IntoMoney * Voucher.DiscountPercent / 100;
+                    var reduceOrder = IntoMoney * Voucher.DiscountPercent / 100;
                     return reduceOrder > Voucher.MaxDiscountAmount ? Voucher.MaxDiscountAmount : reduceOrder;
                 }
                 return 0;

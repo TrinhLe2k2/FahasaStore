@@ -1,6 +1,7 @@
 ﻿using FahasaStore.Models;
+using FahasaStoreApp.Models.DTOs;
 using FahasaStoreApp.Models.ViewModels;
-using FahasaStoreApp.Services.Interfaces;
+using FahasaStoreApp.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using NuGet.Common;
@@ -40,7 +41,7 @@ namespace FahasaStoreApp.Middleware
             var userLoginer = _httpContextAccessor.HttpContext?.Request.Cookies["UserLoginer"];
             if (!string.IsNullOrEmpty(userLoginer))
             {
-                var user = JsonConvert.DeserializeObject<AspNetUserDetail>(userLoginer);
+                var user = JsonConvert.DeserializeObject<UserLoginer>(userLoginer);
                 context.Items["UserLoginer"] = user;
             }
 

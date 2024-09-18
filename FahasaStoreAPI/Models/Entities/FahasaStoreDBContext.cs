@@ -7,13 +7,16 @@ namespace FahasaStoreAPI.Models.Entities
 {
     public partial class FahasaStoreDBContext : DbContext
     {
-        public FahasaStoreDBContext()
+        private readonly IConfiguration _configuration;
+        public FahasaStoreDBContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
-        public FahasaStoreDBContext(DbContextOptions<FahasaStoreDBContext> options)
+        public FahasaStoreDBContext(DbContextOptions<FahasaStoreDBContext> options, IConfiguration configuration)
             : base(options)
         {
+            _configuration = configuration;
         }
 
         public virtual DbSet<Address> Addresses { get; set; } = null!;
@@ -59,7 +62,7 @@ namespace FahasaStoreAPI.Models.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.;Database=FahasaDB;Integrated Security=True;Encrypt=False");
+                optionsBuilder.UseSqlServer(_configuration["ConnectionStrings:myStore"]);
             }
         }
 

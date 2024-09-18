@@ -1,12 +1,18 @@
 ﻿using FahasaStore.Models;
+using FahasaStoreApp.Areas.User.Services;
+using FahasaStoreApp.Constants;
 using FahasaStoreApp.Models;
-using FahasaStoreApp.Services.Interfaces;
+using FahasaStoreApp.Models.DTOs;
+using FahasaStoreApp.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace FahasaStoreApp.Areas.User.Controllers
 {
     [Area("User")]
+    [Authorize(Policy = AppRole.Customer)]
     public class HomeUserController : Controller
     {
         private readonly IUserService _userService;
@@ -20,13 +26,57 @@ namespace FahasaStoreApp.Areas.User.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userLoginerRead = HttpContext.Request.Cookies["UserLoginer"];
-            if (string.IsNullOrEmpty(userLoginerRead))
-            {
-                return RedirectToAction("Error", new ErrorViewModel { ErrorCode = "404", ErrorMessage = "NOT FOUND"});
-            }
+            var isAdmin = await _userService.CheckRoleAccount(AppRole.Admin);
+            TempData["IsAdmin"] = isAdmin;
             var user = await _userService.GetProfileUserAsync();
             return View(user);
+        }
+
+        public async Task<IActionResult> UpdateUser()
+        {
+            var user = await _userService.GetProfileUserAsync();
+            return PartialView(user);
+        }
+
+        [HttpPost, ActionName("UpdateUser")]
+        public async Task<IActionResult> UpdateUser(AspNetUserBase model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView(model);
+            }
+            var repository = await _userService.UpdateAsync(model);
+            if (repository)
+            {
+                var expirationDateString = Request.Cookies["UserLoginer_Expires"];
+                DateTimeOffset expirationDate;
+                if (!string.IsNullOrEmpty(expirationDateString) && DateTimeOffset.TryParse(expirationDateString, out expirationDate))
+                {
+                    var cookieOptions = new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = false,
+                        Expires = expirationDate,
+                        SameSite = SameSiteMode.Strict
+                    };
+
+                    var userUpdated = await _userService.GetUserLoginerAsync();
+                    if (userUpdated == null)
+                    {
+                        return RedirectToAction("Error", new ErrorViewModel { ErrorCode = "404", ErrorMessage = "NOT FOUND" });
+                    }
+                    var updatedUserJson = JsonConvert.SerializeObject(userUpdated);
+
+                    Response.Cookies.Append("UserLoginer", updatedUserJson, cookieOptions);
+                }
+                else
+                {
+                    return RedirectToAction("Error", new ErrorViewModel { ErrorCode = "404", ErrorMessage = "NOT FOUND" });
+                }
+
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Error", new ErrorViewModel { ErrorCode = "404", ErrorMessage = "NOT FOUND" });
         }
 
         #region Voucher for user
@@ -48,6 +98,7 @@ namespace FahasaStoreApp.Areas.User.Controllers
             var result = await _fahasaStoreService.GetVoucherDetailsByIdAsync(id);
             return PartialView(result);
         }
+
         [HttpGet]
         public async Task<IActionResult> ApplyVoucher(string code, int intoMoney)
         {
@@ -70,6 +121,7 @@ namespace FahasaStoreApp.Areas.User.Controllers
         #endregion
 
         #region Notification of user
+
         public async Task<IActionResult> NotificationsUser()
         {
             var result = await _userService.GetNotificationsAsync(1, 10);

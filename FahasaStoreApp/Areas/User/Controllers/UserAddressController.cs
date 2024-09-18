@@ -1,16 +1,18 @@
 ﻿using FahasaStore.Models;
-using FahasaStoreAPI.Models.Entities;
+using FahasaStoreApp.Areas.Base;
 using FahasaStoreApp.Areas.User.Models;
-using FahasaStoreApp.Base;
+using FahasaStoreApp.Constants;
 using FahasaStoreApp.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreApp.Areas.User.Controllers
 {
     [Area("User")]
-    public class UserAddressController : BaseController<CustomerAddress, AddressDetail, AddressExtend, AddressBase>
+    [Authorize(Policy = AppRole.Customer)]
+    public class UserAddressController : BaseController<CustomerAddresses, AddressDetail, AddressExtend, AddressBase>
     {
-        public UserAddressController(IBaseService<CustomerAddress, AddressDetail, AddressExtend, AddressBase> service) : base(service)
+        public UserAddressController(IBaseService<CustomerAddresses, AddressDetail, AddressExtend, AddressBase> service) : base(service)
         {
         }
 
@@ -32,9 +34,9 @@ namespace FahasaStoreApp.Areas.User.Controllers
             return base.FilterSubmit(filterOptions);
         }
 
-        public override Task<IActionResult> Create(AddressBase model)
+        public override Task<IActionResult> Create()
         {
-            return base.Create(model);
+            return base.Create();
         }
 
         public override Task<IActionResult> Delete(int id)

@@ -10,6 +10,7 @@ namespace FahasaStoreApp.Models.DTOs
         public int CartId { get; set; } = 0;
         public string FullName { get; set; } = null!;
         public string? ImageUrl { get; set; }
+        public IList<string> Roles { get; set; } = new List<string>();
     }
     public class Login
     {

@@ -1,0 +1,101 @@
+﻿@using FahasaStore.Models
+@using FahasaStoreApp.Models.DTOs
+@using FahasaStoreApp.Models.ViewModels
+@model FilterVM<BookExtend>
+@{
+    var extend = new BookExtend();
+    var Filters = new List<FilterItem>
+    {
+        new FilterItem(),
+        new FilterItem(),
+        new FilterItem(),
+        new FilterItem(),
+        new FilterItem()
+    };
+
+    Model.FilterOptions.Filters = Filters;
+
+    var paged = Model.Paged;
+
+    TempData["NameController"] = "AdminBooks";
+    ViewData["Title"] = TempData["NameController"];
+    ViewData["TotalItemCount"] = paged.PagedNavigation.TotalItemCount;
+
+    ViewData["ActiveSidebar"] = 7;
+    ViewData["UrlCurrent"] = $"/Admin/{TempData["NameController"]}/Index";
+}
+<form asp-action="Filter" id="Filter">
+    <div class="d-flex flex-wrap justify-content-end align-items-center mb-3">
+        <a href="/Admin/@TempData["NameController"]/Create" class="btn btn-primary me-3 mb-3" onclick="HandlerCRUD(this, event)">Add new</a>
+        <div class="border rounded-3 flex-grow-1 order-1 order-sm-0 me-3 mb-3">
+            <div class="p-1 d-flex">
+                <input asp-for="@Filters[0].TypeOfKey" value="string" hidden />
+                <input asp-for="@Filters[0].Key" value="Name" hidden />
+                <input asp-for="@Filters[0].Value" type="search" placeholder="Bạn muốn tìm kiếm gì?" class="border-0 flex-grow-1" style="outline: none;" />
+                <button type="button" class="border-0 px-4 py-1 rounded-3" onclick="RenderPartialView('Filter', 'boxData', event)">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="me-3 mb-3">
+            <input asp-for="@Filters[1].TypeOfKey" value="string" hidden />
+            <input asp-for="@Filters[1].Key" value="SubcategoryName" hidden />
+            <select asp-for="@Filters[1].Value" class="form-select" asp-items="ViewBag.Subcategories" onchange="RenderPartialView('Filter', 'boxData', event)">
+                <option value="">-- Filter By SubcategoryName --</option>
+            </select>
+        </div>
+        <div class="me-3 mb-3">
+            <input asp-for="@Filters[2].TypeOfKey" value="string" hidden />
+            <input asp-for="@Filters[2].Key" value="AuthorName" hidden />
+            <select asp-for="@Filters[2].Value" class="form-select" asp-items="ViewBag.Authors" onchange="RenderPartialView('Filter', 'boxData', event)">
+                <option value="">-- Filter By Author --</option>
+            </select>
+        </div>
+        <div class="me-3 mb-3">
+            <input asp-for="@Filters[3].TypeOfKey" value="string" hidden />
+            <input asp-for="@Filters[3].Key" value="CoverTypeName" hidden />
+            <select asp-for="@Filters[3].Value" class="form-select" asp-items="ViewBag.CoverTypes" onchange="RenderPartialView('Filter', 'boxData', event)">
+                <option value="">-- Filter By CoverType --</option>
+            </select>
+        </div>
+        <div class="me-3 mb-3">
+            <input asp-for="@Filters[4].TypeOfKey" value="string" hidden />
+            <input asp-for="@Filters[4].Key" value="DimensionName" hidden />
+            <select asp-for="@Filters[4].Value" class="form-select" asp-items="ViewBag.Dimensions" onchange="RenderPartialView('Filter', 'boxData', event)">
+                <option value="">-- Filter By Dimension --</option>
+            </select>
+        </div>
+        <div class="me-3 mb-3">
+            <select name="SortField" class="form-select" onchange="RenderPartialView('Filter', 'boxData', event)">
+                <option value="@nameof(extend.Id)">-- Sắp xếp theo --</option>
+                <option value="@nameof(extend.Id)">@Html.DisplayNameFor(model => extend.Id)</option>
+                <option value="@nameof(extend.Name)">@Html.DisplayNameFor(model => extend.Name)</option>
+                <option value="@nameof(extend.CurrentPrice)">@Html.DisplayNameFor(model => extend.CurrentPrice)</option>
+                <option value="@nameof(extend.FavouritesCount)">@Html.DisplayNameFor(model => extend.FavouritesCount)</option>
+                <option value="@nameof(extend.SubcategoryName)">@Html.DisplayNameFor(model => extend.SubcategoryName)</option>
+                <option value="@nameof(extend.AuthorName)">@Html.DisplayNameFor(model => extend.AuthorName)</option>
+                <option value="@nameof(extend.CoverTypeName)">@Html.DisplayNameFor(model => extend.CoverTypeName)</option>
+                <option value="@nameof(extend.DimensionName)">@Html.DisplayNameFor(model => extend.DimensionName)</option>
+                <option value="@nameof(extend.RateAverage)">@Html.DisplayNameFor(model => extend.RateAverage)</option>
+                <option value="@nameof(extend.RateCount)">@Html.DisplayNameFor(model => extend.RateCount)</option>
+                <option value="@nameof(extend.CreatedAt)">@Html.DisplayNameFor(model => extend.CreatedAt)</option>
+            </select>
+        </div>
+        <div class="me-3 mb-3">
+            <div class="input-group">
+                <span class="input-group-text">Hiển Thị</span>
+                <input type="number" name="PageSize" value="10" min="1" disabled class="form-control">
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" name="OrderByDescending" value="false" onchange="RenderPartialView('Filter', 'boxData', event)" /> @Html.DisplayNameFor(model => model.FilterOptions.OrderByDescending)
+                </label>
+            </div>
+        </div>
+    </div>
+    <div id="boxData">
+        @await Html.PartialAsync($"/Areas/Admin/Views/{TempData["NameController"]}/Filter.cshtml", Model)
+    </div>
+</form>

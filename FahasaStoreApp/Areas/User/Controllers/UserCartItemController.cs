@@ -1,15 +1,18 @@
 ﻿using FahasaStore.Models;
+using FahasaStoreApp.Areas.Base;
 using FahasaStoreApp.Areas.User.Models;
-using FahasaStoreApp.Base;
+using FahasaStoreApp.Constants;
 using FahasaStoreApp.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreApp.Areas.User.Controllers
 {
     [Area("User")]
-    public class UserCartItemController : BaseController<CustomerCartItem, CartItemDetail, CartItemDetail, CartItemBase>
+    [Authorize(Policy = AppRole.Customer)]
+    public class UserCartItemController : BaseController<CustomerCartItems, CartItemDetail, CartItemDetail, CartItemBase>
     {
-        public UserCartItemController(IBaseService<CustomerCartItem, CartItemDetail, CartItemDetail, CartItemBase> service) : base(service)
+        public UserCartItemController(IBaseService<CustomerCartItems, CartItemDetail, CartItemDetail, CartItemBase> service) : base(service)
         {
         }
 
