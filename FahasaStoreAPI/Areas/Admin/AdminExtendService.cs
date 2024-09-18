@@ -1,5 +1,5 @@
 ﻿using FahasaStore.Models;
-using FahasaStoreAPI.Models.DTOs;
+using FahasaStoreAPI.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FahasaStoreAPI.Areas.Admin

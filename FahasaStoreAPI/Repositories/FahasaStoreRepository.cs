@@ -17,7 +17,7 @@ namespace FahasaStoreAPI.Repositories
         Task<PagedVM<BookExtend>> TopSellingBooksByCategory(int categoryId, int pageNumber, int pageSize);
         Task<DataOptionsFilterBook> DataOptionsFilterBook();
         Task<ResultFilterBook> FilterBook(OptionsFilterBook optionsFilterBook);
-        Task<HomeIndexVM> DataForHomeIndex(int numBanner, int numMenu, int numFS, int numTrend, int numCategory, int numTopSelling, int numPartner);
+        Task<HomeIndexVM> DataForHomeIndex(int numBanner, int numMenu, int numFS, int numTrend, int numCategory, int numTopSelling, int numPartner, int? userId);
         Task<VoucherExtend?> GetVoucherDetailsByIdAsync(int voucherId);
         Task<VoucherExtend?> ApplyVoucherAsync(string code, int intoMoney);
         Task<PagedVM<VoucherExtend>> GetVouchersAsync(int pageNumber, int pageSize, int intoMoney = 0);
@@ -243,7 +243,7 @@ namespace FahasaStoreAPI.Repositories
             return MethodsHelper.GetPaged(pageList);
         }
 
-        public async Task<HomeIndexVM> DataForHomeIndex(int numBanner, int numMenu, int numFS, int numTrend, int numCategory, int numTopSelling, int numPartner)
+        public async Task<HomeIndexVM> DataForHomeIndex(int numBanner, int numMenu, int numFS, int numTrend, int numCategory, int numTopSelling, int numPartner, int? userId)
         {
             var bannerPageList = await _context.Banners.AsNoTracking()
                 .ProjectTo<BannerExtend>(_mapper.ConfigurationProvider)
@@ -283,6 +283,18 @@ namespace FahasaStoreAPI.Repositories
                 TopSellingBooksByCategoryPaged = topSellingBooksByCategoryPageVM,
                 PartnerPaged = MethodsHelper.GetPaged(partnerPageList)
             };
+
+            if (userId != null)
+            {
+                var bookIdsOnCart = await _context.CartItems.AsNoTracking()
+                    .Where(e => e.UserId.Equals(userId) && e.BookId.HasValue)
+                    .Select(e => e.BookId.Value)
+                    .ToListAsync();
+
+                var rs = await _bookRecommendationSystem.FindSimilarBooksBasedOnCart(bookIdsOnCart, 1, 10);
+                result.BooksRecommendationSystem = rs;
+            }
+
             return result;
         }
 

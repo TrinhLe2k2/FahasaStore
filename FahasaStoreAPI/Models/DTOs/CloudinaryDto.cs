@@ -1,8 +1,8 @@
-﻿namespace FahasaStoreAPI.Models.ViewModels
+﻿namespace FahasaStoreAPI.Models.DTOs
 {
-    public class CloudinaryVM
+    public class CloudinaryDto
     {
-        public CloudinaryVM(string imageUrl, string? publicId)
+        public CloudinaryDto(string imageUrl, string? publicId)
         {
             ImageUrl = imageUrl;
             PublicId = publicId;

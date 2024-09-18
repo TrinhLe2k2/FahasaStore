@@ -69,7 +69,17 @@ namespace FahasaStoreAPI.Controllers
         [HttpGet("DataForHomeIndex")]
         public async Task<ActionResult> DataForHomeIndex(int numBanner = 10, int numMenu = 10, int numFS = 10, int numTrend = 10, int numCategory = 10, int numTopSelling = 10, int numPartner = 10)
         {
-            var result = await _fahasaStoreService.DataForHomeIndex(numBanner, numMenu, numFS, numTrend, numCategory, numTopSelling, numPartner);
+            var userId = User.FindFirst(c => c.Type == "UserId")?.Value;
+            var result = new HomeIndexVM();
+            if (string.IsNullOrEmpty(userId))
+            {
+                result = await _fahasaStoreService.DataForHomeIndex(numBanner, numMenu, numFS, numTrend, numCategory, numTopSelling, numPartner, null);
+            }
+            else
+            {
+                result = await _fahasaStoreService.DataForHomeIndex(numBanner, numMenu, numFS, numTrend, numCategory, numTopSelling, numPartner, int.Parse(userId));
+            }
+
             return Ok(result);
         }
 

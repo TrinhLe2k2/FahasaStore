@@ -1,6 +1,6 @@
 ﻿using FahasaStore.Models;
 
-namespace FahasaStoreAPI.Models.DTOs
+namespace FahasaStoreAPI.Models.ViewModels
 {
     public class MonthlyStatisticsDTO
     {

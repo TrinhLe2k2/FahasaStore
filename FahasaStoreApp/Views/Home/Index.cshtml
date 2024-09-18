@@ -12,6 +12,7 @@
     var categories = data?.CategoryPaged.Items.ToList();
     var topSellingBooksByCategory = data?.TopSellingBooksByCategoryPaged.Items.ToList();
     var partners = data?.PartnerPaged.Items.ToList();
+    var recommendationSystem = data?.BooksRecommendationSystem.Items.ToList();
 }
 
 <div class="bg-black bg-opacity-10 rounded-3">
@@ -149,6 +150,24 @@
                 </div>
                 <div class="flashSaleMenu mt-4" countDownDate="@flashSaleToday.EndDate">
                     @(await Html.RenderComponentAsync<BookComponent>(RenderMode.ServerPrerendered, new { FlashSaleBooks = flashSaleToday.FlashSaleBooks }))
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (recommendationSystem != null && recommendationSystem.Any())
+    {
+        <div class="container mt-4">
+            <div class="d-flex align-items-center p-3 rounded-top-3" style="background-color: #FCDDEF;">
+                <img src="~/image/icon_dealhot_new.png" width="32" height="32" class="object-fit-cover rounded-3" />
+                <h5 class="mb-0 p-2">Sản Phẩm Gợi Ý Cho Bạn</h5>
+            </div>
+            <div class="bg-white p-3 rounded-bottom-3">
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4 mt-1">
+                    @(await Html.RenderComponentAsync<BookComponent>(RenderMode.ServerPrerendered, new { Books = recommendationSystem }))
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#" class="btn btn-outline-danger px-5">Xem Thêm</a>
                 </div>
             </div>
         </div>

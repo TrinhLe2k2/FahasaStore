@@ -11,7 +11,7 @@ namespace FahasaStoreAPI.Services
         Task<PagedVM<BookExtend>> TopSellingBooksByCategory(int categoryId, int pageNumber, int pageSize);
         Task<DataOptionsFilterBook> DataOptionsFilterBook();
         Task<ResultFilterBook> FilterBook(OptionsFilterBook optionsFilterBook);
-        Task<HomeIndexVM> DataForHomeIndex(int numBanner, int numMenu, int numFS, int numTrend, int numCategory, int numTopSelling, int numPartner);
+        Task<HomeIndexVM> DataForHomeIndex(int numBanner, int numMenu, int numFS, int numTrend, int numCategory, int numTopSelling, int numPartner, int? userId);
         Task<VoucherExtend?> GetVoucherDetailsByIdAsync(int voucherId);
         Task<VoucherExtend?> ApplyVoucherAsync(string code, int intoMoney);
         Task<PagedVM<VoucherExtend>> GetVouchersAsync(int pageNumber, int pageSize, int intoMoney = 0);
@@ -59,9 +59,9 @@ namespace FahasaStoreAPI.Services
             var result = await _fahasaStoreRepository.FilterBook(optionsFilterBook);
             return result;
         }
-        public async Task<HomeIndexVM> DataForHomeIndex(int numBanner, int numMenu, int numFS, int numTrend, int numCategory, int numTopSelling, int numPartner)
+        public async Task<HomeIndexVM> DataForHomeIndex(int numBanner, int numMenu, int numFS, int numTrend, int numCategory, int numTopSelling, int numPartner, int? userId)
         {
-            var result = await _fahasaStoreRepository.DataForHomeIndex(numBanner, numMenu, numFS, numTrend, numCategory, numTopSelling, numPartner);
+            var result = await _fahasaStoreRepository.DataForHomeIndex(numBanner, numMenu, numFS, numTrend, numCategory, numTopSelling, numPartner, userId);
             return result;
         }
         public async Task<VoucherExtend?> GetVoucherDetailsByIdAsync(int voucherId)

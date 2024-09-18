@@ -1,12 +1,12 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using FahasaStoreAPI.Models.ViewModels;
+using FahasaStoreAPI.Models.DTOs;
 
 namespace FahasaStoreAPI.Services
 {
     public interface ICloudinaryService
     {
-        Task<CloudinaryVM> UploadImageAsync(IFormFile file, string? folderName);
+        Task<CloudinaryDto> UploadImageAsync(IFormFile file, string? folderName);
         Task<bool> RemoveImageAsync(string? publicId);
     }
     public class CloudinaryService : ICloudinaryService
@@ -20,11 +20,11 @@ namespace FahasaStoreAPI.Services
                 configuration["Cloudinary:ApiSecret"]);
             _cloudinary = new Cloudinary(account);
         }
-        public async Task<CloudinaryVM> UploadImageAsync(IFormFile file, string? folderName)
+        public async Task<CloudinaryDto> UploadImageAsync(IFormFile file, string? folderName)
         {
             if (file == null || file.Length == 0)
             {
-                var imageUploadResult = new CloudinaryVM("https://st.depositphotos.com/2934765/53192/v/450/depositphotos_531920820-stock-illustration-photo-available-vector-icon-default.jpg", null);
+                var imageUploadResult = new CloudinaryDto("https://st.depositphotos.com/2934765/53192/v/450/depositphotos_531920820-stock-illustration-photo-available-vector-icon-default.jpg", null);
                 return imageUploadResult;
             }
 
@@ -39,7 +39,7 @@ namespace FahasaStoreAPI.Services
 
                 var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-                return new CloudinaryVM(uploadResult.Url.ToString(), uploadResult.PublicId);
+                return new CloudinaryDto(uploadResult.Url.ToString(), uploadResult.PublicId);
             }
         }
         public async Task<bool> RemoveImageAsync(string? publicId)

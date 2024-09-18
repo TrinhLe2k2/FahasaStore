@@ -12,5 +12,6 @@ namespace FahasaStoreApp.Models.ViewModels
         public PagedVM<CategoryExtend> CategoryPaged { get; set; } = new PagedVM<CategoryExtend>();
         public PagedVM<BookExtend> TopSellingBooksByCategoryPaged { get; set; } = new PagedVM<BookExtend>();
         public PagedVM<PartnerExtend> PartnerPaged { get; set; } = new PagedVM<PartnerExtend>();
+        public PagedVM<BookExtend> BooksRecommendationSystem { get; set; } = new PagedVM<BookExtend>();
     }
 }

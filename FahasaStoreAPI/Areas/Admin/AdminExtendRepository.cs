@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using FahasaStore.Models;
 using FahasaStoreAPI.Constants;
-using FahasaStoreAPI.Models.DTOs;
 using FahasaStoreAPI.Models.Entities;
+using FahasaStoreAPI.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.NetworkInformation;
